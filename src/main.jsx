@@ -8,7 +8,7 @@ import App from "./app/ui/App.jsx";
 
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    <BrowserRouter>
+    <BrowserRouter basename="/simple-balance-frontend">
       <StrictMode>
         <App />
       </StrictMode>
