@@ -30,11 +30,6 @@ export default function AddTransForm() {
   const categories =
     transType === "expense" ? expenseCategories : incomeCategories;
 
-  const transOptions = [
-    { value: "expense", label: "Expense" },
-    { value: "income", label: "Income" },
-  ];
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setTrans((prev) => ({ ...prev, [name]: value, type: transType }));
@@ -61,20 +56,31 @@ export default function AddTransForm() {
     <div className="w-full h-screen flex justify-center items-center">
       <div className="bg-pink-100 w-fit flex flex-col gap-5 p-4 rounded">
         <div className="flex items-center justify-center">
-          {transOptions.map((opt) => (
-            <label key={opt.value}>
-              <input
-                type="radio"
-                value={opt.value}
-                checked={transType === opt.value}
-                onChange={(e) => setTransType(e.target.value)}
-                className="peer hidden"
-              />
-              <span className="block px-4 py-2 rounded-lg text-sm font-medium peer-checked:border peer-checked:border-green-500 transition">
-                {opt.label}
-              </span>
-            </label>
-          ))}
+          <label>
+            <input
+              type="radio"
+              value="expense"
+              checked={transType === "expense"}
+              onChange={(e) => setTransType(e.target.value)}
+              className="peer hidden"
+            />
+            <span className="block px-4 py-2 rounded-lg text-sm font-medium peer-checked:border peer-checked:border-green-500 transition">
+              Expense
+            </span>
+          </label>
+
+          <label>
+            <input
+              type="radio"
+              value="income"
+              checked={transType === "income"}
+              onChange={(e) => setTransType(e.target.value)}
+              className="peer hidden"
+            />
+            <span className="block px-4 py-2 rounded-lg text-sm font-medium peer-checked:border peer-checked:border-green-500 transition">
+              Income
+            </span>
+          </label>
         </div>
 
         <div>
