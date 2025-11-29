@@ -1,4 +1,8 @@
 import { useState } from "react";
+import {
+  expenseCategories,
+  incomeCategories,
+} from "../../data/transCategories";
 
 export default function AddTransForm() {
   const [transType, setTransType] = useState("expense");
@@ -10,22 +14,6 @@ export default function AddTransForm() {
     date: "",
     type: "expense",
   });
-
-  const expenseCategories = [
-    { label: "Food", value: "food" },
-    { label: "Rent", value: "rent" },
-    { label: "Transport", value: "transport" },
-    { label: "Entertainment", value: "entertainment" },
-    { label: "Other", value: "other" },
-  ];
-
-  const incomeCategories = [
-    { label: "Salary", value: "salary" },
-    { label: "Freelance", value: "freelance" },
-    { label: "Investment", value: "investment" },
-    { label: "Gift", value: "gift" },
-    { label: "Other", value: "other" },
-  ];
 
   const categories =
     transType === "expense" ? expenseCategories : incomeCategories;
@@ -53,95 +41,92 @@ export default function AddTransForm() {
   };
 
   return (
-    <div className="w-full h-screen flex justify-center items-center">
-      <div className="bg-pink-100 w-fit flex flex-col gap-5 p-4 rounded">
-        <div className="flex items-center justify-center">
-          <label>
+    <div className="bg-pink-100 w-96 max-w-full flex flex-col gap-6 p-6 rounded-lg shadow-lg">
+      <h2 className="text-xl font-semibold text-center">Add Transaction</h2>
+      <div className="flex justify-center gap-4">
+        {["expense", "income"].map((type) => (
+          <label key={type} className="flex items-center cursor-pointer">
             <input
               type="radio"
-              value="expense"
-              checked={transType === "expense"}
-              onChange={(e) => setTransType(e.target.value)}
-              className="peer hidden"
+              value={type}
+              checked={transType === type}
+              onChange={() => setTransType(type)}
+              className="hidden peer"
             />
-            <span className="block px-4 py-2 rounded-lg text-sm font-medium peer-checked:border peer-checked:border-green-500 transition">
-              Expense
+            <span
+              className={`px-6 py-2 rounded-lg text-sm font-medium transition-all capitalize
+                  ${
+                    transType === type
+                      ? "bg-green-500 text-white shadow-md"
+                      : "bg-white text-gray-700 hover:bg-gray-100"
+                  }`}
+            >
+              {type}
             </span>
           </label>
+        ))}
+      </div>
 
-          <label>
-            <input
-              type="radio"
-              value="income"
-              checked={transType === "income"}
-              onChange={(e) => setTransType(e.target.value)}
-              className="peer hidden"
-            />
-            <span className="block px-4 py-2 rounded-lg text-sm font-medium peer-checked:border peer-checked:border-green-500 transition">
-              Income
-            </span>
-          </label>
-        </div>
+      <div>
+        <label>Name: </label>
+        <input
+          value={trans.name}
+          name="name"
+          onChange={handleChange}
+          autoComplete="off"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+      </div>
 
-        <div>
-          <label>Name: </label>
-          <input
-            type="text"
-            value={trans.name}
-            name="name"
-            onChange={handleChange}
-            className="border rounded w-75 ml-8"
-            autoComplete="off"
-          />
-        </div>
+      <div>
+        <label>Amount: </label>
+        <input
+          type="number"
+          value={trans.amount}
+          name="amount"
+          onChange={handleChange}
+          min="0"
+          step="1"
+          autoComplete="off"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+      </div>
 
-        <div>
-          <label>Amount: </label>
-          <input
-            type="number"
-            value={trans.amount}
-            name="amount"
-            onChange={handleChange}
-            min="0"
-            step="1"
-            className="border rounded w-75 ml-5"
-            autoComplete="off"
-          />
-        </div>
+      <div>
+        <label>Category: </label>
+        <select
+          value={trans.category}
+          onChange={handleChange}
+          name="category"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+        >
+          <option value="">Select category</option>
+          {categories.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      </div>
 
-        <div>
-          <label>Category: </label>
-          <select
-            value={trans.category}
-            onChange={handleChange}
-            name="category"
-            className="border rounded w-75 ml-3"
-          >
-            <option value="">Select category</option>
-            {categories.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div>
+        <label>Date: </label>
+        <input
+          type="date"
+          value={trans.date}
+          name="date"
+          onChange={handleChange}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+      </div>
 
-        <div>
-          <label>Date: </label>
-          <input
-            type="date"
-            value={trans.date}
-            name="date"
-            onChange={handleChange}
-            className="border rounded w-75 ml-10"
-          />
-        </div>
-
-        <div className="flex justify-center">
-          <button onClick={addTrans} className="border rounded p-2">
-            Add Transaction
-          </button>
-        </div>
+      <div className="flex justify-center">
+        <button
+          onClick={addTrans}
+          className="w-full py-3 bg-green-500 text-white font-medium rounded-md hover:bg-green-600 transition shadow-md"
+        >
+          Add Transaction
+        </button>
       </div>
     </div>
   );
