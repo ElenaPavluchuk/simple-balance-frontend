@@ -3,7 +3,6 @@ import { useState } from "react";
 export default function AddTransForm() {
   const [transType, setTransType] = useState("expense");
   const [transes, setTranses] = useState([]);
-
   const [trans, setTrans] = useState({
     name: "",
     amount: "",
@@ -36,16 +35,12 @@ export default function AddTransForm() {
     setTrans((prev) => ({ ...prev, [name]: value, type: transType }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  const addTrans = () => {
     const newTrans = {
       id: crypto.randomUUID(),
       ...trans,
       amount: Number(trans.amount),
     };
-
-    console.log(newTrans);
     setTranses([...transes, newTrans]);
 
     setTrans({
@@ -59,10 +54,7 @@ export default function AddTransForm() {
 
   return (
     <div className="w-full h-screen flex justify-center items-center">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-pink-100 w-fit flex flex-col gap-5 p-4 rounded"
-      >
+      <div className="bg-pink-100 w-fit flex flex-col gap-5 p-4 rounded">
         <div className="flex items-center justify-center">
           <label>
             <input
@@ -77,7 +69,7 @@ export default function AddTransForm() {
             </span>
           </label>
 
-          <label style={{ marginLeft: "8px" }}>
+          <label>
             <input
               type="radio"
               value="income"
@@ -146,11 +138,11 @@ export default function AddTransForm() {
         </div>
 
         <div className="flex justify-center">
-          <button type="submit" className="border rounded p-2">
+          <button onClick={addTrans} className="border rounded p-2">
             Add Transaction
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 }
