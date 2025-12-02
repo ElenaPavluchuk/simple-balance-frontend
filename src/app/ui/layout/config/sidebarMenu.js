@@ -8,15 +8,15 @@ export const sidebarMenu = [
     path: "/",
   },
   {
-    key: "income",
-    label: "Income",
-    icon: Wallet,
-    path: "/income",
-  },
-  {
     key: "expense",
     label: "Expense",
     icon: CreditCard,
     path: "/expense",
+  },
+  {
+    key: "income",
+    label: "Income",
+    icon: Wallet,
+    path: "/income",
   },
 ];

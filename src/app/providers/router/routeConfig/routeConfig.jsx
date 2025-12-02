@@ -2,6 +2,7 @@ import AppLayout from "../../../ui/layout/AppLayout";
 import DashboardPage from "../../../../pages/DashboardPage/DashboardPage";
 import ExpensePage from "../../../../pages/ExpensePage/ExpensePage";
 import IncomePage from "../../../../pages/IncomePage/IncomePage";
+import AddTransCard from "../../../../shared/ui/AddTransCard/AddTransCard";
 
 export const routeConfig = [
   {
@@ -21,5 +22,9 @@ export const routeConfig = [
         element: <IncomePage />,
       },
     ],
+  },
+  {
+    path: "/test",
+    element: <AddTransCard />,
   },
 ];
