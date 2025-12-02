@@ -6,7 +6,7 @@ import {
 
 export default function AddTransCard() {
   const [transType, setTransType] = useState("expense");
-  const [transes, setTranses] = useState([]);
+  // const [transes, setTranses] = useState([]);
   const [trans, setTrans] = useState({
     name: "",
     amount: "",
@@ -24,12 +24,12 @@ export default function AddTransCard() {
   };
 
   const addTrans = () => {
-    const newTrans = {
-      id: crypto.randomUUID(),
-      ...trans,
-      amount: Number(trans.amount),
-    };
-    setTranses([...transes, newTrans]);
+    // const newTrans = {
+    //   id: crypto.randomUUID(),
+    //   ...trans,
+    //   amount: Number(trans.amount),
+    // };
+    // setTranses([...transes, newTrans]);
 
     setTrans({
       name: "",
