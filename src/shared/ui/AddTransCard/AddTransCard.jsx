@@ -4,7 +4,7 @@ import {
   incomeCategories,
 } from "../../data/transCategories";
 
-export default function AddTransForm() {
+export default function AddTransCard() {
   const [transType, setTransType] = useState("expense");
   const [transes, setTranses] = useState([]);
   const [trans, setTrans] = useState({
