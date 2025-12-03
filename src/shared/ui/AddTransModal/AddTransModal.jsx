@@ -1,12 +1,15 @@
 import { useState } from "react";
+import Button from "../Button/Button";
 import {
   expenseCategories,
   incomeCategories,
 } from "../../data/transCategories";
+import { useDispatch } from "react-redux";
+import { addTransToRedux } from "../../../app/providers/redux/slices/transesSlice";
 
-export default function AddTransCard() {
+export default function AddTransModal() {
+  const dispatch = useDispatch();
   const [transType, setTransType] = useState("expense");
-  const [transes, setTranses] = useState([]);
   const [trans, setTrans] = useState({
     name: "",
     amount: "",
@@ -14,22 +17,27 @@ export default function AddTransCard() {
     date: "",
     type: "expense",
   });
-
   const categories =
     transType === "expense" ? expenseCategories : incomeCategories;
 
-  const handleChange = (e) => {
+  const handleTypeChange = (type) => {
+    setTransType(type);
+  };
+
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setTrans((prev) => ({ ...prev, [name]: value, type: transType }));
   };
 
   const addTrans = () => {
-    const newTrans = {
-      id: crypto.randomUUID(),
-      ...trans,
-      amount: Number(trans.amount),
-    };
-    setTranses([...transes, newTrans]);
+    dispatch(
+      addTransToRedux({
+        id: crypto.randomUUID(),
+        name: trans.name.trim(),
+        amount: Number(trans.amount),
+        ...trans,
+      })
+    );
 
     setTrans({
       name: "",
@@ -50,7 +58,7 @@ export default function AddTransCard() {
               type="radio"
               value={type}
               checked={transType === type}
-              onChange={() => setTransType(type)}
+              onChange={() => handleTypeChange(type)}
               className="hidden peer"
             />
             <span
@@ -72,7 +80,7 @@ export default function AddTransCard() {
         <input
           value={trans.name}
           name="name"
-          onChange={handleChange}
+          onChange={handleInputChange}
           autoComplete="off"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
         />
@@ -84,7 +92,7 @@ export default function AddTransCard() {
           type="number"
           value={trans.amount}
           name="amount"
-          onChange={handleChange}
+          onChange={handleInputChange}
           min="0"
           step="1"
           autoComplete="off"
@@ -96,7 +104,7 @@ export default function AddTransCard() {
         <label>Category: </label>
         <select
           value={trans.category}
-          onChange={handleChange}
+          onChange={handleInputChange}
           name="category"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
         >
@@ -115,18 +123,18 @@ export default function AddTransCard() {
           type="date"
           value={trans.date}
           name="date"
-          onChange={handleChange}
+          onChange={handleInputChange}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
         />
       </div>
 
       <div className="flex justify-center">
-        <button
+        <Button
           onClick={addTrans}
           className="w-full py-3 bg-green-500 text-white font-medium rounded-md hover:bg-green-600 transition shadow-md"
         >
           Add Transaction
-        </button>
+        </Button>
       </div>
     </div>
   );
