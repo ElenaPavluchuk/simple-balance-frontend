@@ -7,7 +7,7 @@ import {
 import { useDispatch } from "react-redux";
 import { addTransToRedux } from "../../../app/providers/redux/slices/transesSlice";
 
-export default function AddTransModal() {
+export default function AddTransCard({ onClose }) {
   const dispatch = useDispatch();
   const [transType, setTransType] = useState("expense");
   const [trans, setTrans] = useState({
@@ -38,6 +38,7 @@ export default function AddTransModal() {
         ...trans,
       })
     );
+    onClose();
 
     setTrans({
       name: "",

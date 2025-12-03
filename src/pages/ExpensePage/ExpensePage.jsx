@@ -1,11 +1,26 @@
-import AddTransModal from "../../shared/ui/AddTransModal/AddTransModal";
-import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import Button from "../../shared/ui/Button/Button";
+import DialogModal from "../../shared/ui/DialogModal/DialogModal";
+import AddTransCard from "../../shared/ui/AddTransCard/AddTransCard";
 
 export default function ExpensePage() {
+  const [openAddTransModal, setOpenAddTransModal] = useState(false);
   const transes = useSelector((state) => state.transes.value);
+
   return (
     <div className="flex flex-row gap-20">
-      <AddTransModal />
+      <Button onClick={() => setOpenAddTransModal(true)} variant="primary">
+        Add Transaction
+      </Button>
+
+      <DialogModal
+        isOpen={openAddTransModal}
+        onClose={() => setOpenAddTransModal(false)}
+        title="Add transaction"
+      >
+        <AddTransCard onClose={() => setOpenAddTransModal(false)} />
+      </DialogModal>
 
       <div>
         <ul>
