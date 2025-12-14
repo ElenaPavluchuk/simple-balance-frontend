@@ -9,10 +9,12 @@ export default function ExpensePage() {
   const transes = useSelector((state) => state.transes.value);
 
   return (
-    <div className="flex flex-row gap-20">
-      <Button onClick={() => setOpenAddTransModal(true)} variant="primary">
-        Add Transaction
-      </Button>
+    <div className="flex flex-col gap-20">
+      <div>
+        <Button onClick={() => setOpenAddTransModal(true)} variant="primary">
+          Add Transaction
+        </Button>
+      </div>
 
       <DialogModal
         isOpen={openAddTransModal}
@@ -22,19 +24,24 @@ export default function ExpensePage() {
         <AddTransCard onClose={() => setOpenAddTransModal(false)} />
       </DialogModal>
 
-      <div>
-        <ul>
+      <div className="min-w-2xl mx-auto mt-6">
+        <ul className="space-y-4">
           {transes
             .filter((trans) => trans.type === "expense")
             .map((trans) => (
-              <li className="flex flex-col gap-2">
-                <div className="flex flex-row gap-20 mt-10">
+              <li
+                key={trans.id}
+                className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition"
+              >
+                <div div className="flex justify-between items-center">
                   <p>{trans.name}</p>
-                  <p>{trans.amount}</p>
+                  <p>-{trans.amount}</p>
                 </div>
-                <div className="flex flex-row gap-20">
-                  <p>{trans.category}</p>
-                  <p>{trans.date}</p>
+                <div className="flex justify-between items-center mt-2 text-sm text-gray-500">
+                  <span className="bg-gray-100 px-2 py-1 rounded-lg">
+                    {trans.category}
+                  </span>
+                  <span>{trans.date}</span>
                 </div>
               </li>
             ))}

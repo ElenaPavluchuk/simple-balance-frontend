@@ -38,8 +38,8 @@ export default function AddTransCard({ onClose }) {
         ...trans,
       })
     );
-    onClose();
 
+    onClose();
     setTrans({
       name: "",
       amount: "",

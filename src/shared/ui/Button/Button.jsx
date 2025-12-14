@@ -1,5 +1,15 @@
 import PropTypes from "prop-types";
 
+Button.propTypes = {
+  children: PropTypes.node.isRequired,
+  onClick: PropTypes.func,
+  size: PropTypes.number,
+  variant: PropTypes.oneOf(["ghost", "solid", "primary", "danger"]),
+  className: PropTypes.string,
+  title: PropTypes.string,
+  disabled: PropTypes.bool,
+};
+
 export default function Button({
   children,
   onClick,
@@ -38,19 +48,9 @@ export default function Button({
         ${baseClasses}
         ${sizeClasses}
         ${className}
-      `.trim()}
+      `}
     >
       {children}
     </button>
   );
 }
-
-Button.propTypes = {
-  children: PropTypes.node.isRequired,
-  onClick: PropTypes.func,
-  size: PropTypes.number,
-  variant: PropTypes.oneOf(["ghost", "solid", "primary", "danger"]),
-  className: PropTypes.string,
-  title: PropTypes.string,
-  disabled: PropTypes.bool,
-};
