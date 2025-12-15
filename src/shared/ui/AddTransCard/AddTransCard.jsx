@@ -33,7 +33,7 @@ export default function AddTransCard({ onClose }) {
     dispatch(
       addTransToRedux({
         id: crypto.randomUUID(),
-        name: trans.name.trim(),
+        name: trans.name,
         amount: Number(trans.amount),
         ...trans,
       })
