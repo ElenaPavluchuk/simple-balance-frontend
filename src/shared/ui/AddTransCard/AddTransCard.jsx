@@ -30,23 +30,21 @@ export default function AddTransCard({ onClose }) {
   };
 
   const addTrans = () => {
-    dispatch(
-      addTransToRedux({
-        id: crypto.randomUUID(),
-        name: trans.name,
-        amount: Number(trans.amount),
-        ...trans,
-      })
-    );
-
-    onClose();
-    setTrans({
-      name: "",
-      amount: "",
-      category: "",
-      date: "",
-      type: transType,
-    });
+    try {
+      dispatch(addTransToRedux({ ...trans, id: crypto.randomUUID() }));
+      onClose();
+      setTrans({
+        name: "",
+        amount: "",
+        category: "",
+        date: "",
+        type: transType,
+      });
+    } catch (err) {
+      console.log("validation error: ", err.errors);
+      // TODO: show error for user
+      // setErrors(err.errors)
+    }
   };
 
   return (

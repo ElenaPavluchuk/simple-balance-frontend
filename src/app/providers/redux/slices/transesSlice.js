@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { prepareTranses } from "./prepareTranses";
 
 export const transesSlice = createSlice({
   name: "transes",
@@ -6,8 +7,19 @@ export const transesSlice = createSlice({
     value: [],
   },
   reducers: {
-    addTransToRedux: (state, action) => {
-      state.value.push(action.payload);
+    addTransToRedux: {
+      reducer(state, action) {
+        state.value.push(action.payload);
+      },
+      prepare(trans) {
+        const result = prepareTranses(trans);
+
+        if (result.error) {
+          throw result;
+        }
+
+        return result;
+      },
     },
     deleteTransFromRedux: (state, action) => {
       state.value = state.value.filter((trans) => trans.id !== action.payload);
