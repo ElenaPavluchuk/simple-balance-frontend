@@ -45,7 +45,7 @@ export default function ExpensePage() {
     dispatch(
       updateTransInRedux({
         id,
-        name: editingTrans.name,
+        name: editingTrans.name.trim(),
         amount: Number(editingTrans.amount),
         category: editingTrans.category,
         date: editingTrans.date,
