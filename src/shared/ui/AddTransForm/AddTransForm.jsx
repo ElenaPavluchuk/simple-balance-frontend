@@ -7,7 +7,7 @@ import {
 import { useDispatch } from "react-redux";
 import { addTransToRedux } from "../../../app/providers/redux/slices/transesSlice";
 
-export default function AddTransCard({ onClose }) {
+export default function AddTransForm({ onClose }) {
   const dispatch = useDispatch();
   const [transType, setTransType] = useState("expense");
   const [trans, setTrans] = useState({

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Button from "../../shared/ui/Button/Button";
 import DialogModal from "../../shared/ui/DialogModal/DialogModal";
-import AddTransCard from "../../shared/ui/AddTransCard/AddTransCard";
+import AddTransForm from "../../shared/ui/AddTransForm/AddTransForm";
 import { useSelector, useDispatch } from "react-redux";
 import {
   deleteTransFromRedux,
@@ -82,7 +82,7 @@ export default function ExpensePage() {
         onClose={() => setOpenAddTransModal(false)}
         title="Add transaction"
       >
-        <AddTransCard onClose={() => setOpenAddTransModal(false)} />
+        <AddTransForm onClose={() => setOpenAddTransModal(false)} />
       </DialogModal>
 
       <div className="min-w-xl mx-auto mt-6">
