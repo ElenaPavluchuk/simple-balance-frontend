@@ -14,26 +14,14 @@ export default function ExpensePage() {
   const [openAddTransModal, setOpenAddTransModal] = useState(false);
   const transes = useSelector((state) => state.transes.value);
   const dispatch = useDispatch();
-  const [editingTrans, setEditingTrans] = useState({
-    id: null,
-    name: "",
-    amount: "",
-    category: "",
-    date: "",
-  });
+  const [editingTrans, setEditingTrans] = useState(null);
 
   const deleteTrans = (id) => {
     dispatch(deleteTransFromRedux(id));
   };
 
-  const editTrans = (id, currName, currAmount, currCategory, currDate) => {
-    setEditingTrans({
-      id,
-      name: currName,
-      amount: currAmount,
-      category: currCategory,
-      date: currDate,
-    });
+  const editTrans = (trans) => {
+    setEditingTrans(trans);
   };
 
   const handleEditInputChange = (e) => {
@@ -41,33 +29,24 @@ export default function ExpensePage() {
     setEditingTrans((prev) => ({ ...prev, [name]: value }));
   };
 
-  const saveUpdateTrans = (id) => {
+  const saveUpdateTrans = () => {
+    if (!editingTrans) return;
+
+    const { id, name, amount, category, date } = editingTrans;
     dispatch(
       updateTransInRedux({
         id,
-        name: editingTrans.name.trim(),
-        amount: Number(editingTrans.amount),
-        category: editingTrans.category,
-        date: editingTrans.date,
+        name: name.trim(),
+        amount: Number(amount),
+        category,
+        date,
       })
     );
-    setEditingTrans({
-      id: null,
-      name: "",
-      amount: "",
-      category: "",
-      date: "",
-    });
+    setEditingTrans(null);
   };
 
   const cancelUpdateTrans = () => {
-    setEditingTrans({
-      id: null,
-      name: "",
-      amount: "",
-      category: "",
-      date: "",
-    });
+    setEditingTrans(null);
   };
 
   return (
@@ -93,21 +72,16 @@ export default function ExpensePage() {
               <TransesList
                 key={trans.id}
                 trans={trans}
-                editingTrans={editingTrans}
-                category={expenseCategories}
-                handleEditInputChange={handleEditInputChange}
-                saveUpdateTrans={() => saveUpdateTrans(trans.id)}
-                cancelUpdateTrans={cancelUpdateTrans}
-                editTrans={() =>
-                  editTrans(
-                    trans.id,
-                    trans.name,
-                    trans.amount,
-                    trans.category,
-                    trans.date
-                  )
+                isEditing={editingTrans?.id === trans.id}
+                editingTrans={
+                  editingTrans?.id === trans.id ? editingTrans : null
                 }
-                deleteTrans={() => deleteTrans(trans.id)}
+                category={expenseCategories}
+                onChangeEditInput={handleEditInputChange}
+                saveUpdateTrans={saveUpdateTrans}
+                cancelUpdateTrans={cancelUpdateTrans}
+                onEdit={editTrans}
+                onDelete={deleteTrans}
               />
             ))}
         </ul>

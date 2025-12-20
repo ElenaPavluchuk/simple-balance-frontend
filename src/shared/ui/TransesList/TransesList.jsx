@@ -2,34 +2,47 @@ import PropTypes from "prop-types";
 import Button from "../Button/Button";
 import { Trash2, Pencil, X, Check } from "lucide-react";
 
+TransesList.PropTypes = {
+  trans: PropTypes.object.isRequired,
+  isEditing: PropTypes.bool.isRequired,
+  editingTrans: PropTypes.object,
+  category: PropTypes.array.isRequired,
+  onChangeEditInput: PropTypes.func.isRequired,
+  saveUpdateTrans: PropTypes.func.isRequired,
+  cancelUpdateTrans: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+};
+
 export default function TransesList({
   trans,
+  isEditing,
   editingTrans,
   category,
-  handleEditInputChange,
+  onChangeEditInput,
   saveUpdateTrans,
   cancelUpdateTrans,
-  editTrans,
-  deleteTrans,
+  onEdit,
+  onDelete,
 }) {
   return (
     <li className="bg-white flex flex-row justify-between gap-10 rounded-2xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition">
-      {editingTrans.id === trans.id ? (
+      {isEditing ? (
         <>
           <div className="w-full">
             <div className="flex justify-between items-center ">
               <input
-                value={editingTrans.name}
+                value={editingTrans?.name}
                 name="name"
-                onChange={handleEditInputChange}
+                onChange={onChangeEditInput}
                 autoComplete="off"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               />
               <input
                 type="number"
-                value={editingTrans.amount}
+                value={editingTrans?.amount}
                 name="amount"
-                onChange={handleEditInputChange}
+                onChange={onChangeEditInput}
                 min="0"
                 step="1"
                 autoComplete="off"
@@ -38,8 +51,8 @@ export default function TransesList({
             </div>
             <div className="flex justify-between items-center mt-2 text-sm text-gray-500 ">
               <select
-                value={editingTrans.category}
-                onChange={handleEditInputChange}
+                value={editingTrans?.category}
+                onChange={onChangeEditInput}
                 name="category"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               >
@@ -52,9 +65,9 @@ export default function TransesList({
               </select>
               <input
                 type="date"
-                value={editingTrans.date}
+                value={editingTrans?.date}
                 name="date"
-                onChange={handleEditInputChange}
+                onChange={onChangeEditInput}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
@@ -83,10 +96,10 @@ export default function TransesList({
             </div>
           </div>
           <div className="flex flex-col gap-4 items-start">
-            <Button onClick={editTrans} size={4}>
+            <Button onClick={() => onEdit(trans)} size={4}>
               <Pencil className="text-gray-700" />
             </Button>
-            <Button onClick={deleteTrans} size={4}>
+            <Button onClick={() => onDelete(trans.id)} size={4}>
               <Trash2 className="text-gray-700" />
             </Button>
           </div>
@@ -95,14 +108,3 @@ export default function TransesList({
     </li>
   );
 }
-
-TransesList.PropTypes = {
-  trans: PropTypes.object.isRequired,
-  editingTrans: PropTypes.object.isRequired,
-  category: PropTypes.array.isRequired,
-  handleEditInputChange: PropTypes.func.isRequired,
-  saveUpdateTrans: PropTypes.func.isRequired,
-  cancelUpdateTrans: PropTypes.func.isRequired,
-  editTrans: PropTypes.func.isRequired,
-  deleteTrans: PropTypes.func.isRequired,
-};
