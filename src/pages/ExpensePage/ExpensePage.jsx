@@ -63,7 +63,6 @@ export default function ExpensePage() {
       >
         <AddTransForm onClose={() => setOpenAddTransModal(false)} />
       </DialogModal>
-
       <div className="min-w-xl mx-auto mt-6">
         <ul className="space-y-4">
           {transes
@@ -72,7 +71,6 @@ export default function ExpensePage() {
               <TransesList
                 key={trans.id}
                 trans={trans}
-                isEditing={editingTrans?.id === trans.id}
                 editingTrans={
                   editingTrans?.id === trans.id ? editingTrans : null
                 }
