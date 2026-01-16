@@ -1,31 +1,18 @@
 import { Routes, Route } from "react-router";
 import { routeConfig } from "./routeConfig/routeConfig.jsx";
 
-const renderRoutes = (routes) => {
-  return routes.map((route) => {
-    const { path, element, children, index } = route;
-
-    if (children) {
-      return (
-        <Route key={path || "root"} path={path} element={element}>
-          {index && (
-            <Route index element={route.index.element || route.element} />
-          )}
-          {renderRoutes(children)}
-        </Route>
-      );
-    }
-
-    return (
-      <Route
-        key={path || "index"}
-        {...(index ? { index: true } : { path })}
-        element={element}
-      />
-    );
-  });
-};
-
 export const AppRouter = () => {
-  return <Routes>{renderRoutes(routeConfig)}</Routes>;
+  return (
+    <Routes>
+      <Route path={routeConfig.path} element={routeConfig.element}>
+        {routeConfig.children.map((route, index) => (
+          <Route
+            key={index}
+            {...(route.index ? { index: true } : { path: route.path })}
+            element={route.element}
+          />
+        ))}
+      </Route>
+    </Routes>
+  );
 };
