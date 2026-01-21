@@ -51,7 +51,6 @@ exports.up = async function (knex) {
       .onDelete("CASCADE");
     table.boolean("is_active").notNullable().defaultTo(true);
     table.timestamps(true, true);
-
     table.unique(["name", "type", "user_id"]);
   });
 
