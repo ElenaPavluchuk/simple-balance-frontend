@@ -1,0 +1,49 @@
+const { registerUser, loginUser } = require("../services/auth.services.js");
+const generateAccessToken = require("../utils/jwt.js");
+const ApiError = require("../errors/api.error.js");
+
+const register = async (req, res, next) => {
+  const { email, password, fullName } = req.body;
+
+  if (!email?.trim() || !password?.trim() || !fullName?.trim()) {
+    return next(ApiError.badRequest("Email, password and name are required"));
+  }
+
+  if (password.length < 6) {
+    return next(ApiError.badRequest("Password must be at least 6 characters"));
+  }
+
+  try {
+    const user = await registerUser({ email, password, fullName });
+    const token = generateAccessToken(user.id, user.user_role);
+
+    return res.status(201).json({
+      message: "User registered successfully",
+      token,
+      userId: user.id,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const login = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return next(ApiError.badRequest("Email and password are required"));
+  }
+
+  try {
+    const user = await loginUser({ email, password });
+    const token = generateAccessToken(user.id, user.user_role);
+
+    return res
+      .status(200)
+      .json({ message: "User login successfully", token, userId: user.id });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { register, login };
