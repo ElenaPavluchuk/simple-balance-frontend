@@ -6,7 +6,6 @@ const registerUser = async ({ email, password, fullName }) => {
   const existingUser = await knex("users").where({ email }).first();
 
   if (existingUser) {
-    // throw new Error("USER_EXISTS");
     throw ApiError.conflict("User with this email already exists");
   }
 
@@ -24,4 +23,18 @@ const registerUser = async ({ email, password, fullName }) => {
   return user;
 };
 
-module.exports = { registerUser };
+const loginUser = async ({ email, password }) => {
+  const user = await knex("users").where({ email }).first();
+  if (!user) {
+    throw ApiError.notFound("User not found");
+  }
+
+  const isValid = await bcrypt.compare(password, user.password_hash);
+  if (!isValid) {
+    throw ApiError.unauthorized("Wrong password");
+  }
+
+  return user;
+};
+
+module.exports = { registerUser, loginUser };
