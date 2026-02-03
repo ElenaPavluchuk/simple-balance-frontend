@@ -1,6 +1,6 @@
 const knex = require("../db.js");
 const bcrypt = require("bcrypt");
-const ApiError = require("../errors/api.error.js");
+const ApiError = require("../errors/apiError.js");
 
 const registerUser = async ({ email, password, fullName }) => {
   const existingUser = await knex("users").where({ email }).first();

@@ -1,6 +1,6 @@
-const ApiError = require("../errors/api.error.js");
+const ApiError = require("../errors/apiError.js");
 
-const errorMiddleware = (err, req, res, _next) => {
+const error = (err, _req, res, _next) => {
   console.error(err);
 
   if (err instanceof ApiError) {
@@ -10,8 +10,8 @@ const errorMiddleware = (err, req, res, _next) => {
   }
 
   return res.status(500).json({
-    message: "Internal server error",
+    message: "Unexpected error",
   });
 };
 
-module.exports = errorMiddleware;
+module.exports = error;

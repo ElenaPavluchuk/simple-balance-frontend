@@ -1,6 +1,6 @@
-const { registerUser, loginUser } = require("../services/auth.services.js");
+const { registerUser, loginUser } = require("../services/authServices.js");
 const generateAccessToken = require("../utils/jwt.js");
-const ApiError = require("../errors/api.error.js");
+const ApiError = require("../errors/apiError.js");
 
 const register = async (req, res, next) => {
   const { email, password, fullName } = req.body;
