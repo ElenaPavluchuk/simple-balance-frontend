@@ -6,7 +6,7 @@ const authenticate = require("../middlewares/authentication.js");
 const verifyRole = require("../middlewares/authorization.js");
 
 const router = express.Router();
-router.use("/transactions", transactions);
+router.use("/transactions", authenticate, transactions);
 router.use("/users", users);
 router.use("/admins", authenticate, verifyRole("admin"), admins);
 
