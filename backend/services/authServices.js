@@ -17,6 +17,7 @@ const registerUser = async ({ email, password, fullName }) => {
       password_hash: passwordHash,
       full_name: fullName.trim(),
       user_role: "member",
+      // TODO: add user's base_currency_id
     })
     .returning(["id"]);
 
@@ -34,6 +35,7 @@ const loginUser = async ({ email, password }) => {
     throw ApiError.unauthorized("Wrong password");
   }
 
+  // TODO: return only specific keyes for user
   return user;
 };
 
