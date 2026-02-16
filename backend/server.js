@@ -19,5 +19,5 @@ app.listen(8000, () => {
 // SERVER -> ROUTES -> MIDDLEWARES -> CONTROLLERS -> SERVICES -> DATABASE
 
 // database structure:
-// currencies → users → categories → transactions
-// (пользователь + его категории и транзакции, то транзакции и категории зависят от пользователей, а пользователи — от валют)
+// exchange rates -> currencies → users → categories → transactions
+// транзакции и категории зависят от пользователей, а пользователи — от валют, а валюты от курсов

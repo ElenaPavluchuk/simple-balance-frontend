@@ -10,6 +10,11 @@ const registerUser = async ({ email, password, fullName }) => {
   }
 
   const passwordHash = await bcrypt.hash(password, 7);
+  const usd = await knex("currencies").where({ code: "USD" }).first();
+
+  if (!usd) {
+    throw ApiError.notFound("USD currency not found");
+  }
 
   const [user] = await knex("users")
     .insert({
@@ -17,26 +22,32 @@ const registerUser = async ({ email, password, fullName }) => {
       password_hash: passwordHash,
       full_name: fullName.trim(),
       user_role: "member",
-      // TODO: add user's base_currency_id
+      base_currency_id: usd.id,
     })
-    .returning(["id"]);
+    .returning(["id", "user_role"]);
 
   return user;
 };
 
 const loginUser = async ({ email, password }) => {
-  const user = await knex("users").where({ email }).first();
+  const user = await knex("users")
+    .where({ email })
+    .select(["id", "password_hash", "user_role"])
+    .first();
+
+  const { password_hash, ...safeUser } = user;
+
   if (!user) {
     throw ApiError.notFound("User not found");
   }
 
-  const isValid = await bcrypt.compare(password, user.password_hash);
+  const isValid = await bcrypt.compare(password, password_hash);
+
   if (!isValid) {
     throw ApiError.unauthorized("Wrong password");
   }
 
-  // TODO: return only specific keyes for user
-  return user;
+  return safeUser;
 };
 
 module.exports = { registerUser, loginUser };
