@@ -17,9 +17,9 @@ exports.seed = async function (knex) {
     .insert({
       email: "admin@test.com",
       password_hash: bcrypt.hashSync("123test", bcrypt.genSaltSync(7)),
-      user_role: "admin",
       full_name: "System Admin",
       profile_image_url: null,
+      user_role: "admin",
       base_currency_id: usd.id,
     })
     .returning(["id", "email", "user_role"]);

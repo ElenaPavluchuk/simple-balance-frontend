@@ -15,4 +15,9 @@ app.listen(8000, () => {
   console.log("Server is running on port 8000");
 });
 
+// backend structure:
 // SERVER -> ROUTES -> MIDDLEWARES -> CONTROLLERS -> SERVICES -> DATABASE
+
+// database structure:
+// exchange rates -> currencies → users → categories → transactions
+// транзакции и категории зависят от пользователей, а пользователи — от валют, а валюты от курсов

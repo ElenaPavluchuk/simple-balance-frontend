@@ -1,4 +1,12 @@
-const { getAllUsers, deleteUserById } = require("../services/adminServices.js");
+const {
+  getAllUsers,
+  deleteUserById,
+  createNews,
+  getAllNews,
+  deleteNewsById,
+  updateNewsById,
+} = require("../services/adminServices.js");
+const ApiError = require("../errors/apiError.js");
 
 const getUsers = async (_req, res, next) => {
   try {
@@ -24,4 +32,62 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-module.exports = { getUsers, deleteUser };
+const addNews = async (req, res, next) => {
+  const userId = req.user.id;
+  const { title, content } = req.body;
+
+  if (!title || !content) {
+    return next(ApiError.badRequest("All fields are required"));
+  }
+
+  try {
+    const newPost = await createNews({ userId, title, content });
+
+    res.status(201).json(newPost);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getNews = async (_req, res, next) => {
+  try {
+    const allNews = await getAllNews();
+
+    return res.status(200).json(allNews);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const deleteNews = async (req, res, next) => {
+  const newsId = Number(req.params.id);
+
+  try {
+    await deleteNewsById(newsId);
+
+    return res.status(200).json({ message: "News deleted successfully" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const updateNews = async (req, res, next) => {
+  const newsId = Number(req.params.id);
+  const { title, content } = req.body;
+  try {
+    const updatedNews = await updateNewsById({ newsId, title, content });
+
+    return res.status(200).json(updatedNews);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = {
+  getUsers,
+  deleteUser,
+  addNews,
+  getNews,
+  deleteNews,
+  updateNews,
+};

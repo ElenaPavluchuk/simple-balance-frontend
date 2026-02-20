@@ -17,16 +17,19 @@ exports.up = async function (knex) {
     table.increments("id").primary();
     table.string("email").notNullable().unique();
     table.string("password_hash").notNullable();
+    table.string("full_name").notNullable();
+    table.string("profile_image_url").nullable().defaultTo(null);
     table
       .enu("user_role", ["admin", "member"], {
         useNative: true,
-        enumName: "user_role",
+        enumName: "user_role_enum",
       })
       .notNullable()
       .defaultTo("member");
     table
       .integer("base_currency_id")
       .unsigned()
+      .notNullable()
       .references("id")
       .inTable("currencies")
       .onDelete("RESTRICT");
@@ -39,7 +42,7 @@ exports.up = async function (knex) {
     table
       .enu("type", ["income", "expense"], {
         useNative: true,
-        enumName: "category_type",
+        enumName: "category_type_enum",
       })
       .notNullable();
     table
@@ -52,6 +55,7 @@ exports.up = async function (knex) {
     table.boolean("is_active").notNullable().defaultTo(true);
     table.timestamps(true, true);
     table.unique(["name", "type", "user_id"]);
+    table.index(["user_id", "type"]);
   });
 
   await knex.schema.createTable("transactions", (table) => {
@@ -66,7 +70,7 @@ exports.up = async function (knex) {
     table
       .enu("type", ["income", "expense"], {
         useNative: true,
-        enumName: "transaction_type",
+        enumName: "transaction_type_enum",
       })
       .notNullable();
     table.decimal("amount", 14, 4).notNullable();
@@ -85,10 +89,11 @@ exports.up = async function (knex) {
       .inTable("categories")
       .onDelete("RESTRICT");
     table.date("date").notNullable();
-    table.string("title");
+    table.string("title", 200);
+    table.text("notes");
     table.timestamps(true, true);
-    table.index(["user_id", "date"]);
-    table.index(["category_id"]);
+    table.index(["user_id", "date", "type"]);
+    table.index(["user_id", "category_id"]);
   });
 };
 
@@ -102,6 +107,7 @@ exports.down = async function (knex) {
   await knex.schema.dropTableIfExists("users");
   await knex.schema.dropTableIfExists("currencies");
 
-  await knex.raw('DROP TYPE IF EXISTS "transaction_type"');
-  await knex.raw('DROP TYPE IF EXISTS "category_type"');
+  await knex.raw('DROP TYPE IF EXISTS "user_role_enum" CASCADE');
+  await knex.raw('DROP TYPE IF EXISTS "category_type_enum" CASCADE');
+  await knex.raw('DROP TYPE IF EXISTS "transaction_type_enum" CASCADE');
 };
