@@ -1,5 +1,12 @@
-const { getAllUsers, deleteUserById } = require("../services/adminServices.js");
-const knex = require("../db.js");
+const {
+  getAllUsers,
+  deleteUserById,
+  createNews,
+  getAllNews,
+  deleteNewsById,
+  updateNewsById,
+} = require("../services/adminServices.js");
+const ApiError = require("../errors/apiError.js");
 
 const getUsers = async (_req, res, next) => {
   try {
@@ -25,115 +32,54 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-const addNews = async (req, res) => {
+const addNews = async (req, res, next) => {
   const userId = req.user.id;
   const { title, content } = req.body;
 
   if (!title || !content) {
-    return res.status(400).json({ message: "All fields are required" });
+    return next(ApiError.badRequest("All fields are required"));
   }
 
   try {
-    const [createdNews] = await knex("news")
-      .insert({
-        title,
-        content,
-        author_id: userId,
-      })
-      .returning(["id"]);
-
-    const newPost = await knex("news")
-      .leftJoin("users", "news.author_id", "users.id")
-      .select(
-        "news.id",
-        "news.title",
-        "news.content",
-        "news.published_at",
-        "users.full_name as author_name",
-      )
-      .where("news.id", createdNews.id)
-      .first();
+    const newPost = await createNews({ userId, title, content });
 
     res.status(201).json(newPost);
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Internal server error" });
+    next(err);
   }
 };
 
-const getAllNews = async (_req, res) => {
+const getNews = async (_req, res, next) => {
   try {
-    const allNews = await knex("news")
-      .leftJoin("users", "news.author_id", "users.id")
-      .select(
-        "news.id",
-        "news.title",
-        "news.content",
-        "news.published_at",
-        "users.full_name as author_name",
-      )
-      .orderBy("news.published_at", "desc");
+    const allNews = await getAllNews();
 
     return res.status(200).json(allNews);
   } catch (err) {
-    console.error(err);
-    return res
-      .status(500)
-      .json({ message: "Server error during fetching content" });
+    next(err);
   }
 };
 
-const deleteNews = async (req, res) => {
+const deleteNews = async (req, res, next) => {
   const newsId = Number(req.params.id);
 
   try {
-    const deletedNews = await knex("news").where({ id: newsId }).del();
-
-    if (deletedNews === 0) {
-      return res.status(404).json({ message: "News not found" });
-    }
+    await deleteNewsById(newsId);
 
     return res.status(200).json({ message: "News deleted successfully" });
   } catch (err) {
-    console.error(err);
-    return res
-      .status(500)
-      .json({ message: "Server error during deleting news" });
+    next(err);
   }
 };
 
-const updateNews = async (req, res) => {
+const updateNews = async (req, res, next) => {
   const newsId = Number(req.params.id);
   const { title, content } = req.body;
   try {
-    const news = await knex("news").where({ id: newsId }).first();
-
-    if (!news) {
-      return res.status(404).json({ message: "News not found" });
-    }
-
-    const updateData = Object.fromEntries(
-      Object.entries({
-        title,
-        content,
-      }).filter(([, value]) => value !== undefined),
-    );
-
-    if (Object.keys(updateData).length === 0) {
-      return res.status(400).json({ message: "No fields to update" });
-    }
-
-    const [updatedNews] = await knex("news")
-      .where({ id: newsId })
-      .update(updateData)
-      .returning(["id", "title", "content"]);
+    const updatedNews = await updateNewsById({ newsId, title, content });
 
     return res.status(200).json(updatedNews);
   } catch (err) {
-    console.error(err);
-    return res
-      .status(500)
-      .json({ message: "Server error during updating news" });
+    next(err);
   }
 };
 
@@ -141,7 +87,7 @@ module.exports = {
   getUsers,
   deleteUser,
   addNews,
-  getAllNews,
+  getNews,
   deleteNews,
   updateNews,
 };
