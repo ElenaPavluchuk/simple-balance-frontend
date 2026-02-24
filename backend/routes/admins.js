@@ -9,6 +9,7 @@ const {
   deleteNews,
   updateNews,
 } = require("../controllers/adminController.js");
+
 const router = express.Router();
 
 router.get("/users", getUsers);

@@ -1,13 +1,16 @@
 const express = require("express");
-const transactions = require("./transactions.js");
 const auth = require("./auth.js");
+const users = require("./users.js");
+const transactions = require("./transactions.js");
 const admins = require("./admins.js");
 const authenticate = require("../middlewares/authentication.js");
 const verifyRole = require("../middlewares/authorization.js");
 
 const router = express.Router();
-router.use("/transactions", authenticate, transactions);
+
 router.use("/auth", auth);
+router.use("/users", authenticate, users);
 router.use("/admins", authenticate, verifyRole("admin"), admins);
+router.use("/transactions", authenticate, transactions);
 
 module.exports = router;

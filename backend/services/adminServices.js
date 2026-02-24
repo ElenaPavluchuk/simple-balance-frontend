@@ -11,6 +11,7 @@ const getAllUsers = async () => {
 
   return allUsers;
 };
+
 const deleteUserById = async (id) => {
   const deletedUser = await knex("users")
     .where({ id })
