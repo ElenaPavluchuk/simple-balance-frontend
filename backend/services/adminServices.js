@@ -11,18 +11,6 @@ const getAllUsers = async () => {
 
   return allUsers;
 };
-const deleteUserById = async (id) => {
-  const deletedUser = await knex("users")
-    .where({ id })
-    .del()
-    .returning(["full_name"]);
-
-  if (!deletedUser || deletedUser.length === 0) {
-    throw ApiError.notFound("User not found");
-  }
-
-  return deletedUser;
-};
 
 const createNews = async ({ userId, title, content }) => {
   const [newPost] = await knex("news")
@@ -44,21 +32,6 @@ const createNews = async ({ userId, title, content }) => {
     ]);
 
   return newPost;
-};
-
-const getAllNews = async () => {
-  const allNews = await knex("news")
-    .leftJoin("users", "news.author_id", "users.id")
-    .select(
-      "news.id",
-      "news.title",
-      "news.content",
-      "news.published_at",
-      "users.full_name as author_name",
-    )
-    .orderBy("news.published_at", "desc");
-
-  return allNews;
 };
 
 const deleteNewsById = async (newsId) => {
@@ -97,9 +70,7 @@ const updateNewsById = async ({ newsId, title, content }) => {
 
 module.exports = {
   getAllUsers,
-  deleteUserById,
   createNews,
-  getAllNews,
   deleteNewsById,
   updateNewsById,
 };

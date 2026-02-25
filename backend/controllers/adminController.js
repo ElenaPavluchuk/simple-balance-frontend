@@ -1,11 +1,10 @@
 const {
   getAllUsers,
-  deleteUserById,
   createNews,
-  getAllNews,
   deleteNewsById,
   updateNewsById,
 } = require("../services/adminServices.js");
+const { deleteUserById } = require("../services/userServices.js");
 const ApiError = require("../errors/apiError.js");
 
 const getUsers = async (_req, res, next) => {
@@ -21,12 +20,9 @@ const getUsers = async (_req, res, next) => {
 const deleteUser = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const deletedUser = await deleteUserById(id);
+    await deleteUserById(id);
 
-    res.status(200).json({
-      message: "User deleted successfully",
-      user: deletedUser[0],
-    });
+    res.status(200).json({ message: "User deleted successfully" });
   } catch (err) {
     next(err);
   }
@@ -44,16 +40,6 @@ const addNews = async (req, res, next) => {
     const newPost = await createNews({ userId, title, content });
 
     res.status(201).json(newPost);
-  } catch (err) {
-    next(err);
-  }
-};
-
-const getNews = async (_req, res, next) => {
-  try {
-    const allNews = await getAllNews();
-
-    return res.status(200).json(allNews);
   } catch (err) {
     next(err);
   }
@@ -87,7 +73,6 @@ module.exports = {
   getUsers,
   deleteUser,
   addNews,
-  getNews,
   deleteNews,
   updateNews,
 };
