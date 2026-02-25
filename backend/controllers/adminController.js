@@ -1,11 +1,11 @@
 const {
   getAllUsers,
-  deleteUserById,
   createNews,
   getAllNews,
   deleteNewsById,
   updateNewsById,
 } = require("../services/adminServices.js");
+const { deleteUserById } = require("../services/userServices.js");
 const ApiError = require("../errors/apiError.js");
 
 const getUsers = async (_req, res, next) => {
@@ -21,12 +21,9 @@ const getUsers = async (_req, res, next) => {
 const deleteUser = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const deletedUser = await deleteUserById(id);
+    await deleteUserById(id);
 
-    res.status(200).json({
-      message: "User deleted successfully",
-      user: deletedUser[0],
-    });
+    res.status(200).json({ message: "User deleted successfully" });
   } catch (err) {
     next(err);
   }

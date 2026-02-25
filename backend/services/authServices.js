@@ -35,11 +35,11 @@ const loginUser = async ({ email, password }) => {
     .select(["id", "password_hash", "user_role"])
     .first();
 
-  const { password_hash, ...safeUser } = user;
-
   if (!user) {
     throw ApiError.notFound("User not found");
   }
+
+  const { password_hash, ...safeUser } = user;
 
   const isValid = await bcrypt.compare(password, password_hash);
 
