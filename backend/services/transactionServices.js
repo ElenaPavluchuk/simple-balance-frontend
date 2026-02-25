@@ -10,7 +10,7 @@ const addUserTransaction = async ({
   date,
   title,
 }) => {
-  const [transaction] = await knex("transactions")
+  const [result] = await knex("transactions")
     .insert({
       user_id: userId,
       type,
@@ -20,36 +20,45 @@ const addUserTransaction = async ({
       date: date,
       title,
     })
-    .returning([
-      "id",
-      "type",
-      "amount",
-      "currency_id",
-      "category_id",
-      "date",
-      "title",
-    ]);
+    .returning("*");
 
-  if (!transaction) {
+  if (!result) {
     throw ApiError.badRequest("Failed to create transaction");
   }
+
+  const transaction = await knex("transactions as t")
+    .join("currencies as c", "t.currency_id", "c.id")
+    .join("categories as cat", "t.category_id", "cat.id")
+    .select(
+      "t.id",
+      "t.type",
+      "t.amount",
+      "t.date",
+      "t.title",
+      "c.symbol as currency_symbol",
+      "cat.name as category_name",
+    )
+    .where("t.id", transaction.id)
+    .first();
 
   return transaction;
 };
 
 const getUserTransactions = async ({ userId, type }) => {
-  const transactions = await knex("transactions")
-    .where({ user_id: userId, type: type })
+  const transactions = await knex("transactions as t")
+    .join("currencies as c", "t.currency_id", "c.id")
+    .join("categories as cat", "t.category_id", "cat.id")
+    .where({ "t.user_id": userId, "t.type": type })
     .select([
-      "id",
-      "type",
-      "amount",
-      "currency_id",
-      "category_id",
-      "date",
-      "title",
+      "t.id",
+      "t.type",
+      "t.amount",
+      "t.date",
+      "t.title",
+      "c.symbol as currency_symbol",
+      "cat.name as category_name",
     ])
-    .orderBy("date", "desc");
+    .orderBy("t.date", "desc");
 
   return transactions;
 };
@@ -62,6 +71,8 @@ const deleteUserTransaction = async ({ transactionId, userId }) => {
   if (deletedCount === 0) {
     throw ApiError.notFound("Transaction deletion error");
   }
+
+  return;
 };
 
 const updateUserTransaction = async ({
@@ -100,17 +111,24 @@ const updateUserTransaction = async ({
     throw ApiError.badRequest("No fields to update");
   }
 
-  const [updatedTransaction] = await knex("transactions")
-    .where({ id: transactionId })
-    .update(updateData)
-    .returning([
-      "id",
-      "type",
-      "amount",
+  await knex("transactions")
+    .where({ id: transactionId, user_id: userId })
+    .update(updateData);
+
+  const updatedTransaction = await knex("transactions as t")
+    .join("currencies as c", "t.currency_id", "c.id")
+    .join("categories as cat", "t.category_id", "cat.id")
+    .where({ "t.id": transactionId, "t.user_id": userId })
+    .select([
+      "t.id",
+      "t.type",
+      "t.amount",
+      "t.date",
+      "t.title",
       "currency_id",
       "category_id",
-      "date",
-      "title",
+      "c.symbol as currency_symbol",
+      "cat.name as category_name",
     ]);
 
   return updatedTransaction;

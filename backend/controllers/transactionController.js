@@ -4,6 +4,8 @@ const {
   deleteUserTransaction,
   updateUserTransaction,
 } = require("../services/transactionServices.js");
+const knex = require("../db.js");
+const xlsx = require("xlsx");
 
 const addTransaction = async (req, res, next) => {
   const userId = req.user.id;
@@ -65,9 +67,66 @@ const updateTransaction = async (req, res, next) => {
   }
 };
 
+const downloadTransactions = async (req, res, next) => {
+  const userId = req.user.id;
+  const { type } = req.query;
+
+  if (!type) {
+    return res.status(500).json({ message: "type is required" });
+  }
+
+  try {
+    // TODO: потестировать и вынести логику БД в сервис
+    const transactions = await knex("transactions as t")
+      .join("currencies as c", "t.currency_id", "c.id")
+      .join("categories as cat", "t.category_id", "cat.id")
+      .where({
+        "t.user_id": userId,
+        "t.type": type,
+      })
+      .select([
+        "t.id",
+        "t.type",
+        "t.amount",
+        "t.date",
+        "t.title",
+        "c.symbol as currency_symbol",
+        "cat.name as category_name",
+      ])
+      .orderBy("t.date", "desc");
+
+    const data = transactions.map((t) => ({
+      Category: t.category_name,
+      Title: t.title,
+      Amount: t.amount,
+      Currency: t.currency_symbol,
+      Date: t.date,
+    }));
+
+    const wb = xlsx.utils.book_new();
+    const ws = xlsx.utils.json_to_sheet(data);
+
+    xlsx.utils.book_append_sheet(wb, ws, type);
+
+    const buffer = xlsx.write(wb, { type: "buffer", bookType: "xlsx" });
+    const filename = `${type}.xlsx`;
+
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    );
+
+    res.send(buffer);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   addTransaction,
   getTransactions,
   deleteTransaction,
   updateTransaction,
+  downloadTransactions,
 };
