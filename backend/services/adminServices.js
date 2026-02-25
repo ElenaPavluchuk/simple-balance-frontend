@@ -34,21 +34,6 @@ const createNews = async ({ userId, title, content }) => {
   return newPost;
 };
 
-const getAllNews = async () => {
-  const allNews = await knex("news")
-    .leftJoin("users", "news.author_id", "users.id")
-    .select(
-      "news.id",
-      "news.title",
-      "news.content",
-      "news.published_at",
-      "users.full_name as author_name",
-    )
-    .orderBy("news.published_at", "desc");
-
-  return allNews;
-};
-
 const deleteNewsById = async (newsId) => {
   const deletedNews = await knex("news").where({ id: newsId }).del();
 
@@ -86,7 +71,6 @@ const updateNewsById = async ({ newsId, title, content }) => {
 module.exports = {
   getAllUsers,
   createNews,
-  getAllNews,
   deleteNewsById,
   updateNewsById,
 };

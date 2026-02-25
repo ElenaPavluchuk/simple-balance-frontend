@@ -2,6 +2,7 @@ const {
   getUserById,
   deleteUserById,
   updateUserById,
+  getAllNews,
 } = require("../services/userServices.js");
 
 const getUser = async (req, res, next) => {
@@ -47,4 +48,14 @@ const updateUser = async (req, res, next) => {
   }
 };
 
-module.exports = { getUser, deleteUser, updateUser };
+const getNews = async (_req, res, next) => {
+  try {
+    const allNews = await getAllNews();
+
+    return res.status(200).json(allNews);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { getUser, deleteUser, updateUser, getNews };

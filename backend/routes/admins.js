@@ -5,7 +5,6 @@ const {
   // getCurrencyRates,
   // updateCurrencyRates,
   addNews,
-  getNews,
   deleteNews,
   updateNews,
 } = require("../controllers/adminController.js");
@@ -18,7 +17,6 @@ router.delete("/users/:id", deleteUser);
 // router.patch("/exchange-rates", updateCurrencyRates);
 // router.get("/exchange-rates", getCurrencyRates);
 router.post("/news", addNews);
-router.get("/news", getNews);
 router.delete("/news/:id", deleteNews);
 router.put("/news/:id", updateNews);
 

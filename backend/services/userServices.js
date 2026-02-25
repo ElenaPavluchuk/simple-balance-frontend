@@ -82,4 +82,19 @@ const updateUserById = async ({
   return updatedUser;
 };
 
-module.exports = { getUserById, deleteUserById, updateUserById };
+const getAllNews = async () => {
+  const allNews = await knex("news")
+    .leftJoin("users", "news.author_id", "users.id")
+    .select(
+      "news.id",
+      "news.title",
+      "news.content",
+      "news.published_at",
+      "users.full_name as author_name",
+    )
+    .orderBy("news.published_at", "desc");
+
+  return allNews;
+};
+
+module.exports = { getUserById, deleteUserById, updateUserById, getAllNews };

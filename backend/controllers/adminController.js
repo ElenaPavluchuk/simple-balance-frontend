@@ -1,7 +1,6 @@
 const {
   getAllUsers,
   createNews,
-  getAllNews,
   deleteNewsById,
   updateNewsById,
 } = require("../services/adminServices.js");
@@ -46,16 +45,6 @@ const addNews = async (req, res, next) => {
   }
 };
 
-const getNews = async (_req, res, next) => {
-  try {
-    const allNews = await getAllNews();
-
-    return res.status(200).json(allNews);
-  } catch (err) {
-    next(err);
-  }
-};
-
 const deleteNews = async (req, res, next) => {
   const newsId = Number(req.params.id);
 
@@ -84,7 +73,6 @@ module.exports = {
   getUsers,
   deleteUser,
   addNews,
-  getNews,
   deleteNews,
   updateNews,
 };
