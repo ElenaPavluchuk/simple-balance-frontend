@@ -21,7 +21,7 @@ const registerUser = async ({ email, password, fullName }) => {
       email: email.toLowerCase(),
       password_hash: passwordHash,
       full_name: fullName.trim(),
-      user_role: "member",
+      user_role: "MEMBER",
       base_currency_id: usd.id,
     })
     .returning(["id", "user_role"]);

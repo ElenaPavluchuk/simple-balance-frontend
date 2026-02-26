@@ -27,8 +27,8 @@ const getDashboardData = async (req, res, next) => {
       .andWhere("currency_id", baseCurrencyId)
       .select(
         knex.raw(`
-          COALESCE(SUM(CASE WHEN type = 'income'  THEN amount ELSE 0 END), 0) as total_income,
-          COALESCE(SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END), 0) as total_expense
+          COALESCE(SUM(CASE WHEN type = 'INCOME'  THEN amount ELSE 0 END), 0) as total_income,
+          COALESCE(SUM(CASE WHEN type = 'EXPENSE' THEN amount ELSE 0 END), 0) as total_expense
         `),
       );
 
@@ -43,8 +43,8 @@ const getDashboardData = async (req, res, next) => {
       .andWhere("date", ">=", date30DaysAgo)
       .select(
         knex.raw(`
-          COALESCE(SUM(CASE WHEN type = 'income'  THEN amount ELSE 0 END), 0) as total_income,
-          COALESCE(SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END), 0) as total_expense
+          COALESCE(SUM(CASE WHEN type = 'INCOME'  THEN amount ELSE 0 END), 0) as total_income,
+          COALESCE(SUM(CASE WHEN type = 'EXPENSE' THEN amount ELSE 0 END), 0) as total_expense
         `),
       );
 
@@ -63,7 +63,7 @@ const getDashboardData = async (req, res, next) => {
       .orderBy([{ column: "type" }, { column: "total", order: "desc" }]);
 
     const incomeByCategory = last30ByCategory
-      .filter((r) => r.type === "income")
+      .filter((r) => r.type === "INCOME")
       .map((r) => ({ category: r.category, total: Number(r.total) }));
 
     const expenseByCategory = last30ByCategory
