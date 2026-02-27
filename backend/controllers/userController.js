@@ -42,7 +42,9 @@ const updateUser = async (req, res, next) => {
       imageUrl: req.file,
     });
 
-    return res.status(200).json(updatedUser);
+    return res
+      .status(200)
+      .json({ message: "User updated successfully", updatedUser });
   } catch (err) {
     next(err);
   }

@@ -3,10 +3,10 @@ const generateAccessToken = require("../utils/jwt.js");
 const ApiError = require("../errors/apiError.js");
 
 const register = async (req, res, next) => {
-  const { email, password, fullName } = req.body;
+  const { email, password, fullName, currencyId } = req.body;
 
-  if (!email?.trim() || !password?.trim() || !fullName?.trim()) {
-    return next(ApiError.badRequest("Email, password and name are required"));
+  if (!email?.trim() || !password || !fullName?.trim() || !currencyId) {
+    return next(ApiError.badRequest("All fields are required"));
   }
 
   if (password.length < 6) {
@@ -14,7 +14,7 @@ const register = async (req, res, next) => {
   }
 
   try {
-    const user = await registerUser({ email, password, fullName });
+    const user = await registerUser({ email, password, fullName, currencyId });
     const token = generateAccessToken(user.id, user.user_role);
 
     return res.status(201).json({
@@ -30,7 +30,7 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
+  if (!email.trim() || !password.trim()) {
     return next(ApiError.badRequest("Email and password are required"));
   }
 
