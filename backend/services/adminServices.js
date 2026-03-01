@@ -21,15 +21,15 @@ const createNews = async ({ userId, title, content }) => {
       content,
       author_id: userId,
     })
-    .returning(["id", "title", "content", "published_at"]);
+    .returning(["id", "title", "content", "published_at", "author_id"]);
 
   return newPost;
 };
 
 const deleteNewsById = async (id) => {
-  const deletedNews = await knex("news").where({ id }).del();
+  const deletedCount = await knex("news").where({ id }).del();
 
-  if (!deletedNews || deletedNews === 0) {
+  if (!deletedCount || deletedCount === 0) {
     throw ApiError.notFound("News not found");
   }
 

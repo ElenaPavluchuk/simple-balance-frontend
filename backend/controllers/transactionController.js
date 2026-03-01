@@ -6,14 +6,37 @@ const {
 } = require("../services/transactionServices.js");
 const knex = require("../db.js");
 const xlsx = require("xlsx");
+const ApiError = require("../errors/apiError.js");
 
 const addTransaction = async (req, res, next) => {
   const userId = req.user.id;
+  const { type, amount, currencyId, categoryId, date, title, notes } = req.body;
+
+  if (
+    !type ||
+    !amount ||
+    !currencyId ||
+    !categoryId ||
+    !date ||
+    !title.trim()
+  ) {
+    return next(
+      ApiError.badRequest(
+        "Type, amount, currency, category, date, title are required fields",
+      ),
+    );
+  }
 
   try {
     const transaction = await addUserTransaction({
       userId,
-      ...req.body,
+      type,
+      amount,
+      currencyId,
+      categoryId,
+      date,
+      title,
+      notes,
     });
 
     return res.status(201).json(transaction);
@@ -26,6 +49,10 @@ const getTransactions = async (req, res, next) => {
   const userId = req.user.id;
   const { type } = req.query;
 
+  if (!type) {
+    return next(ApiError.badRequest("Type is required field"));
+  }
+
   try {
     const transactions = await getUserTransactions({ userId, type });
 
@@ -36,7 +63,7 @@ const getTransactions = async (req, res, next) => {
 };
 
 const deleteTransaction = async (req, res, next) => {
-  const transactionId = Number(req.params.id);
+  const transactionId = req.params.id;
   const userId = req.user.id;
 
   try {
@@ -50,8 +77,9 @@ const deleteTransaction = async (req, res, next) => {
   }
 };
 
+// TODO: перед обновлениями нужно проверять, отлично ли значение полей для обновления и если нет, send: no fields to update error
 const updateTransaction = async (req, res, next) => {
-  const transactionId = Number(req.params.id);
+  const transactionId = req.params.id;
   const userId = req.user.id;
 
   try {
@@ -76,7 +104,7 @@ const downloadTransactions = async (req, res, next) => {
   }
 
   try {
-    // TODO: потестировать и вынести логику БД в сервис
+    // TODO: потестировать и вынести логику взаимодейсвия с БД в сервис
     const transactions = await knex("transactions as t")
       .join("currencies as c", "t.currency_id", "c.id")
       .join("categories as cat", "t.category_id", "cat.id")

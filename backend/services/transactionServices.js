@@ -9,56 +9,29 @@ const addUserTransaction = async ({
   categoryId,
   date,
   title,
+  notes,
 }) => {
-  const [result] = await knex("transactions")
+  const [transaction] = await knex("transactions")
     .insert({
       user_id: userId,
       type,
       amount,
       currency_id: currencyId,
       category_id: categoryId,
-      date: date,
+      date,
       title,
+      notes,
     })
     .returning("*");
-
-  if (!result) {
-    throw ApiError.badRequest("Failed to create transaction");
-  }
-
-  const transaction = await knex("transactions as t")
-    .join("currencies as c", "t.currency_id", "c.id")
-    .join("categories as cat", "t.category_id", "cat.id")
-    .select(
-      "t.id",
-      "t.type",
-      "t.amount",
-      "t.date",
-      "t.title",
-      "c.symbol as currency_symbol",
-      "cat.name as category_name",
-    )
-    .where("t.id", transaction.id)
-    .first();
 
   return transaction;
 };
 
 const getUserTransactions = async ({ userId, type }) => {
-  const transactions = await knex("transactions as t")
-    .join("currencies as c", "t.currency_id", "c.id")
-    .join("categories as cat", "t.category_id", "cat.id")
-    .where({ "t.user_id": userId, "t.type": type })
-    .select([
-      "t.id",
-      "t.type",
-      "t.amount",
-      "t.date",
-      "t.title",
-      "c.symbol as currency_symbol",
-      "cat.name as category_name",
-    ])
-    .orderBy("t.date", "desc");
+  const transactions = await knex("transactions")
+    .where({ user_id: userId, type: type })
+    .select("*")
+    .orderBy("date", "desc");
 
   return transactions;
 };
@@ -68,7 +41,7 @@ const deleteUserTransaction = async ({ transactionId, userId }) => {
     .where({ id: transactionId, user_id: userId })
     .del();
 
-  if (deletedCount === 0) {
+  if (!deletedCount || deletedCount === 0) {
     throw ApiError.notFound("Transaction deletion error");
   }
 
@@ -78,12 +51,11 @@ const deleteUserTransaction = async ({ transactionId, userId }) => {
 const updateUserTransaction = async ({
   transactionId,
   userId,
-  type,
   amount,
-  currencyId,
   categoryId,
   date,
   title,
+  notes,
 }) => {
   const transaction = await knex("transactions")
     .where({
@@ -98,12 +70,11 @@ const updateUserTransaction = async ({
 
   const updateData = Object.fromEntries(
     Object.entries({
-      type,
       amount,
-      currency_id: currencyId,
       category_id: categoryId,
       date,
       title,
+      notes,
     }).filter(([, value]) => value !== undefined),
   );
 
@@ -115,21 +86,9 @@ const updateUserTransaction = async ({
     .where({ id: transactionId, user_id: userId })
     .update(updateData);
 
-  const updatedTransaction = await knex("transactions as t")
-    .join("currencies as c", "t.currency_id", "c.id")
-    .join("categories as cat", "t.category_id", "cat.id")
-    .where({ "t.id": transactionId, "t.user_id": userId })
-    .select([
-      "t.id",
-      "t.type",
-      "t.amount",
-      "t.date",
-      "t.title",
-      "currency_id",
-      "category_id",
-      "c.symbol as currency_symbol",
-      "cat.name as category_name",
-    ]);
+  const [updatedTransaction] = await knex("transactions")
+    .where({ id: transactionId, user_id: userId })
+    .select(["id", "amount", "date", "title", "notes", "category_id"]);
 
   return updatedTransaction;
 };

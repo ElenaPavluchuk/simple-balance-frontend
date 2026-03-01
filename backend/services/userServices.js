@@ -20,9 +20,9 @@ const getUserById = async (id) => {
 
 const deleteUserById = async (id) => {
   // TODO: нужно удалить image перед вызовом del()
-  const deletedUser = await knex("users").where({ id }).del();
+  const deletedCount = await knex("users").where({ id }).del();
 
-  if (!deletedUser || deletedUser === 0) {
+  if (!deletedCount || deletedCount === 0) {
     throw ApiError.notFound("User to delete not found");
   }
 
@@ -83,7 +83,7 @@ const updateUserById = async ({
 
 const getAllNews = async () => {
   const allNews = await knex("news")
-    .select("id", "title", "content", "published_at")
+    .select("id", "title", "content", "published_at", "author_id")
     .orderBy("published_at", "desc");
 
   return allNews;
