@@ -2,9 +2,9 @@ const knex = require("../db.js");
 const ApiError = require("../errors/apiError.js");
 const bcrypt = require("bcrypt");
 
-const getUserById = async (userId) => {
+const getUserById = async (id) => {
   const user = await knex("users")
-    .where({ id: userId })
+    .where({ id })
     .select([
       "id",
       "email",
@@ -18,9 +18,13 @@ const getUserById = async (userId) => {
   return user;
 };
 
-const deleteUserById = async (userId) => {
+const deleteUserById = async (id) => {
   // TODO: нужно удалить image перед вызовом del()
-  await knex("users").where({ id: userId }).del();
+  const deletedUser = await knex("users").where({ id }).del();
+
+  if (!deletedUser || deletedUser === 0) {
+    throw ApiError.notFound("User to delete not found");
+  }
 
   return;
 };
@@ -79,7 +83,7 @@ const updateUserById = async ({
 
 const getAllNews = async () => {
   const allNews = await knex("news")
-    .select(["id", "title", "content", "published_at"])
+    .select("id", "title", "content", "published_at")
     .orderBy("published_at", "desc");
 
   return allNews;

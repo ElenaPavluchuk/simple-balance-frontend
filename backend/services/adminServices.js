@@ -5,8 +5,10 @@ const getAllUsers = async () => {
   const allUsers = await knex("users").select(
     "id",
     "email",
-    "user_role",
     "full_name",
+    "profile_image_url",
+    "user_role",
+    "base_currency_id",
   );
 
   return allUsers;
@@ -19,27 +21,19 @@ const createNews = async ({ userId, title, content }) => {
       content,
       author_id: userId,
     })
-    .returning([
-      "news.id",
-      "news.title",
-      "news.content",
-      "news.published_at",
-      knex.raw(`(
-        SELECT full_name 
-        FROM users 
-        WHERE users.id = news.author_id
-      ) as author_name`),
-    ]);
+    .returning(["id", "title", "content", "published_at"]);
 
   return newPost;
 };
 
-const deleteNewsById = async (newsId) => {
-  const deletedNews = await knex("news").where({ id: newsId }).del();
+const deleteNewsById = async (id) => {
+  const deletedNews = await knex("news").where({ id }).del();
 
-  if (deletedNews === 0) {
+  if (!deletedNews || deletedNews === 0) {
     throw ApiError.notFound("News not found");
   }
+
+  return;
 };
 
 const updateNewsById = async ({ newsId, title, content }) => {

@@ -15,8 +15,11 @@ exports.seed = async function (knex) {
 
   const [admin] = await knex("users")
     .insert({
-      email: "admin@test.com",
-      password_hash: bcrypt.hashSync("123test", bcrypt.genSaltSync(7)),
+      email: process.env.ADMIN_EMAIL,
+      password_hash: bcrypt.hashSync(
+        process.env.ADMIN_PASSWORD,
+        bcrypt.genSaltSync(7),
+      ),
       full_name: "System Admin",
       profile_image_url: null,
       user_role: "ADMIN",

@@ -5,7 +5,7 @@ const ApiError = require("../errors/apiError.js");
 const register = async (req, res, next) => {
   const { email, password, fullName, currencyId } = req.body;
 
-  if (!email?.trim() || !password || !fullName?.trim() || !currencyId) {
+  if (!email?.trim() || !password.trim() || !fullName?.trim() || !currencyId) {
     return next(ApiError.badRequest("All fields are required"));
   }
 
