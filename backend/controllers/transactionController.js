@@ -3,6 +3,7 @@ const {
   getUserTransactions,
   deleteUserTransaction,
   updateUserTransaction,
+  getData,
 } = require("../services/transactionServices.js");
 const knex = require("../db.js");
 const xlsx = require("xlsx");
@@ -95,6 +96,18 @@ const updateTransaction = async (req, res, next) => {
   }
 };
 
+const getDashboardData = async (req, res, next) => {
+  const userId = req.user.id;
+
+  try {
+    const data = await getData(userId);
+
+    res.status(200).json(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
 const downloadTransactions = async (req, res, next) => {
   const userId = req.user.id;
   const { type } = req.query;
@@ -157,4 +170,5 @@ module.exports = {
   deleteTransaction,
   updateTransaction,
   downloadTransactions,
+  getDashboardData,
 };

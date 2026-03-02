@@ -93,9 +93,62 @@ const updateUserTransaction = async ({
   return updatedTransaction;
 };
 
+const getData = async (userId) => {
+  const [totals] = await knex("transactions")
+    .where({ user_id: userId })
+    .select(
+      knex.raw(`
+          COALESCE(SUM(CASE WHEN type = 'INCOME'  THEN amount ELSE 0 END), 0) as total_income,
+          COALESCE(SUM(CASE WHEN type = 'EXPENSE' THEN amount ELSE 0 END), 0) as total_expense
+        `),
+    );
+
+  const totalIncome = Number(totals.total_income);
+  const totalExpense = Number(totals.total_expense);
+  const totalBalance = totalIncome - totalExpense;
+
+  const date30DaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+  const [last30Totals] = await knex("transactions")
+    .where("user_id", userId)
+    .andWhere("date", ">=", date30DaysAgo)
+    .select(
+      knex.raw(`
+          COALESCE(SUM(CASE WHEN type = 'INCOME'  THEN amount ELSE 0 END), 0) as total_income,
+          COALESCE(SUM(CASE WHEN type = 'EXPENSE' THEN amount ELSE 0 END), 0) as total_expense
+        `),
+    );
+
+  const last30Income = Number(last30Totals.total_income);
+  const last30Expense = Number(last30Totals.total_expense);
+
+  const last5 = await knex("transactions")
+    .where({ user_id: userId })
+    .select(
+      "id",
+      "type",
+      "amount",
+      "date",
+      "title",
+      "currency_id",
+      "category_id",
+    )
+    .orderBy("date", "desc")
+    .limit(5);
+
+  return {
+    total: { totalBalance, totalIncome, totalExpense },
+    last30Days: {
+      income: last30Income,
+      expense: last30Expense,
+    },
+    recent: { transactions: last5 },
+  };
+};
+
 module.exports = {
   addUserTransaction,
   getUserTransactions,
   deleteUserTransaction,
   updateUserTransaction,
+  getData,
 };
