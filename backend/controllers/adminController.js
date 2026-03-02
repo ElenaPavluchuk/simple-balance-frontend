@@ -18,9 +18,9 @@ const getUsers = async (_req, res, next) => {
 };
 
 const deleteUser = async (req, res, next) => {
-  const { id } = req.params;
+  const userId = req.params.id;
   try {
-    await deleteUserById(id);
+    await deleteUserById(userId);
 
     res.status(200).json({ message: "User deleted successfully" });
   } catch (err) {
@@ -32,7 +32,7 @@ const addNews = async (req, res, next) => {
   const userId = req.user.id;
   const { title, content } = req.body;
 
-  if (!title || !content) {
+  if (!title.trim() || !content.trim()) {
     return next(ApiError.badRequest("All fields are required"));
   }
 
@@ -46,7 +46,7 @@ const addNews = async (req, res, next) => {
 };
 
 const deleteNews = async (req, res, next) => {
-  const newsId = Number(req.params.id);
+  const newsId = req.params.id;
 
   try {
     await deleteNewsById(newsId);
@@ -58,8 +58,9 @@ const deleteNews = async (req, res, next) => {
 };
 
 const updateNews = async (req, res, next) => {
-  const newsId = Number(req.params.id);
+  const newsId = req.params.id;
   const { title, content } = req.body;
+
   try {
     const updatedNews = await updateNewsById({ newsId, title, content });
 

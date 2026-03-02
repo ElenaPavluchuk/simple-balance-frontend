@@ -6,7 +6,7 @@ exports.up = async function (knex) {
   await knex.schema.createTable("currencies", (table) => {
     table.increments("id").primary();
     table.string("code", 3).notNullable().unique();
-    table.string("symbol", 5).notNullable();
+    table.string("symbol", 3).notNullable();
     table.string("name").notNullable();
     table.integer("precision").notNullable().defaultTo(2);
     table.boolean("is_active").notNullable().defaultTo(true);
@@ -20,12 +20,12 @@ exports.up = async function (knex) {
     table.string("full_name").notNullable();
     table.string("profile_image_url").nullable().defaultTo(null);
     table
-      .enu("user_role", ["admin", "member"], {
+      .enu("user_role", ["ADMIN", "MEMBER"], {
         useNative: true,
         enumName: "user_role_enum",
       })
       .notNullable()
-      .defaultTo("member");
+      .defaultTo("MEMBER");
     table
       .integer("base_currency_id")
       .unsigned()
@@ -40,7 +40,7 @@ exports.up = async function (knex) {
     table.increments("id").primary();
     table.string("name").notNullable();
     table
-      .enu("type", ["income", "expense"], {
+      .enu("type", ["INCOME", "EXPENSE"], {
         useNative: true,
         enumName: "category_type_enum",
       })
@@ -68,12 +68,12 @@ exports.up = async function (knex) {
       .inTable("users")
       .onDelete("CASCADE");
     table
-      .enu("type", ["income", "expense"], {
+      .enu("type", ["INCOME", "EXPENSE"], {
         useNative: true,
         enumName: "transaction_type_enum",
       })
       .notNullable();
-    table.decimal("amount", 14, 4).notNullable();
+    table.decimal("amount", 15, 2).notNullable();
     table
       .integer("currency_id")
       .unsigned()

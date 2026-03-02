@@ -13,13 +13,6 @@ exports.seed = async function (knex) {
       is_active: true,
     },
     {
-      code: "EUR",
-      symbol: "€",
-      name: "Euro",
-      precision: 2,
-      is_active: true,
-    },
-    {
       code: "RUB",
       symbol: "₽",
       name: "Russian Ruble",

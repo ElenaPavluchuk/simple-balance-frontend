@@ -10,16 +10,19 @@ exports.seed = async function (knex) {
   const usd = await knex("currencies").where({ code: "USD" }).first();
 
   if (!usd) {
-    throw new Error("USD currency not found. Run currencies seed first");
+    throw new Error("USD currency not found");
   }
 
   const [admin] = await knex("users")
     .insert({
-      email: "admin@test.com",
-      password_hash: bcrypt.hashSync("123test", bcrypt.genSaltSync(7)),
+      email: process.env.ADMIN_EMAIL,
+      password_hash: bcrypt.hashSync(
+        process.env.ADMIN_PASSWORD,
+        bcrypt.genSaltSync(7),
+      ),
       full_name: "System Admin",
       profile_image_url: null,
-      user_role: "admin",
+      user_role: "ADMIN",
       base_currency_id: usd.id,
     })
     .returning(["id", "email", "user_role"]);

@@ -2,24 +2,27 @@ const knex = require("../db.js");
 const ApiError = require("../errors/apiError.js");
 const bcrypt = require("bcrypt");
 
-const getUserById = async (userId) => {
+const getUserById = async (id) => {
   const user = await knex("users")
-    .where({ id: userId })
-    .select(["id", "email", "full_name", "profile_image_url"])
+    .where({ id })
+    .select([
+      "id",
+      "email",
+      "full_name",
+      "profile_image_url",
+      "user_role",
+      "base_currency_id",
+    ])
     .first();
-
-  if (!user) {
-    throw ApiError.notFound("User not found");
-  }
 
   return user;
 };
 
-const deleteUserById = async (userId) => {
+const deleteUserById = async (id) => {
   // TODO: нужно удалить image перед вызовом del()
-  const deletedUser = await knex("users").where({ id: userId }).del();
+  const deletedCount = await knex("users").where({ id }).del();
 
-  if (!deletedUser || deletedUser === 0) {
+  if (!deletedCount || deletedCount === 0) {
     throw ApiError.notFound("User to delete not found");
   }
 
@@ -35,14 +38,10 @@ const updateUserById = async ({
 }) => {
   const user = await knex("users").where({ id: userId }).first();
 
-  if (!user) {
-    throw ApiError.notFound("User to update not found");
-  }
-
   const updateData = {};
 
   if (fullName) {
-    updateData.full_name = fullName;
+    updateData.full_name = fullName.trim();
   }
 
   if (imageUrl) {
@@ -61,13 +60,13 @@ const updateUserById = async ({
       );
     }
 
-    const isMatch = await bcrypt.compare(currentPassword, user.password_hash);
+    const isValid = await bcrypt.compare(currentPassword, user.password_hash);
 
-    if (!isMatch) {
+    if (!isValid) {
       throw ApiError.forbidden("Incorrect password");
     }
 
-    updateData.password_hash = await bcrypt.hash(newPassword, 10);
+    updateData.password_hash = await bcrypt.hash(newPassword, 7);
   }
 
   if (Object.keys(updateData).length === 0) {
@@ -77,22 +76,15 @@ const updateUserById = async ({
   const [updatedUser] = await knex("users")
     .where({ id: userId })
     .update(updateData)
-    .returning(["id", "email", "full_name", "profile_image_url"]);
+    .returning(["id", "full_name", "profile_image_url"]);
 
   return updatedUser;
 };
 
 const getAllNews = async () => {
   const allNews = await knex("news")
-    .leftJoin("users", "news.author_id", "users.id")
-    .select(
-      "news.id",
-      "news.title",
-      "news.content",
-      "news.published_at",
-      "users.full_name as author_name",
-    )
-    .orderBy("news.published_at", "desc");
+    .select("id", "title", "content", "published_at", "author_id")
+    .orderBy("published_at", "desc");
 
   return allNews;
 };

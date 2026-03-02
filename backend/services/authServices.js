@@ -2,7 +2,7 @@ const knex = require("../db.js");
 const bcrypt = require("bcrypt");
 const ApiError = require("../errors/apiError.js");
 
-const registerUser = async ({ email, password, fullName }) => {
+const registerUser = async ({ email, fullName, password, currencyId }) => {
   const existingUser = await knex("users").where({ email }).first();
 
   if (existingUser) {
@@ -10,19 +10,21 @@ const registerUser = async ({ email, password, fullName }) => {
   }
 
   const passwordHash = await bcrypt.hash(password, 7);
-  const usd = await knex("currencies").where({ code: "USD" }).first();
+  const baseCurrency = await knex("currencies")
+    .where({ id: currencyId })
+    .first();
 
-  if (!usd) {
-    throw ApiError.notFound("USD currency not found");
+  if (!baseCurrency) {
+    throw ApiError.notFound("Currency not found");
   }
 
   const [user] = await knex("users")
     .insert({
-      email: email.toLowerCase(),
+      email: email,
       password_hash: passwordHash,
-      full_name: fullName.trim(),
-      user_role: "member",
-      base_currency_id: usd.id,
+      full_name: fullName,
+      user_role: "MEMBER",
+      base_currency_id: baseCurrency.id,
     })
     .returning(["id", "user_role"]);
 
@@ -40,7 +42,6 @@ const loginUser = async ({ email, password }) => {
   }
 
   const { password_hash, ...safeUser } = user;
-
   const isValid = await bcrypt.compare(password, password_hash);
 
   if (!isValid) {
