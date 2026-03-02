@@ -19,7 +19,6 @@ const getUserById = async (id) => {
 };
 
 const deleteUserById = async (id) => {
-  // TODO: нужно удалить image перед вызовом del()
   const deletedCount = await knex("users").where({ id }).del();
 
   if (!deletedCount || deletedCount === 0) {
@@ -45,7 +44,6 @@ const updateUserById = async ({
   }
 
   if (imageUrl) {
-    // TODO: remove profile image also
     updateData.profile_image_url = imageUrl.path;
   }
 

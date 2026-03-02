@@ -25,6 +25,8 @@ const registerUser = async ({ email, fullName, password, currencyId }) => {
       full_name: fullName,
       user_role: "MEMBER",
       base_currency_id: baseCurrency.id,
+      // TODO: задавать image url на этапе регистрации
+      // profile_image_url: ...
     })
     .returning(["id", "user_role"]);
 
