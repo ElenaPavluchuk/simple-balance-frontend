@@ -4,6 +4,7 @@ const {
   deleteUserTransaction,
   updateUserTransaction,
   getData,
+  getAllCategories,
 } = require("../services/transactionServices.js");
 const knex = require("../db.js");
 const xlsx = require("xlsx");
@@ -78,7 +79,6 @@ const deleteTransaction = async (req, res, next) => {
   }
 };
 
-// TODO: перед обновлениями нужно проверять, отлично ли значение полей для обновления и если нет, send: no fields to update error
 const updateTransaction = async (req, res, next) => {
   const transactionId = req.params.id;
   const userId = req.user.id;
@@ -117,7 +117,7 @@ const downloadTransactions = async (req, res, next) => {
   }
 
   try {
-    // TODO: потестировать и вынести логику взаимодейсвия с БД в сервис
+    // TODO: test and refactoring
     const transactions = await knex("transactions as t")
       .join("currencies as c", "t.currency_id", "c.id")
       .join("categories as cat", "t.category_id", "cat.id")
@@ -164,6 +164,22 @@ const downloadTransactions = async (req, res, next) => {
   }
 };
 
+const getCategories = async (req, res, next) => {
+  const { type } = req.query;
+
+  if (!type) {
+    return next(ApiError.badRequest("Type is required field"));
+  }
+
+  try {
+    const categories = await getAllCategories(type);
+
+    return res.status(200).json(categories);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   addTransaction,
   getTransactions,
@@ -171,4 +187,5 @@ module.exports = {
   updateTransaction,
   downloadTransactions,
   getDashboardData,
+  getCategories,
 };

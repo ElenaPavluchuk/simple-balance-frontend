@@ -1,4 +1,8 @@
-const { registerUser, loginUser } = require("../services/authServices.js");
+const {
+  registerUser,
+  loginUser,
+  getAllCurrencies,
+} = require("../services/authServices.js");
 const generateAccessToken = require("../utils/jwt.js");
 const ApiError = require("../errors/apiError.js");
 
@@ -46,4 +50,14 @@ const login = async (req, res, next) => {
   }
 };
 
-module.exports = { register, login };
+const getCurrencies = async (req, res, next) => {
+  try {
+    const currencies = await getAllCurrencies();
+
+    return res.status(200).json(currencies);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { register, login, getCurrencies };
