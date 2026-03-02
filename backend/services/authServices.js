@@ -51,4 +51,10 @@ const loginUser = async ({ email, password }) => {
   return safeUser;
 };
 
-module.exports = { registerUser, loginUser };
+const getAllCurrencies = async () => {
+  const currencies = await knex("currencies").select("code", "symbol", "name");
+
+  return currencies;
+};
+
+module.exports = { registerUser, loginUser, getAllCurrencies };

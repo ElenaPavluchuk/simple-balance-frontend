@@ -145,10 +145,20 @@ const getData = async (userId) => {
   };
 };
 
+const getAllCategories = async (type) => {
+  const categories = await knex("categories")
+    .where({ type })
+    .select("id", "name", "type", "user_id")
+    .orderBy("created_at", "desc");
+
+  return categories;
+};
+
 module.exports = {
   addUserTransaction,
   getUserTransactions,
   deleteUserTransaction,
   updateUserTransaction,
   getData,
+  getAllCategories,
 };
