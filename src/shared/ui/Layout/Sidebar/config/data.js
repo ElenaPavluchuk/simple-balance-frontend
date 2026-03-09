@@ -1,6 +1,6 @@
 import { Home, Wallet, CreditCard } from "lucide-react";
 
-export const sidebarMenu = [
+export const data = [
   {
     key: "dashboard",
     label: "Dashboard",
