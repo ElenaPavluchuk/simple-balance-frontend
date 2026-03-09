@@ -1,6 +1,12 @@
+import PropTypes from "prop-types";
 import { Link, useLocation } from "react-router";
 import { data } from "./config/data";
 import { Menu, X } from "lucide-react";
+
+Sidebar.propTypes = {
+  isSidebarClose: PropTypes.bool.isRequired,
+  toggleSidebar: PropTypes.func.isRequired,
+};
 
 export default function Sidebar({ isSidebarClose, toggleSidebar }) {
   const location = useLocation();
