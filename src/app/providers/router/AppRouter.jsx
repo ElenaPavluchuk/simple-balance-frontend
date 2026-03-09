@@ -4,15 +4,17 @@ import { routeConfig } from "./routeConfig/routeConfig.jsx";
 export const AppRouter = () => {
   return (
     <Routes>
-      <Route path={routeConfig.path} element={routeConfig.element}>
-        {routeConfig.children.map((route, index) => (
-          <Route
-            key={index}
-            {...(route.index ? { index: true } : { path: route.path })}
-            element={route.element}
-          />
-        ))}
-      </Route>
+      {routeConfig.map((rootRoute, index) => (
+        <Route key={index} path={rootRoute.path} element={rootRoute.element}>
+          {rootRoute.children?.map((child, childIndex) => (
+            <Route
+              key={childIndex}
+              {...(child.index ? { index: true } : { path: child.path })}
+              element={child.element}
+            />
+          ))}
+        </Route>
+      ))}
     </Routes>
   );
 };
