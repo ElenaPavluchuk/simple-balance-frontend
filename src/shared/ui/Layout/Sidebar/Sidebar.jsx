@@ -17,14 +17,11 @@ export default function Sidebar({ isSidebarClose, toggleSidebar }) {
 
       <nav className="flex-1 pt-4 bg-white">
         <ul className="space-y-2 px-3">
-          {data.map((item) => {
-            const Icon = item.icon;
-
-            return (
-              <li key={item.key}>
-                <Link
-                  to={item.path}
-                  className={`
+          {data.map((item) => (
+            <li key={item.key}>
+              <Link
+                to={item.path}
+                className={`
                     flex items-center gap-3 px-3 py-3 rounded-lg transition-colors
                     ${
                       location.pathname === item.path
@@ -32,16 +29,15 @@ export default function Sidebar({ isSidebarClose, toggleSidebar }) {
                         : "text-gray-700 hover:bg-gray-100"
                     }
                   `}
-                >
-                  <span className={`${isSidebarClose ? "mx-auto" : ""}`}>
-                    <Icon size={20} />
-                  </span>
+              >
+                <span className={`${isSidebarClose ? "mx-auto" : ""}`}>
+                  <item.icon size={20} />
+                </span>
 
-                  {!isSidebarClose && <span>{item.label}</span>}
-                </Link>
-              </li>
-            );
-          })}
+                {!isSidebarClose && <span>{item.label}</span>}
+              </Link>
+            </li>
+          ))}
         </ul>
       </nav>
 
