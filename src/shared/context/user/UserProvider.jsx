@@ -3,22 +3,18 @@ import { UserContext } from "./UserContext";
 
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   const updateUser = (userData) => {
     setUser(userData);
-    setLoading(false);
   };
 
   const clearUser = () => {
     localStorage.removeItem("token");
     setUser(null);
-    setLoading(false);
   };
 
   const value = {
     user,
-    loading,
     updateUser,
     clearUser,
   };

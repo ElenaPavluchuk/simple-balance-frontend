@@ -50,7 +50,7 @@ const login = async (req, res, next) => {
   }
 };
 
-const getCurrencies = async (req, res, next) => {
+const getCurrencies = async (_req, res, next) => {
   try {
     const currencies = await getAllCurrencies();
 
