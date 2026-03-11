@@ -2,7 +2,6 @@ const knex = require("../db.js");
 const bcrypt = require("bcrypt");
 const ApiError = require("../errors/apiError.js");
 
-// TODO: отправлять всю информацию о пользователе для добавления в context
 const registerUser = async ({ email, fullName, password, currencyId }) => {
   const existingUser = await knex("users").where({ email }).first();
 
