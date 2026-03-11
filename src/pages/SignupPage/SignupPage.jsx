@@ -35,7 +35,7 @@ export default function SignupPage() {
           placeholder="Full name"
           className="border rounded p-2 w-md"
         />
-        {errors.fullName && <p>{errors.fullName}</p>}
+        {errors?.fullName && <p>{errors.fullName}</p>}
 
         <input
           value={email}
