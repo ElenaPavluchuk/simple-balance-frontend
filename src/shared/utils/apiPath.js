@@ -2,7 +2,6 @@ export const API_PATHS = {
   AUTH: {
     REGISTRATION: "/api/auth/registration",
     LOGIN: "/api/auth/login",
-    GET_CURRENCIES: "/api/auth/currencies",
   },
   USERS: {
     USER_PROFILE: "/api/users/profile",
@@ -17,8 +16,12 @@ export const API_PATHS = {
   TRANSACTIONS: {
     ADD_TRANSACTION: "/api/transactions",
     GET_TRANSACTIONS_BY_TYPE: (type) => `/api/transactions?type=${type}`,
+    TRANSACTIONS_BY_ID: (id) => `/api/transactions/${id}`,
     DASHBOARD: "/api/transactions/dashboard",
     GET_CATEGORIES_BY_TYPE: (type) =>
       `/api/transactions/categories?type=${type}`,
+  },
+  CURRENCIES: {
+    GET_CURRENCIES: "/api/currencies",
   },
 };
