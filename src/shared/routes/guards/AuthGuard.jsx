@@ -1,10 +1,9 @@
-import { useUser } from "../../../../shared/context/user/useUser";
 import { Navigate } from "react-router";
 
 export const AuthGuard = ({ children }) => {
-  const { user } = useUser();
+  const isAuth = localStorage.getItem("token");
 
-  if (!user) {
+  if (!isAuth) {
     return <Navigate to="/login" replace />;
   }
 

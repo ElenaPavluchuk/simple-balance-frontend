@@ -1,6 +1,6 @@
 import UserProvider from "../../../shared/context/user/UserProvider";
 import { Routes, Route } from "react-router";
-import { routeConfig } from "../../../shared/config/routeConfig";
+import { routeConfig } from "../../../shared/routes/config/routeConfig";
 
 export const AppRouter = () => {
   return (
