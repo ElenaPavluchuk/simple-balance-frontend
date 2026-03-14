@@ -1,8 +1,21 @@
 const {
+  getUserById,
   deleteUserById,
   updateUserById,
   getAllNews,
 } = require("../services/userServices.js");
+
+const getUser = async (req, res, next) => {
+  const userId = req.user.id;
+
+  try {
+    const user = await getUserById(userId);
+
+    return res.status(200).json(user);
+  } catch (err) {
+    next(err);
+  }
+};
 
 const deleteUser = async (req, res, next) => {
   const userId = req.user.id;
@@ -47,4 +60,4 @@ const getNews = async (_req, res, next) => {
   }
 };
 
-module.exports = { deleteUser, updateUser, getNews };
+module.exports = { getUser, deleteUser, updateUser, getNews };

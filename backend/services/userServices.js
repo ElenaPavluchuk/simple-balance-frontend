@@ -2,6 +2,22 @@ const knex = require("../db.js");
 const ApiError = require("../errors/apiError.js");
 const bcrypt = require("bcrypt");
 
+const getUserById = async (id) => {
+  const user = await knex("users")
+    .where({ id })
+    .select([
+      "id",
+      "email",
+      "full_name",
+      "profile_image_url",
+      "user_role",
+      "base_currency_id",
+    ])
+    .first();
+
+  return user;
+};
+
 const deleteUserById = async (id) => {
   const deletedCount = await knex("users").where({ id }).del();
 
@@ -71,4 +87,4 @@ const getAllNews = async () => {
   return allNews;
 };
 
-module.exports = { deleteUserById, updateUserById, getAllNews };
+module.exports = { getUserById, deleteUserById, updateUserById, getAllNews };
