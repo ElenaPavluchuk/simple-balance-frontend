@@ -1,4 +1,4 @@
-import UserProvider from "../../../shared/context/user/UserProvider";
+import UserProvider from "../user/UserProvider";
 import { Routes, Route } from "react-router";
 import { routeConfig } from "../../../shared/routes/config/routeConfig";
 
