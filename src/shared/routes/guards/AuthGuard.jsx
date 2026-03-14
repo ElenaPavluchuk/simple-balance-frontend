@@ -1,5 +1,5 @@
 import { Navigate } from "react-router";
-import { useUser } from "../../context/user/useUser";
+import { useAuth } from "../../context/auth/useAuth";
 
 // export const AuthGuard = ({ children }) => {
 //   const isAuth = localStorage.getItem("token");
@@ -13,7 +13,7 @@ import { useUser } from "../../context/user/useUser";
 
 // protected route
 export function AuthGuard({ children }) {
-  const { user, isLoading } = useUser();
+  const { user, isLoading } = useAuth();
 
   if (isLoading) {
     return <div>Loading...</div>;

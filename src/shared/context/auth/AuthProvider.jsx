@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
-import { UserContext } from "../../../shared/context/user/UserContext";
-import axiosInstance from "../../../shared/utils/axiosInstance";
-import { API_PATHS } from "../../../shared/utils/apiPaths";
+import { AuthContext } from "./AuthContext";
+import axiosInstance from "../../utils/axiosInstance";
+import { API_PATHS } from "../../utils/apiPaths";
 
-const UserProvider = ({ children }) => {
+const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -31,7 +31,11 @@ const UserProvider = ({ children }) => {
     loadUser();
   }, []);
 
-  const updateUser = (userData) => setUser(userData);
+  // const updateUser = (userData) => setUser(userData);
+  const login = (token, userData) => {
+    localStorage.setItem("token", token);
+    setUser(userData);
+  };
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -42,13 +46,14 @@ const UserProvider = ({ children }) => {
     () => ({
       user,
       isLoading,
-      updateUser,
+      // updateUser,
+      login,
       logout,
     }),
     [user, isLoading],
   );
 
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export default UserProvider;
+export default AuthProvider;
