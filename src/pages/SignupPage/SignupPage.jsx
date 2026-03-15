@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Select from "react-select";
 import axiosInstance from "../../shared/utils/axiosInstance";
 import { API_PATHS } from "../../shared/utils/apiPaths";
+import { useAuth } from "../../shared/context/auth/useAuth";
 
 export default function SignupPage() {
   const [fullName, setFullName] = useState("");
@@ -11,6 +12,8 @@ export default function SignupPage() {
   const [selectedCurrency, setSelectedCurrency] = useState(null);
   const [currencyOptions, setCurrencyOptions] = useState([]);
   const [errors, setErrors] = useState(null);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getCurrencyOptions = async () => {
@@ -76,10 +79,38 @@ export default function SignupPage() {
     setErrors((prev) => ({ ...prev, selectedCurrency: "" }));
   };
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
 
     if (!validate()) return;
+
+    const data = {
+      currencyId: selectedCurrency.value,
+      fullName: fullName.trim().toLowerCase(),
+      email: email.trim().toLowerCase(),
+      password: password.trim().toLowerCase(),
+    };
+
+    try {
+      const response = await axiosInstance.post(
+        API_PATHS.AUTH.REGISTRATION,
+        data,
+      );
+
+      if (response.status === 201) {
+        const authData = response.data;
+        login(authData);
+        navigate("/");
+      }
+
+      setSelectedCurrency(null);
+      setFullName("");
+      setEmail("");
+      setPassword("");
+      setErrors({});
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (

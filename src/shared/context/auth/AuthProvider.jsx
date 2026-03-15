@@ -32,9 +32,9 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   // const updateUser = (userData) => setUser(userData);
-  const login = (token, userData) => {
+  const login = ({ token, user }) => {
     localStorage.setItem("token", token);
-    setUser(userData);
+    setUser(user);
   };
 
   const logout = () => {
