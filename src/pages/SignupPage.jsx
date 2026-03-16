@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import Select from "react-select";
-import axiosInstance from "../../shared/utils/axiosInstance";
-import { API_PATHS } from "../../shared/utils/apiPaths";
-import { useAuth } from "../../shared/context/auth/useAuth";
+import axiosInstance from "../shared/utils/axiosInstance";
+import { API_PATHS } from "../shared/utils/apiPaths";
+import { useAuth } from "../shared/context/auth/useAuth";
+import { authValidate } from "../shared/utils/authValidate";
 
 export default function SignupPage() {
   const [fullName, setFullName] = useState("");
@@ -11,7 +12,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [selectedCurrency, setSelectedCurrency] = useState(null);
   const [currencyOptions, setCurrencyOptions] = useState([]);
-  const [errors, setErrors] = useState({});
+  const [validateErrors, setValidateErrors] = useState({});
   const [apiError, setApiError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
@@ -46,50 +47,28 @@ export default function SignupPage() {
     getCurrencyOptions();
   }, []);
 
-  const validate = () => {
-    const validateErrors = {};
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!selectedCurrency) {
-      validateErrors.selectedCurrency = "Currency is required";
-    }
-
-    if (!fullName.trim()) {
-      validateErrors.fullName = "Full name is required";
-    } else if (fullName.length > 100) {
-      validateErrors.fullName =
-        "Full name must be no more than 100 characters long";
-    }
-
-    if (!emailRegex.test(email)) {
-      validateErrors.email = "Please enter a valide email address";
-    }
-
-    if (!password) {
-      validateErrors.password = "Password is required";
-    } else if (password.length < 6 || password.length > 128) {
-      validateErrors.password =
-        "Password length must be between 6 and 128 characters";
-    }
-
-    setErrors(validateErrors);
-    return Object.keys(validateErrors).length === 0;
-  };
-
   const handleChangeCurrency = (option) => {
     setSelectedCurrency(option || null);
-    setErrors((prev) => ({ ...prev, selectedCurrency: "" }));
+    setValidateErrors((prev) => ({ ...prev, selectedCurrency: "" }));
   };
 
   const handleSignup = async (e) => {
     e.preventDefault();
 
-    if (!validate()) return;
+    const errors = authValidate({
+      selectedCurrency,
+      fullName,
+      email,
+      password,
+    });
+
+    setValidateErrors(errors);
+    if (Object.keys(errors).length) return;
 
     const data = {
       currencyId: selectedCurrency.value,
       fullName: fullName.trim(),
-      email: email.trim(),
+      email,
       password,
     };
 
@@ -127,8 +106,10 @@ export default function SignupPage() {
             onChange={handleChangeCurrency}
             options={currencyOptions}
           />
-          {errors.selectedCurrency && (
-            <p className="text-red-500 italic">{errors.selectedCurrency}</p>
+          {validateErrors.selectedCurrency && (
+            <p className="text-red-500 italic">
+              {validateErrors.selectedCurrency}
+            </p>
           )}
         </div>
 
@@ -136,39 +117,41 @@ export default function SignupPage() {
           value={fullName}
           onChange={(e) => {
             setFullName(e.target.value);
-            setErrors((prev) => ({ ...prev, fullName: "" }));
+            setValidateErrors((prev) => ({ ...prev, fullName: "" }));
           }}
           placeholder="Full name"
           className="border rounded p-2 w-md"
         />
-        {errors.fullName && (
-          <p className="text-red-500 italic">{errors.fullName}</p>
+        {validateErrors.fullName && (
+          <p className="text-red-500 italic">{validateErrors.fullName}</p>
         )}
 
         <input
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
-            setErrors((prev) => ({ ...prev, email: "" }));
+            setValidateErrors((prev) => ({ ...prev, email: "" }));
           }}
           placeholder="Email"
           className="border rounded p-2 w-md"
           type="email"
         />
-        {errors.email && <p className="text-red-500 italic">{errors.email}</p>}
+        {validateErrors.email && (
+          <p className="text-red-500 italic">{validateErrors.email}</p>
+        )}
 
         <input
           value={password}
           onChange={(e) => {
             setPassword(e.target.value);
-            setErrors((prev) => ({ ...prev, password: "" }));
+            setValidateErrors((prev) => ({ ...prev, password: "" }));
           }}
           placeholder="Password"
           className="border rounded p-2 w-md"
           type="password"
         />
-        {errors.password && (
-          <p className="text-red-500 italic">{errors.password}</p>
+        {validateErrors.password && (
+          <p className="text-red-500 italic">{validateErrors.password}</p>
         )}
 
         <button
