@@ -11,7 +11,9 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [selectedCurrency, setSelectedCurrency] = useState(null);
   const [currencyOptions, setCurrencyOptions] = useState([]);
-  const [errors, setErrors] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -22,14 +24,14 @@ export default function SignupPage() {
           API_PATHS.CURRENCIES.GET_CURRENCIES,
         );
 
-        const normolizeOptions = response?.data?.map((o) => ({
+        const normolizedOptions = response?.data?.map((o) => ({
           label: o.code,
           value: o.id,
         }));
 
-        setCurrencyOptions(normolizeOptions || []);
+        setCurrencyOptions(normolizedOptions || []);
 
-        const defaultCurrency = normolizeOptions?.find(
+        const defaultCurrency = normolizedOptions?.find(
           (c) => c.label === "USD",
         );
 
@@ -46,7 +48,7 @@ export default function SignupPage() {
 
   const validate = () => {
     const validateErrors = {};
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!selectedCurrency) {
       validateErrors.selectedCurrency = "Currency is required";
@@ -59,11 +61,11 @@ export default function SignupPage() {
         "Full name must be no more than 100 characters long";
     }
 
-    if (!regex.test(email)) {
+    if (!emailRegex.test(email)) {
       validateErrors.email = "Please enter a valide email address";
     }
 
-    if (!password.trim()) {
+    if (!password) {
       validateErrors.password = "Password is required";
     } else if (password.length < 6 || password.length > 128) {
       validateErrors.password =
@@ -74,8 +76,8 @@ export default function SignupPage() {
     return Object.keys(validateErrors).length === 0;
   };
 
-  const handleChangeCurrency = (options) => {
-    setSelectedCurrency(options || []);
+  const handleChangeCurrency = (option) => {
+    setSelectedCurrency(option || null);
     setErrors((prev) => ({ ...prev, selectedCurrency: "" }));
   };
 
@@ -86,10 +88,12 @@ export default function SignupPage() {
 
     const data = {
       currencyId: selectedCurrency.value,
-      fullName: fullName.trim().toLowerCase(),
-      email: email.trim().toLowerCase(),
-      password: password.trim().toLowerCase(),
+      fullName: fullName.trim(),
+      email: email.trim(),
+      password,
     };
+
+    setIsLoading(true);
 
     try {
       const response = await axiosInstance.post(
@@ -98,35 +102,35 @@ export default function SignupPage() {
       );
 
       if (response.status === 201) {
-        const authData = response.data;
-        login(authData);
+        login(response.data);
         navigate("/");
       }
-
-      setSelectedCurrency(null);
-      setFullName("");
-      setEmail("");
-      setPassword("");
-      setErrors({});
     } catch (err) {
       console.error(err);
+      const message =
+        err?.response?.message || "Something went wrong. Please try again";
+      setApiError(message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center gap-5 h-screen">
-      <h2>Create an account</h2>
+      <h2 className="font-bold">Create an account</h2>
 
       <form onSubmit={handleSignup} className="flex flex-col gap-2 w-fit">
-        <Select
-          value={selectedCurrency}
-          onChange={handleChangeCurrency}
-          options={currencyOptions}
-          placeholder="Select currency"
-        />
-        {errors?.selectedCurrency && (
-          <p className="text-red-500 italic">{errors.selectedCurrency}</p>
-        )}
+        <div>
+          <label className="text-gary-500 text-sm">Select currency</label>
+          <Select
+            value={selectedCurrency}
+            onChange={handleChangeCurrency}
+            options={currencyOptions}
+          />
+          {errors.selectedCurrency && (
+            <p className="text-red-500 italic">{errors.selectedCurrency}</p>
+          )}
+        </div>
 
         <input
           value={fullName}
@@ -137,7 +141,7 @@ export default function SignupPage() {
           placeholder="Full name"
           className="border rounded p-2 w-md"
         />
-        {errors?.fullName && (
+        {errors.fullName && (
           <p className="text-red-500 italic">{errors.fullName}</p>
         )}
 
@@ -149,8 +153,9 @@ export default function SignupPage() {
           }}
           placeholder="Email"
           className="border rounded p-2 w-md"
+          type="email"
         />
-        {errors?.email && <p className="text-red-500 italic">{errors.email}</p>}
+        {errors.email && <p className="text-red-500 italic">{errors.email}</p>}
 
         <input
           value={password}
@@ -158,16 +163,17 @@ export default function SignupPage() {
             setPassword(e.target.value);
             setErrors((prev) => ({ ...prev, password: "" }));
           }}
-          placeholder="Pasword"
+          placeholder="Password"
           className="border rounded p-2 w-md"
           type="password"
         />
-        {errors?.password && (
+        {errors.password && (
           <p className="text-red-500 italic">{errors.password}</p>
         )}
 
         <button
           type="submit"
+          disabled={isLoading}
           className="border rounded p-2 bg-rose-400 text-white"
         >
           Sign up
@@ -180,6 +186,10 @@ export default function SignupPage() {
           Login
         </Link>
       </span>
+
+      {apiError && (
+        <p className="text-red-500 italic text-center">{apiError}</p>
+      )}
     </div>
   );
 }
