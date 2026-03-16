@@ -28,7 +28,14 @@ const registerUser = async ({ email, fullName, password, currencyId }) => {
       // TODO: задавать image url на этапе регистрации
       // profile_image_url: ...
     })
-    .returning(["id", "user_role"]);
+    .returning([
+      "id",
+      "email",
+      "full_name",
+      "profile_image_url",
+      "user_role",
+      "base_currency_id",
+    ]);
 
   return user;
 };
@@ -36,7 +43,15 @@ const registerUser = async ({ email, fullName, password, currencyId }) => {
 const loginUser = async ({ email, password }) => {
   const user = await knex("users")
     .where({ email })
-    .select(["id", "password_hash", "user_role"])
+    .select([
+      "id",
+      "password_hash",
+      "email",
+      "full_name",
+      "profile_image_url",
+      "user_role",
+      "base_currency_id",
+    ])
     .first();
 
   if (!user) {
@@ -53,10 +68,4 @@ const loginUser = async ({ email, password }) => {
   return safeUser;
 };
 
-const getAllCurrencies = async () => {
-  const currencies = await knex("currencies").select("code", "symbol", "name");
-
-  return currencies;
-};
-
-module.exports = { registerUser, loginUser, getAllCurrencies };
+module.exports = { registerUser, loginUser };

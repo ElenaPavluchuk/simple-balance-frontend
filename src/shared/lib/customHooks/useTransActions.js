@@ -35,7 +35,7 @@ export function useTransActions() {
         amount: Number(amount),
         category,
         date,
-      })
+      }),
     );
 
     setEditingTrans(null);
@@ -55,3 +55,5 @@ export function useTransActions() {
     cancelUpdateTrans,
   };
 }
+
+// TODO: хранить просто в shared, а не в lib

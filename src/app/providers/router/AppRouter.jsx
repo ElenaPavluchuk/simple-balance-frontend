@@ -1,18 +1,23 @@
+import AuthProvider from "../../../shared/context/auth/AuthProvider";
 import { Routes, Route } from "react-router";
-import { routeConfig } from "./routeConfig/routeConfig.jsx";
+import { routeConfig } from "../../../shared/routes/config/routeConfig";
 
 export const AppRouter = () => {
   return (
-    <Routes>
-      <Route path={routeConfig.path} element={routeConfig.element}>
-        {routeConfig.children.map((route, index) => (
-          <Route
-            key={index}
-            {...(route.index ? { index: true } : { path: route.path })}
-            element={route.element}
-          />
+    <AuthProvider>
+      <Routes>
+        {routeConfig.map((rootRoute, index) => (
+          <Route key={index} path={rootRoute.path} element={rootRoute.element}>
+            {rootRoute.children?.map((child, childIndex) => (
+              <Route
+                key={childIndex}
+                {...(child.index ? { index: true } : { path: child.path })}
+                element={child.element}
+              />
+            ))}
+          </Route>
         ))}
-      </Route>
-    </Routes>
+      </Routes>
+    </AuthProvider>
   );
 };
