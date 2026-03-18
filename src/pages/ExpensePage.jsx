@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Button from "../shared/ui/Button/Button";
 import DialogModal from "../shared/ui/DialogModal/DialogModal";
-import AddTransForm from "../shared/ui/AddTransForm/AddTransForm";
+import AddTransactionForm from "../shared/ui/AddTransactionForm";
 import { useTransActions } from "../shared/lib/customHooks/useTransActions";
 import { expenseCategories } from "../shared/data/transCategories";
 import TransesList from "../shared/ui/TransesList/TransesList";
@@ -30,7 +30,7 @@ export default function ExpensePage() {
         onClose={() => setOpenAddTransModal(false)}
         title="Add transaction"
       >
-        <AddTransForm onClose={() => setOpenAddTransModal(false)} />
+        <AddTransactionForm onClose={() => setOpenAddTransModal(false)} />
       </DialogModal>
       <div className="min-w-xl mx-auto mt-6">
         <ul className="space-y-4">
