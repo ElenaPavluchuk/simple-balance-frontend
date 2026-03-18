@@ -30,3 +30,34 @@ export const authValidate = (values) => {
 
   return errors;
 };
+
+export const transactionsValidate = (values) => {
+  const errors = {};
+  const { type, title, amount, selectedCategory, date } = values;
+
+  if ("type" in values && !type) {
+    errors.type = "Type is required";
+  }
+
+  if ("title" in values) {
+    if (!title.trim()) {
+      errors.title = "Titile is required";
+    } else if (title.length > 150) {
+      errors.title = "Title must be no more than 150 characters long";
+    }
+  }
+
+  if ("amount" in values && !amount) {
+    errors.amount = "Amount is required";
+  }
+
+  if ("selectedCategory" in values && !selectedCategory) {
+    errors.selectedCategory = "Category is required";
+  }
+
+  if ("date" in values && !date) {
+    errors.date = "Date is required";
+  }
+
+  return errors;
+};

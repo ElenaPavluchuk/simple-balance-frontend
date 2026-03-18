@@ -4,7 +4,7 @@ import Select from "react-select";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
 import { useAuth } from "../shared/context/auth/useAuth";
-import { authValidate } from "../shared/utils/authValidate";
+import { authValidate } from "../shared/utils/validate";
 
 export default function SignupPage() {
   const [fullName, setFullName] = useState("");

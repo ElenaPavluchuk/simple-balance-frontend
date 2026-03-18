@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { authValidate } from "../shared/utils/authValidate";
+import { authValidate } from "../shared/utils/validate";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
 import { Link, useNavigate } from "react-router";

@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import Select from "react-select";
 import axiosInstance from "../utils/axiosInstance";
 import { API_PATHS } from "../utils/apiPaths";
-// import { useAuth} from "../context/auth/useAuth"
+// import { useAuth } from "../context/auth/useAuth"
+import { transactionsValidate } from "../utils/validate";
 
 export default function AddTransactionForm() {
   const [type, setType] = useState("EXPENSE");
@@ -12,6 +13,7 @@ export default function AddTransactionForm() {
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [date, setDate] = useState("");
   const [note, setNote] = useState("");
+  const [validateErrors, setValidateErrors] = useState({});
   // and user's base currency id
   // const { user } = useAuth()
 
@@ -58,7 +60,21 @@ export default function AddTransactionForm() {
 
   const handleChangeDate = (value) => setDate(value);
 
-  const handleSubmit = () => {};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const errors = transactionsValidate({
+      type,
+      title,
+      amount,
+      selectedCategory,
+      date,
+    });
+
+    setValidateErrors(errors);
+    if (Object.keys(errors).length) return;
+  };
+
   return (
     <div className="bg-pink-100 w-96 max-w-full flex flex-col gap-6 p-6 rounded-lg shadow-lg">
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -84,6 +100,9 @@ export default function AddTransactionForm() {
               </span>
             </label>
           ))}
+          {validateErrors.type && (
+            <p className="text-red-500 italic">{validateErrors.type}</p>
+          )}
         </div>
 
         <div>
@@ -95,6 +114,9 @@ export default function AddTransactionForm() {
             placeholder="Add title"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           />
+          {validateErrors.title && (
+            <p className="text-red-500 italic">{validateErrors.title}</p>
+          )}
         </div>
 
         <div>
@@ -109,15 +131,23 @@ export default function AddTransactionForm() {
             placeholder="Add amount"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           />
+          {validateErrors.amount && (
+            <p className="text-red-500 italic">{validateErrors.amount}</p>
+          )}
         </div>
+
         <div>
           <label>Select category</label>
-
           <Select
             value={selectedCategory}
             onChange={handleChangeCategory}
             options={categoryOptions}
           />
+          {validateErrors.selectedCategory && (
+            <p className="text-red-500 italic">
+              {validateErrors.selectedCategory}
+            </p>
+          )}
         </div>
 
         <div>
@@ -128,6 +158,9 @@ export default function AddTransactionForm() {
             onChange={(e) => handleChangeDate(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           />
+          {validateErrors.date && (
+            <p className="text-red-500 italic">{validateErrors.date}</p>
+          )}
         </div>
 
         <div>
