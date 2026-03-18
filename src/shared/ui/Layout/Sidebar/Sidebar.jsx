@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { Link, useLocation } from "react-router";
 import { data } from "./config/data";
 import { Menu, X } from "lucide-react";
+import { useAuth } from "../../../context/auth/useAuth";
 
 Sidebar.propTypes = {
   isSidebarClose: PropTypes.bool.isRequired,
@@ -10,6 +11,7 @@ Sidebar.propTypes = {
 
 export default function Sidebar({ isSidebarClose, toggleSidebar }) {
   const location = useLocation();
+  const { logout } = useAuth();
 
   return (
     <div
@@ -46,6 +48,15 @@ export default function Sidebar({ isSidebarClose, toggleSidebar }) {
           ))}
         </ul>
       </nav>
+
+      <div className="flex items-center justify-center">
+        <button
+          onClick={logout}
+          className="w-full h-16 flex items-center justify-center hover:bg-teal-200 bg-teal-50 rounded text-gray-700"
+        >
+          Logout
+        </button>
+      </div>
 
       <div className="flex items-center justify-center">
         <button

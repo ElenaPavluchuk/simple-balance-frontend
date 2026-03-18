@@ -1,4 +1,4 @@
-import { Home, Wallet, CreditCard } from "lucide-react";
+import { Home, Wallet, CreditCard, ArrowRight } from "lucide-react";
 
 export const data = [
   {

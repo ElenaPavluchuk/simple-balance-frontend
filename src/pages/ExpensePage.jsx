@@ -1,10 +1,10 @@
 import { useState } from "react";
-import Button from "../../shared/ui/Button/Button";
-import DialogModal from "../../shared/ui/DialogModal/DialogModal";
-import AddTransForm from "../../shared/ui/AddTransForm/AddTransForm";
-import { useTransActions } from "../../shared/lib/customHooks/useTransActions";
-import { expenseCategories } from "../../shared/data/transCategories";
-import TransesList from "../../shared/ui/TransesList/TransesList";
+import Button from "../shared/ui/Button/Button";
+import DialogModal from "../shared/ui/DialogModal/DialogModal";
+import AddTransForm from "../shared/ui/AddTransForm/AddTransForm";
+import { useTransActions } from "../shared/lib/customHooks/useTransActions";
+import { expenseCategories } from "../shared/data/transCategories";
+import TransesList from "../shared/ui/TransesList/TransesList";
 
 export default function ExpensePage() {
   const [openAddTransModal, setOpenAddTransModal] = useState(false);
