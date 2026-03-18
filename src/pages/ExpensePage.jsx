@@ -19,7 +19,7 @@ export default function ExpensePage() {
   } = useTransActions();
 
   return (
-    <div className="flex flex-col gap-20">
+    <div className="flex flex-col gap-20 p-10">
       <div>
         <Button onClick={() => setOpenAddTransModal(true)} variant="primary">
           Add Transaction
