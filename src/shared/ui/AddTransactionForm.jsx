@@ -16,6 +16,7 @@ export default function AddTransactionForm({ onClose }) {
   const [date, setDate] = useState("");
   const [note, setNote] = useState("");
   const [validateErrors, setValidateErrors] = useState({});
+  const [apiError, setApiError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
   const dispatch = useDispatch();
@@ -43,25 +44,41 @@ export default function AddTransactionForm({ onClose }) {
         }
       } catch (err) {
         console.error(err);
+        const message =
+          err?.response?.message || "Something went wrong. Please try again";
+        setApiError(message);
       }
     };
 
     getCategories();
   }, [type]);
 
-  const handleTypeChange = (type) => setType(type);
+  const handleTypeChange = (type) => {
+    setType(type);
+    setValidateErrors((prev) => ({ ...prev, type: "" }));
+  };
 
-  const handleTitleChange = (value) => setTitle(value);
+  const handleTitleChange = (value) => {
+    setTitle(value);
+    setValidateErrors((prev) => ({ ...prev, title: "" }));
+  };
 
-  const handleAmountChange = (value) => setAmount(value);
+  const handleAmountChange = (value) => {
+    setAmount(value);
+    setValidateErrors((prev) => ({ ...prev, selectedCategory: "" }));
+  };
 
   const handleNoteChange = (value) => setNote(value);
 
   const handleChangeCategory = (option) => {
     setSelectedCategory(option || null);
+    setValidateErrors((prev) => ({ ...prev, selectedCategory: "" }));
   };
 
-  const handleChangeDate = (value) => setDate(value);
+  const handleChangeDate = (value) => {
+    setDate(value);
+    setValidateErrors((prev) => ({ ...prev, date: "" }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -84,7 +101,8 @@ export default function AddTransactionForm({ onClose }) {
       currencyId: user.base_currency_id,
       notes: note,
       date,
-      categoryId: selectedCategory.value,
+      categoryId: selectedCategory?.__isNew__ ? null : selectedCategory.value,
+      categoryName: selectedCategory?.__isNew__ ? selectedCategory.label : null,
     };
 
     setIsLoading(true);
@@ -94,13 +112,15 @@ export default function AddTransactionForm({ onClose }) {
         API_PATHS.TRANSACTIONS.ADD_TRANSACTION,
         data,
       );
-      console.log(response.data);
 
       dispatch(addTransactionToRedux(response.data));
 
       onClose();
     } catch (err) {
       console.error(err);
+      const message =
+        err?.response?.message || "Something went wrong. Please try again";
+      setApiError(message);
     } finally {
       setIsLoading(false);
     }
@@ -169,11 +189,6 @@ export default function AddTransactionForm({ onClose }) {
 
         <div>
           <label>Select category</label>
-          {/* <Select
-            value={selectedCategory}
-            onChange={handleChangeCategory}
-            options={categoryOptions}
-          /> */}
           <CreatableSelect
             isClearable
             value={selectedCategory}
@@ -219,6 +234,10 @@ export default function AddTransactionForm({ onClose }) {
           Add transaction
         </button>
       </form>
+
+      {apiError && (
+        <p className="text-red-500 italic text-center">{apiError}</p>
+      )}
     </div>
   );
 }
