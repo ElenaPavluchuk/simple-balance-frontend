@@ -7,10 +7,33 @@ const addUserTransaction = async ({
   amount,
   currencyId,
   categoryId,
+  categoryName,
   date,
   title,
   notes,
 }) => {
+  if (!categoryId && categoryName) {
+    let category = await knex("categories")
+      .where({
+        name: categoryName,
+        type,
+        user_id: userId,
+      })
+      .first();
+
+    if (!category) {
+      [category] = await knex("categories")
+        .insert({
+          name: categoryName,
+          type,
+          user_id: userId,
+          is_active: true,
+        })
+        .returning("*");
+    }
+    categoryId = category.id;
+  }
+
   const [transaction] = await knex("transactions")
     .insert({
       user_id: userId,

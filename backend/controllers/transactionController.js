@@ -12,19 +12,28 @@ const ApiError = require("../errors/apiError.js");
 
 const addTransaction = async (req, res, next) => {
   const userId = req.user.id;
-  const { type, amount, currencyId, categoryId, date, title, notes } = req.body;
+  const {
+    type,
+    amount,
+    currencyId,
+    categoryId,
+    categoryName,
+    date,
+    title,
+    notes,
+  } = req.body;
 
   if (
     !type ||
     !amount ||
     !currencyId ||
-    !categoryId ||
     !date ||
-    !title.trim()
+    !title.trim() ||
+    (!categoryId && !categoryName)
   ) {
     return next(
       ApiError.badRequest(
-        "Type, amount, currency, category, date, title are required fields",
+        "Required fields: type, amount, currency, date, title and categoryId or categoryName",
       ),
     );
   }
@@ -36,6 +45,7 @@ const addTransaction = async (req, res, next) => {
       amount,
       currencyId,
       categoryId,
+      categoryName,
       date,
       title,
       notes,

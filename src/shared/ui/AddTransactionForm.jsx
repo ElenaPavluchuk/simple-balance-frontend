@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
-import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 import axiosInstance from "../utils/axiosInstance";
 import { API_PATHS } from "../utils/apiPaths";
-// import { useAuth } from "../context/auth/useAuth"
+import { useAuth } from "../context/auth/useAuth";
 import { transactionsValidate } from "../utils/validate";
+import { useDispatch } from "react-redux";
+import { addTransactionToRedux } from "../slices/transactionsSlice";
 
-export default function AddTransactionForm() {
+export default function AddTransactionForm({ onClose }) {
   const [type, setType] = useState("EXPENSE");
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
@@ -14,8 +16,9 @@ export default function AddTransactionForm() {
   const [date, setDate] = useState("");
   const [note, setNote] = useState("");
   const [validateErrors, setValidateErrors] = useState({});
-  // and user's base currency id
-  // const { user } = useAuth()
+  const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuth();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getCategories = async () => {
@@ -26,13 +29,13 @@ export default function AddTransactionForm() {
 
         const normolizedOptions = response?.data?.map((o) => ({
           label: o.name,
-          value: o.name,
+          value: o.id,
         }));
 
         setCategoryOptions(normolizedOptions || []);
 
         const defaultCategory = normolizedOptions?.find(
-          (o) => o.value === "Other",
+          (o) => o.label === "Other",
         );
 
         if (defaultCategory) {
@@ -73,6 +76,34 @@ export default function AddTransactionForm() {
 
     setValidateErrors(errors);
     if (Object.keys(errors).length) return;
+
+    const data = {
+      type,
+      title,
+      amount,
+      currencyId: user.base_currency_id,
+      notes: note,
+      date,
+      categoryId: selectedCategory.value,
+    };
+
+    setIsLoading(true);
+
+    try {
+      const response = await axiosInstance.post(
+        API_PATHS.TRANSACTIONS.ADD_TRANSACTION,
+        data,
+      );
+      console.log(response.data);
+
+      dispatch(addTransactionToRedux(response.data));
+
+      onClose();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -106,7 +137,7 @@ export default function AddTransactionForm() {
         </div>
 
         <div>
-          <label>Title: </label>
+          <label>Title</label>
           <input
             value={title}
             onChange={(e) => handleTitleChange(e.target.value)}
@@ -120,7 +151,7 @@ export default function AddTransactionForm() {
         </div>
 
         <div>
-          <label>Amount: </label>
+          <label>Amount</label>
           <input
             type="number"
             value={amount}
@@ -138,7 +169,13 @@ export default function AddTransactionForm() {
 
         <div>
           <label>Select category</label>
-          <Select
+          {/* <Select
+            value={selectedCategory}
+            onChange={handleChangeCategory}
+            options={categoryOptions}
+          /> */}
+          <CreatableSelect
+            isClearable
             value={selectedCategory}
             onChange={handleChangeCategory}
             options={categoryOptions}
@@ -151,7 +188,7 @@ export default function AddTransactionForm() {
         </div>
 
         <div>
-          <label>Select date: </label>
+          <label>Select date</label>
           <input
             type="date"
             value={date}
@@ -164,7 +201,7 @@ export default function AddTransactionForm() {
         </div>
 
         <div>
-          <label>Notes: </label>
+          <label>Notes</label>
           <textarea
             value={note}
             onChange={(e) => handleNoteChange(e.target.value)}
@@ -173,13 +210,15 @@ export default function AddTransactionForm() {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>
+
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="border rounded p-2 bg-rose-400 text-white"
+        >
+          Add transaction
+        </button>
       </form>
-      <button
-        type="submit"
-        className="border rounded p-2 bg-rose-400 text-white"
-      >
-        Add transaction
-      </button>
     </div>
   );
 }
