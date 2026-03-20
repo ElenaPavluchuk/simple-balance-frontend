@@ -8,6 +8,7 @@ const {
 } = require("../services/transactionServices.js");
 const knex = require("../db.js");
 const xlsx = require("xlsx");
+const dayjs = require("dayjs");
 const ApiError = require("../errors/apiError.js");
 
 const addTransaction = async (req, res, next) => {
@@ -51,7 +52,10 @@ const addTransaction = async (req, res, next) => {
       notes,
     });
 
-    return res.status(201).json(transaction);
+    return res.status(201).json({
+      ...transaction,
+      date: dayjs(transaction.date).format("YYYY-MM-DD"),
+    });
   } catch (err) {
     next(err);
   }
