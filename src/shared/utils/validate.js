@@ -42,13 +42,16 @@ export const transactionsValidate = (values) => {
   if ("title" in values) {
     if (!title.trim()) {
       errors.title = "Titile is required";
-    } else if (title.length > 150) {
-      errors.title = "Title must be no more than 150 characters long";
+    } else if (title.length > 200) {
+      errors.title = "Title must be no more than 200 characters long";
     }
   }
 
-  if ("amount" in values && !amount) {
-    errors.amount = "Amount is required";
+  if ("amount" in values) {
+    const num = parseFloat(amount);
+    if (isNaN(num) || num <= 0) {
+      errors.amount = "Amount must be greater than 0";
+    }
   }
 
   if ("selectedCategory" in values && !selectedCategory) {
@@ -60,4 +63,8 @@ export const transactionsValidate = (values) => {
   }
 
   return errors;
+};
+
+export const clearFieldError = (field, setValidateErrors) => {
+  setValidateErrors((prev) => ({ ...prev, [field]: "" }));
 };
