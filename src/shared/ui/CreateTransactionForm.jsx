@@ -122,7 +122,6 @@ export default function CreateTransactionForm({ onClose }) {
         API_PATHS.TRANSACTIONS.ADD_TRANSACTION,
         data,
       );
-      console.log(response);
 
       dispatch(
         addTransactionToRedux({
