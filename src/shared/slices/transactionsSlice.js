@@ -6,12 +6,18 @@ export const transactionsSlice = createSlice({
     value: [],
   },
   reducers: {
+    setTransactions: (state, action) => {
+      state.value = action.payload;
+    },
+
     addTransactionToRedux: (state, action) => {
       state.value.push(action.payload);
     },
+
     deleteTransactionFromRedux: (state, action) => {
       state.value = state.value.filter((t) => t.id !== action.payload);
     },
+
     updateTransactionInRedux: (state, action) => {
       const { id, name, amount, category, date } = action.payload;
       const editedTransaction = state.value.find((t) => t.id === id);
@@ -27,9 +33,12 @@ export const transactionsSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const {
+  setTransactions,
   addTransactionToRedux,
   deleteTransactionFromRedux,
   updateTransactionInRedux,
 } = transactionsSlice.actions;
+
+export const selectTransactions = (state) => state.transactions.value;
 
 export default transactionsSlice.reducer;

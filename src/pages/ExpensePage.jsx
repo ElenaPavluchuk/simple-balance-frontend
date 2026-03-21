@@ -4,10 +4,16 @@ import DialogModal from "../shared/ui/DialogModal/DialogModal";
 import CreateTransactionForm from "../shared/ui/CreateTransactionForm";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
-// import TransesList from "../shared/ui/TransesList/TransesList";
+import { setTransactions } from "../shared/slices/transactionsSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { selectTransactions } from "../shared/slices/transactionsSlice";
+import dayjs from "dayjs";
+import TransactionsList from "../shared/ui/TransactionsList";
 
 export default function ExpensePage() {
   const [openDialogModal, setOpenDialogModal] = useState(false);
+  const transactions = useSelector(selectTransactions);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getTransactions = async () => {
@@ -16,14 +22,19 @@ export default function ExpensePage() {
           API_PATHS.TRANSACTIONS.GET_TRANSACTIONS_BY_TYPE("EXPENSE"),
         );
 
-        console.log(response.data);
+        const formattedData = (response.data || []).map((t) => ({
+          ...t,
+          date: dayjs(t.date).format("YYYY-MM-DD"),
+        }));
+
+        dispatch(setTransactions(formattedData || []));
       } catch (err) {
         console.error(err);
       }
     };
 
     getTransactions();
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="flex flex-col gap-20 p-10">
@@ -58,9 +69,9 @@ export default function ExpensePage() {
                 onDelete={deleteTrans}
               />
             ))} */}
-          {/* {(response?.data || []).map((t) => (
-            <span key={t.id}>{t.title}</span>
-          ))} */}
+          {transactions.map((t) => (
+            <TransactionsList key={t.id} transaction={t} />
+          ))}
         </ul>
       </div>
     </div>

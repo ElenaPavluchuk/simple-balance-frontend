@@ -6,6 +6,7 @@ import { useAuth } from "../context/auth/useAuth";
 import { transactionsValidate, clearFieldError } from "../utils/validate";
 import { useDispatch } from "react-redux";
 import { addTransactionToRedux } from "../slices/transactionsSlice";
+import dayjs from "dayjs";
 
 export default function CreateTransactionForm({ onClose }) {
   const [type, setType] = useState("EXPENSE");
@@ -126,7 +127,7 @@ export default function CreateTransactionForm({ onClose }) {
       dispatch(
         addTransactionToRedux({
           ...response.data,
-          amount: parseFloat(response.data.amount.replace(",", ".")),
+          date: dayjs(response.data.date).format("YYYY-MM-DD"),
         }),
       );
 
