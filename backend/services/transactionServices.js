@@ -51,10 +51,24 @@ const addUserTransaction = async ({
 };
 
 const getUserTransactions = async ({ userId, type }) => {
-  const transactions = await knex("transactions")
-    .where({ user_id: userId, type: type })
-    .select("*")
-    .orderBy("date", "desc");
+  const transactions = await knex("transactions as t")
+    .join("currencies as c", "t.currency_id", "c.id")
+    .join("categories as cat", "t.category_id", "cat.id")
+    .where({ "t.user_id": userId, "t.type": type })
+    .select([
+      "t.id",
+      "t.user_id",
+      "t.type",
+      "t.amount",
+      "t.currency_id",
+      "t.category_id",
+      "t.date",
+      "t.title",
+      "t.notes",
+      "c.symbol as currency_symbol",
+      "cat.name as category_name",
+    ])
+    .orderBy("t.date", "desc");
 
   return transactions;
 };

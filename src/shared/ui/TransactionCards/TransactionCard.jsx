@@ -20,11 +20,14 @@ export default function TransactionCard({ transaction }) {
       <div className="w-full">
         <div className="flex justify-between items-center ">
           <p>{transaction.title}</p>
-          <p>{transaction.amount}</p>
+          <div className="flex flex-row">
+            <p>{transaction.currency_symbol}</p>
+            <p>{transaction.amount}</p>
+          </div>
         </div>
         <div className="flex justify-between items-center mt-2 text-sm text-gray-500 ">
           <span className="bg-gray-100 px-2 py-1 rounded-lg">
-            {transaction.category_id}
+            {transaction.category_name}
           </span>
           <span>{transaction.date}</span>
         </div>
