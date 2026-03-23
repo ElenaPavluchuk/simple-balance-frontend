@@ -1,6 +1,7 @@
 // import PropTypes from "prop-types";
 // import Button from "../Button/Button";
 // import { Trash2, Pencil } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
 // TransCard.propTypes = {
 //   trans: PropTypes.shape({
@@ -14,7 +15,7 @@
 //   onDelete: PropTypes.func.isRequired,
 // };
 // { trans, onEdit, onDelete }
-export default function TransactionCard({ transaction }) {
+export default function TransactionCard({ transaction, onDelete }) {
   return (
     <>
       <div className="w-full">
@@ -39,6 +40,13 @@ export default function TransactionCard({ transaction }) {
         <Button onClick={() => onDelete(trans.id)} size={4}>
           <Trash2 className="text-gray-700" />
         </Button> */}
+        <button>
+          <Trash2
+            onClick={() => onDelete(transaction.id)}
+            className="text-gray-700"
+            size={20}
+          />
+        </button>
       </div>
     </>
   );

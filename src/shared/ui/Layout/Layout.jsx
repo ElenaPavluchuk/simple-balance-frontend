@@ -5,12 +5,12 @@ import Sidebar from "./Sidebar/Sidebar";
 export default function Layout() {
   const [isSidebarClose, setIsSidebarClose] = useState(false);
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen">
       <Sidebar
         isSidebarClose={isSidebarClose}
         toggleSidebar={() => setIsSidebarClose(!isSidebarClose)}
       />
-      <main className="bg-pink-100 flex-1">
+      <main className="bg-pink-100 flex-1 mx-auto">
         <Outlet />
       </main>
     </div>

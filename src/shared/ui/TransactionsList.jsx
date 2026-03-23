@@ -25,7 +25,7 @@ import TransactionCard from "../ui/TransactionCards/TransactionCard";
 //   onDelete: PropTypes.func.isRequired,
 // };
 
-export default function TransactionsList({ transaction }) {
+export default function TransactionsList({ transaction, onDelete }) {
   //{
   //trans,
   // editingTrans,
@@ -56,7 +56,7 @@ export default function TransactionsList({ transaction }) {
         <TransactionCard
           transaction={transaction}
           // onEdit={onEdit}
-          // onDelete={onDelete}
+          onDelete={onDelete}
         />
       }
     </li>

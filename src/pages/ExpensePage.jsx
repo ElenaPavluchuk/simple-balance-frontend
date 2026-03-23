@@ -4,7 +4,10 @@ import DialogModal from "../shared/ui/DialogModal/DialogModal";
 import CreateTransactionForm from "../shared/ui/CreateTransactionForm";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
-import { setTransactions } from "../shared/slices/transactionsSlice";
+import {
+  deleteTransactionFromRedux,
+  setTransactions,
+} from "../shared/slices/transactionsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { selectTransactions } from "../shared/slices/transactionsSlice";
 import dayjs from "dayjs";
@@ -36,8 +39,14 @@ export default function ExpensePage() {
     getTransactions();
   }, [dispatch]);
 
+  const deleteTransaction = async (id) => {
+    await axiosInstance.delete(API_PATHS.TRANSACTIONS.TRANSACTIONS_BY_ID(id));
+
+    dispatch(deleteTransactionFromRedux(id));
+  };
+
   return (
-    <div className="flex flex-col gap-20 p-10">
+    <div className="flex flex-col gap-20 p-10 items-center">
       <div>
         <Button onClick={() => setOpenDialogModal(true)} variant="primary">
           Add Transaction
@@ -50,7 +59,7 @@ export default function ExpensePage() {
       >
         <CreateTransactionForm onClose={() => setOpenDialogModal(false)} />
       </DialogModal>
-      <div className="min-w-xl mx-auto mt-6">
+      <div className="min-w-xl mx-auto">
         <ul className="space-y-4">
           {/* {transes
             .filter((trans) => trans.type === "expense")
@@ -70,7 +79,11 @@ export default function ExpensePage() {
               />
             ))} */}
           {transactions.map((t) => (
-            <TransactionsList key={t.id} transaction={t} />
+            <TransactionsList
+              key={t.id}
+              transaction={t}
+              onDelete={deleteTransaction}
+            />
           ))}
         </ul>
       </div>
