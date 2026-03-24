@@ -7,6 +7,7 @@ import { API_PATHS } from "../shared/utils/apiPaths";
 import {
   deleteTransactionFromRedux,
   setTransactions,
+  updateTransactionInRedux,
 } from "../shared/slices/transactionsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { selectTransactions } from "../shared/slices/transactionsSlice";
@@ -54,19 +55,41 @@ export default function ExpensePage() {
     setEditingId(null);
   };
 
+  // const handleSaveEdit = async (updatedTransaction) => {
+  //   try {
+  //     // const response =
+  //     await axiosInstance.put(
+  //       API_PATHS.TRANSACTIONS.TRANSACTIONS_BY_ID(updatedTransaction.id),
+  //       updatedTransaction,
+  //     );
+
+  //     dispatch(updateTransactionInRedux(updatedTransaction));
+  //     // setTransactions(
+  //     //   transactions.map((t) =>
+  //     //     t.id === updatedTransaction.id ? response.data : t,
+  //     //   ),
+  //     // ),
+
+  //     setEditingId(null);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
   const handleSaveEdit = async (updatedTransaction) => {
     try {
+      // TODO: выслать category_name field в этом response
       const response = await axiosInstance.put(
         API_PATHS.TRANSACTIONS.TRANSACTIONS_BY_ID(updatedTransaction.id),
         updatedTransaction,
       );
+      console.log("save response: ", response.data);
 
       dispatch(
-        setTransactions(
-          transactions.map((t) =>
-            t.id === updatedTransaction.id ? response.data : t,
-          ),
-        ),
+        updateTransactionInRedux({
+          ...response.data,
+          date: dayjs(response.data.date).format("YYYY-MM-DD"),
+        }),
       );
 
       setEditingId(null);

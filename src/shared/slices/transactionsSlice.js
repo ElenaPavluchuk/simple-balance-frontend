@@ -18,15 +18,24 @@ export const transactionsSlice = createSlice({
       state.value = state.value.filter((t) => t.id !== action.payload);
     },
 
+    // updateTransactionInRedux: (state, action) => {
+    //   const { id, title, amount, category_name, date, notes } = action.payload;
+    //   const editedTransaction = state.value.find((t) => t.id === id);
+    //   if (editedTransaction) {
+    //     editedTransaction.title = title;
+    //     editedTransaction.amount = amount;
+    //     editedTransaction.category_name = category_name;
+    //     editedTransaction.date = date;
+    //     editedTransaction.notes = notes;
+    //   }
+    // },
     updateTransactionInRedux: (state, action) => {
-      const { id, title, amount, category, date, note } = action.payload;
-      const editedTransaction = state.value.find((t) => t.id === id);
-      if (editedTransaction) {
-        editedTransaction.title = title;
-        editedTransaction.amount = amount;
-        editedTransaction.category = category;
-        editedTransaction.date = date;
-        editedTransaction.note = note;
+      const updated = action.payload;
+
+      const transaction = state.value.find((t) => t.id === updated.id);
+
+      if (transaction) {
+        Object.assign(transaction, updated);
       }
     },
   },

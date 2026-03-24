@@ -1,5 +1,8 @@
 import { X, Check } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import CreatableSelect from "react-select/creatable";
+import axiosInstance from "../../utils/axiosInstance";
+import { API_PATHS } from "../../utils/apiPaths";
 
 export default function EditingTransactionCard({
   transaction,
@@ -9,6 +12,33 @@ export default function EditingTransactionCard({
   const [title, setTitle] = useState(transaction.title);
   const [amount, setAmount] = useState(transaction.amount);
   const [date, setDate] = useState(transaction.date);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [categoryOptions, setCategoryOptions] = useState([]);
+
+  useEffect(() => {
+    const getCategories = async () => {
+      try {
+        const response = await axiosInstance.get(
+          API_PATHS.TRANSACTIONS.GET_CATEGORIES_BY_TYPE(transaction.type),
+        );
+
+        const normolizedOptions = response?.data?.map((o) => ({
+          label: o.name,
+          value: o.id,
+        }));
+
+        setCategoryOptions(normolizedOptions || []);
+
+        setSelectedCategory(
+          normolizedOptions?.find((o) => o.value === transaction.category_id),
+        );
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    getCategories();
+  }, [transaction]);
 
   const handleSave = () => {
     onSave({
@@ -16,8 +46,13 @@ export default function EditingTransactionCard({
       title,
       amount: parseFloat(amount),
       date,
+      categoryId: selectedCategory?.value || null,
+      categoryName: selectedCategory?.__isNew__
+        ? selectedCategory.label
+        : undefined,
     });
   };
+
   return (
     <>
       <div className="w-full">
@@ -41,6 +76,14 @@ export default function EditingTransactionCard({
           />
         </div>
         <div className="flex justify-between items-center mt-2 text-sm text-gray-500 ">
+          <div className="w-full">
+            <CreatableSelect
+              isClearable
+              value={selectedCategory}
+              options={categoryOptions}
+              onChange={setSelectedCategory}
+            />
+          </div>
           <input
             value={date}
             onChange={(e) => setDate(e.target.value)}
