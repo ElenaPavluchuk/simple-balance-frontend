@@ -1,21 +1,6 @@
-// import PropTypes from "prop-types";
-// import Button from "../Button/Button";
-// import { Trash2, Pencil } from "lucide-react";
-import { Trash2 } from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
 
-// TransCard.propTypes = {
-//   trans: PropTypes.shape({
-//     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-//     name: PropTypes.string,
-//     amount: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-//     category: PropTypes.string,
-//     date: PropTypes.string,
-//   }).isRequired,
-//   onEdit: PropTypes.func.isRequired,
-//   onDelete: PropTypes.func.isRequired,
-// };
-// { trans, onEdit, onDelete }
-export default function TransactionCard({ transaction, onDelete }) {
+export default function TransactionCard({ transaction, onDelete, onEdit }) {
   return (
     <>
       <div className="w-full">
@@ -34,12 +19,9 @@ export default function TransactionCard({ transaction, onDelete }) {
         </div>
       </div>
       <div className="flex flex-col gap-4 items-start">
-        {/* <Button onClick={() => onEdit(trans)} size={4}>
+        <button onClick={() => onEdit(transaction)} size={10}>
           <Pencil className="text-gray-700" />
-        </Button>
-        <Button onClick={() => onDelete(trans.id)} size={4}>
-          <Trash2 className="text-gray-700" />
-        </Button> */}
+        </button>
         <button>
           <Trash2
             onClick={() => onDelete(transaction.id)}

@@ -15,6 +15,7 @@ import TransactionsList from "../shared/ui/TransactionsList";
 
 export default function ExpensePage() {
   const [openDialogModal, setOpenDialogModal] = useState(false);
+  const [editingId, setEditingId] = useState(null);
   const transactions = useSelector(selectTransactions);
   const dispatch = useDispatch();
 
@@ -45,6 +46,35 @@ export default function ExpensePage() {
     dispatch(deleteTransactionFromRedux(id));
   };
 
+  const handleEdit = (transaction) => {
+    setEditingId(transaction.id);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+  };
+
+  const handleSaveEdit = async (updatedTransaction) => {
+    try {
+      const response = await axiosInstance.put(
+        API_PATHS.TRANSACTIONS.TRANSACTIONS_BY_ID(updatedTransaction.id),
+        updatedTransaction,
+      );
+
+      dispatch(
+        setTransactions(
+          transactions.map((t) =>
+            t.id === updatedTransaction.id ? response.data : t,
+          ),
+        ),
+      );
+
+      setEditingId(null);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-20 p-10 items-center">
       <div>
@@ -61,28 +91,15 @@ export default function ExpensePage() {
       </DialogModal>
       <div className="min-w-xl mx-auto">
         <ul className="space-y-4">
-          {/* {transes
-            .filter((trans) => trans.type === "expense")
-            .map((trans) => (
-              <TransesList
-                key={trans.id}
-                trans={trans}
-                editingTrans={
-                  editingTrans?.id === trans.id ? editingTrans : null
-                }
-                category={expenseCategories}
-                onChangeEditInput={handleEditInputChange}
-                saveUpdateTrans={saveUpdateTrans}
-                cancelUpdateTrans={cancelUpdateTrans}
-                onEdit={editTrans}
-                onDelete={deleteTrans}
-              />
-            ))} */}
           {transactions.map((t) => (
             <TransactionsList
               key={t.id}
               transaction={t}
               onDelete={deleteTransaction}
+              onEdit={handleEdit}
+              onCancel={handleCancelEdit}
+              onSave={handleSaveEdit}
+              isEditing={editingId === t.id}
             />
           ))}
         </ul>

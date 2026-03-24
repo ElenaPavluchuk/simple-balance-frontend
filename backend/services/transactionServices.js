@@ -90,6 +90,7 @@ const updateUserTransaction = async ({
   userId,
   amount,
   categoryId,
+  categoryName,
   date,
   title,
   notes,
@@ -103,6 +104,29 @@ const updateUserTransaction = async ({
 
   if (!transaction) {
     throw ApiError.notFound("Transaction not found");
+  }
+
+  if (!categoryId && categoryName) {
+    let category = await knex("categories")
+      .where({
+        name: categoryName,
+        type: transaction.type,
+        user_id: userId,
+      })
+      .first();
+
+    if (!category) {
+      [category] = await knex("categories")
+        .insert({
+          name: categoryName,
+          type: transaction.type,
+          user_id: userId,
+          is_active: true,
+        })
+        .returning("*");
+    }
+
+    categoryId = category.id;
   }
 
   const updateData = Object.fromEntries(

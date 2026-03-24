@@ -19,13 +19,14 @@ export const transactionsSlice = createSlice({
     },
 
     updateTransactionInRedux: (state, action) => {
-      const { id, name, amount, category, date } = action.payload;
+      const { id, title, amount, category, date, note } = action.payload;
       const editedTransaction = state.value.find((t) => t.id === id);
       if (editedTransaction) {
-        editedTransaction.name = name;
+        editedTransaction.title = title;
         editedTransaction.amount = amount;
         editedTransaction.category = category;
         editedTransaction.date = date;
+        editedTransaction.note = note;
       }
     },
   },
