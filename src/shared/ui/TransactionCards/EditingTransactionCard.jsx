@@ -30,7 +30,8 @@ export default function EditingTransactionCard({
         setCategoryOptions(normolizedOptions || []);
 
         setSelectedCategory(
-          normolizedOptions?.find((o) => o.value === transaction.category_id),
+          normolizedOptions?.find((o) => o.value === transaction.category_id) ||
+            null,
         );
       } catch (err) {
         console.error(err);
@@ -42,14 +43,13 @@ export default function EditingTransactionCard({
 
   const handleSave = () => {
     onSave({
+      // TODO: валидировать перед отправкой + categoryName должно быть с заглавной буквы
       ...transaction,
       title,
       amount: parseFloat(amount),
       date,
-      categoryId: selectedCategory?.value || null,
-      categoryName: selectedCategory?.__isNew__
-        ? selectedCategory.label
-        : undefined,
+      categoryId: selectedCategory?.__isNew__ ? null : selectedCategory.value,
+      categoryName: selectedCategory?.__isNew__ ? selectedCategory.label : null,
     });
   };
 

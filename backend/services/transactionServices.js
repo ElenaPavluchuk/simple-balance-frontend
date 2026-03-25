@@ -125,7 +125,6 @@ const updateUserTransaction = async ({
         })
         .returning("*");
     }
-
     categoryId = category.id;
   }
 
@@ -147,9 +146,23 @@ const updateUserTransaction = async ({
     .where({ id: transactionId, user_id: userId })
     .update(updateData);
 
-  const [updatedTransaction] = await knex("transactions")
-    .where({ id: transactionId, user_id: userId })
-    .select(["id", "amount", "date", "title", "notes", "category_id"]);
+  const [updatedTransaction] = await knex("transactions as t")
+    .join("currencies as c", "t.currency_id", "c.id")
+    .join("categories as cat", "t.category_id", "cat.id")
+    .where({ "t.id": transactionId, "t.user_id": userId })
+    .select([
+      "t.id",
+      "t.user_id",
+      "t.type",
+      "t.amount",
+      "t.date",
+      "t.title",
+      "t.notes",
+      "t.currency_id",
+      "t.category_id",
+      "c.symbol as currency_symbol",
+      "cat.name as category_name",
+    ]);
 
   return updatedTransaction;
 };

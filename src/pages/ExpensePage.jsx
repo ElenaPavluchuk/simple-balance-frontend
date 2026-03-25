@@ -55,35 +55,12 @@ export default function ExpensePage() {
     setEditingId(null);
   };
 
-  // const handleSaveEdit = async (updatedTransaction) => {
-  //   try {
-  //     // const response =
-  //     await axiosInstance.put(
-  //       API_PATHS.TRANSACTIONS.TRANSACTIONS_BY_ID(updatedTransaction.id),
-  //       updatedTransaction,
-  //     );
-
-  //     dispatch(updateTransactionInRedux(updatedTransaction));
-  //     // setTransactions(
-  //     //   transactions.map((t) =>
-  //     //     t.id === updatedTransaction.id ? response.data : t,
-  //     //   ),
-  //     // ),
-
-  //     setEditingId(null);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-
   const handleSaveEdit = async (updatedTransaction) => {
     try {
-      // TODO: выслать category_name field в этом response
       const response = await axiosInstance.put(
         API_PATHS.TRANSACTIONS.TRANSACTIONS_BY_ID(updatedTransaction.id),
         updatedTransaction,
       );
-      console.log("save response: ", response.data);
 
       dispatch(
         updateTransactionInRedux({
