@@ -213,6 +213,12 @@ export default function CreateTransactionForm({ onClose }) {
           value={selectedCategory}
           onChange={handleChangeCategory}
           options={categoryOptions}
+          getNewOptionData={(inputValue) => ({
+            label:
+              inputValue.charAt(0).toUpperCase() + inputValue.slice(1).trim(),
+            value:
+              inputValue.charAt(0).toUpperCase() + inputValue.slice(1).trim(),
+          })}
         />
         {validateErrors.selectedCategory && (
           <p className="text-red-500 italic">

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import CreatableSelect from "react-select/creatable";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
+import { transactionsValidate, clearFieldError } from "../../utils/validate";
 
 export default function EditingTransactionCard({
   transaction,
@@ -14,6 +15,7 @@ export default function EditingTransactionCard({
   const [date, setDate] = useState(transaction.date);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categoryOptions, setCategoryOptions] = useState([]);
+  const [validateErrors, setValidateErrors] = useState({});
 
   useEffect(() => {
     const getCategories = async () => {
@@ -42,55 +44,125 @@ export default function EditingTransactionCard({
   }, [transaction]);
 
   const handleSave = () => {
-    onSave({
-      // TODO: валидировать перед отправкой + categoryName должно быть с заглавной буквы
+    // onSave({
+    //   // TODO: валидировать перед отправкой + categoryName должно быть с заглавной буквы
+    //   ...transaction,
+    //   title,
+    //   amount: parseFloat(amount),
+    //   date,
+    //   categoryId: selectedCategory?.__isNew__ ? null : selectedCategory.value,
+    //   categoryName: selectedCategory?.__isNew__ ? selectedCategory.label : null,
+    // });
+
+    const errors = transactionsValidate({
+      title,
+      amount,
+      selectedCategory,
+      date,
+    });
+
+    setValidateErrors(errors);
+
+    if (Object.keys(errors).length) return;
+
+    const data = {
       ...transaction,
       title,
       amount: parseFloat(amount),
       date,
-      categoryId: selectedCategory?.__isNew__ ? null : selectedCategory.value,
-      categoryName: selectedCategory?.__isNew__ ? selectedCategory.label : null,
-    });
+      categoryId: selectedCategory?.__isNew__ ? null : selectedCategory?.value,
+      categoryName: selectedCategory?.__isNew__
+        ? selectedCategory?.label
+        : null,
+    };
+
+    onSave(data);
   };
 
   return (
     <>
       <div className="w-full">
-        <div className="flex justify-between items-center ">
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="title"
-            autoComplete="off"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-          <input
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="amount"
-            type="number"
-            min="0.01"
-            step="0.01"
-            autoComplete="off"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
+        <div className="flex justify-between items-center">
+          <div className="w-full flex flex-col gap-1">
+            <input
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                clearFieldError("title", setValidateErrors);
+              }}
+              placeholder="title"
+              autoComplete="off"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            {validateErrors.title && (
+              <p className="text-red-500 italic text-xs">
+                {validateErrors.title}
+              </p>
+            )}
+          </div>
+          <div className="w-full flex flex-col gap-1">
+            <input
+              value={amount}
+              onChange={(e) => {
+                setAmount(e.target.value);
+                clearFieldError("amount", setValidateErrors);
+              }}
+              placeholder="amount"
+              type="number"
+              min="0.01"
+              step="0.01"
+              autoComplete="off"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            {validateErrors.amount && (
+              <p className="text-red-500 italic text-xs">
+                {validateErrors.amount}
+              </p>
+            )}
+          </div>
         </div>
         <div className="flex justify-between items-center mt-2 text-sm text-gray-500 ">
-          <div className="w-full">
+          <div className="w-full flex flex-col gap-1">
             <CreatableSelect
               isClearable
               value={selectedCategory}
               options={categoryOptions}
-              onChange={setSelectedCategory}
+              onChange={(option) => {
+                setSelectedCategory(option || null);
+                clearFieldError("selectedCategory", setValidateErrors);
+              }}
+              getNewOptionData={(inputValue) => ({
+                label:
+                  inputValue.charAt(0).toUpperCase() +
+                  inputValue.slice(1).trim(),
+                value:
+                  inputValue.charAt(0).toUpperCase() +
+                  inputValue.slice(1).trim(),
+              })}
             />
+            {validateErrors.selectedCategory && (
+              <p className="text-red-500 italic text-xs">
+                {validateErrors.selectedCategory}
+              </p>
+            )}
           </div>
-          <input
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            type="date"
-            placeholder="date"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
+          <div className="w-full flex flex-col gap-1">
+            <input
+              value={date}
+              onChange={(e) => {
+                setDate(e.target.value);
+                clearFieldError("date", setValidateErrors);
+              }}
+              type="date"
+              placeholder="date"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            {validateErrors.date && (
+              <p className="text-red-500 italic text-xs">
+                {validateErrors.date}
+              </p>
+            )}
+          </div>
         </div>
       </div>
       <div className="flex gap-4 items-start">
