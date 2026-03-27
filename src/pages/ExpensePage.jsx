@@ -11,12 +11,12 @@ import {
 } from "../shared/slices/transactionsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { selectTransactions } from "../shared/slices/transactionsSlice";
-// import dayjs from "dayjs";
 import TransactionsList from "../shared/ui/TransactionsList";
 
 export default function ExpensePage() {
   const [openDialogModal, setOpenDialogModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [apiError, setApiError] = useState("");
   const transactions = useSelector(selectTransactions);
   const dispatch = useDispatch();
 
@@ -27,15 +27,13 @@ export default function ExpensePage() {
           API_PATHS.TRANSACTIONS.GET_TRANSACTIONS_BY_TYPE("EXPENSE"),
         );
 
-        // const formattedData = (response.data || []).map((t) => ({
-        //   ...t,
-        //   date: dayjs(t.date).format("YYYY-MM-DD"),
-        // }));
-
-        // dispatch(setTransactions(formattedData || []));
         dispatch(setTransactions(response.data || []));
       } catch (err) {
         console.error(err);
+        const message =
+          err?.response?.data?.message ||
+          "Something went wrong. Please try again";
+        setApiError(message);
       }
     };
 
@@ -63,17 +61,16 @@ export default function ExpensePage() {
         updatedTransaction,
       );
 
-      dispatch(
-        // updateTransactionInRedux({
-        //   ...response.data,
-        //   date: dayjs(response.data.date).format("YYYY-MM-DD"),
-        // }),
-        updateTransactionInRedux(response.data),
-      );
+      dispatch(updateTransactionInRedux(response.data));
 
       setEditingId(null);
     } catch (err) {
       console.error(err);
+      setEditingId(null);
+      const message =
+        err?.response?.data?.message ||
+        "Something went wrong. Please try again";
+      setApiError(message);
     }
   };
 
@@ -106,6 +103,9 @@ export default function ExpensePage() {
           ))}
         </ul>
       </div>
+      {apiError && (
+        <p className="text-red-500 italic text-center">{apiError}</p>
+      )}
     </div>
   );
 }

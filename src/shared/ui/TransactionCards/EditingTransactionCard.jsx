@@ -19,7 +19,7 @@ export default function EditingTransactionCard({
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [validateErrors, setValidateErrors] = useState({});
-  // TODO: обрабатывать ошибки сервера
+  const [apiError, setApiError] = useState("");
 
   useEffect(() => {
     const getCategories = async () => {
@@ -41,6 +41,10 @@ export default function EditingTransactionCard({
         );
       } catch (err) {
         console.error(err);
+        const message =
+          err?.response?.data?.message ||
+          "Something went wrong. Please try again";
+        setApiError(message);
       }
     };
 
@@ -158,6 +162,10 @@ export default function EditingTransactionCard({
         <button onClick={onCancel} size={4}>
           <X className="text-gray-700" />
         </button>
+
+        {apiError && (
+          <p className="text-red-500 italic text-center">{apiError}</p>
+        )}
       </div>
     </>
   );
