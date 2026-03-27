@@ -1,12 +1,12 @@
 import { X, Check } from "lucide-react";
 import { useState, useEffect } from "react";
 import CreatableSelect from "react-select/creatable";
-import axiosInstance from "../../utils/axiosInstance";
-import { API_PATHS } from "../../utils/apiPaths";
-import { transactionsValidate, clearFieldError } from "../../utils/validate";
+import axiosInstance from "../utils/axiosInstance";
+import { API_PATHS } from "../utils/apiPaths";
+import { transactionsValidate, clearFieldError } from "../utils/validate";
 import dayjs from "dayjs";
 
-export default function EditingTransactionCard({
+export default function EditingTransactionForm({
   transaction,
   onCancel,
   onSave,
