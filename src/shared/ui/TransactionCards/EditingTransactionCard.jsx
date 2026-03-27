@@ -4,6 +4,7 @@ import CreatableSelect from "react-select/creatable";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import { transactionsValidate, clearFieldError } from "../../utils/validate";
+import dayjs from "dayjs";
 
 export default function EditingTransactionCard({
   transaction,
@@ -12,10 +13,13 @@ export default function EditingTransactionCard({
 }) {
   const [title, setTitle] = useState(transaction.title);
   const [amount, setAmount] = useState(transaction.amount);
-  const [date, setDate] = useState(transaction.date);
+  const [date, setDate] = useState(
+    transaction.date ? dayjs(transaction.date).format("YYYY-MM-DD") : "",
+  );
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [validateErrors, setValidateErrors] = useState({});
+  // TODO: обрабатывать ошибки сервера
 
   useEffect(() => {
     const getCategories = async () => {
@@ -44,16 +48,6 @@ export default function EditingTransactionCard({
   }, [transaction]);
 
   const handleSave = () => {
-    // onSave({
-    //   // TODO: валидировать перед отправкой + categoryName должно быть с заглавной буквы
-    //   ...transaction,
-    //   title,
-    //   amount: parseFloat(amount),
-    //   date,
-    //   categoryId: selectedCategory?.__isNew__ ? null : selectedCategory.value,
-    //   categoryName: selectedCategory?.__isNew__ ? selectedCategory.label : null,
-    // });
-
     const errors = transactionsValidate({
       title,
       amount,
@@ -131,14 +125,6 @@ export default function EditingTransactionCard({
                 setSelectedCategory(option || null);
                 clearFieldError("selectedCategory", setValidateErrors);
               }}
-              getNewOptionData={(inputValue) => ({
-                label:
-                  inputValue.charAt(0).toUpperCase() +
-                  inputValue.slice(1).trim(),
-                value:
-                  inputValue.charAt(0).toUpperCase() +
-                  inputValue.slice(1).trim(),
-              })}
             />
             {validateErrors.selectedCategory && (
               <p className="text-red-500 italic text-xs">

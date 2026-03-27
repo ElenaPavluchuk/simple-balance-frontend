@@ -6,7 +6,7 @@ import { useAuth } from "../context/auth/useAuth";
 import { transactionsValidate, clearFieldError } from "../utils/validate";
 import { useDispatch } from "react-redux";
 import { addTransactionToRedux } from "../slices/transactionsSlice";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 
 export default function CreateTransactionForm({ onClose }) {
   const [type, setType] = useState("EXPENSE");
@@ -116,6 +116,8 @@ export default function CreateTransactionForm({ onClose }) {
       categoryName: selectedCategory?.__isNew__ ? selectedCategory.label : null,
     };
 
+    console.log(data);
+
     setIsLoading(true);
 
     try {
@@ -124,12 +126,7 @@ export default function CreateTransactionForm({ onClose }) {
         data,
       );
 
-      dispatch(
-        addTransactionToRedux({
-          ...response.data,
-          date: dayjs(response.data.date).format("YYYY-MM-DD"),
-        }),
-      );
+      dispatch(addTransactionToRedux(response.data));
 
       onClose();
     } catch (err) {
@@ -213,12 +210,6 @@ export default function CreateTransactionForm({ onClose }) {
           value={selectedCategory}
           onChange={handleChangeCategory}
           options={categoryOptions}
-          getNewOptionData={(inputValue) => ({
-            label:
-              inputValue.charAt(0).toUpperCase() + inputValue.slice(1).trim(),
-            value:
-              inputValue.charAt(0).toUpperCase() + inputValue.slice(1).trim(),
-          })}
         />
         {validateErrors.selectedCategory && (
           <p className="text-red-500 italic">

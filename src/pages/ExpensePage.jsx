@@ -11,7 +11,7 @@ import {
 } from "../shared/slices/transactionsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { selectTransactions } from "../shared/slices/transactionsSlice";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 import TransactionsList from "../shared/ui/TransactionsList";
 
 export default function ExpensePage() {
@@ -27,12 +27,13 @@ export default function ExpensePage() {
           API_PATHS.TRANSACTIONS.GET_TRANSACTIONS_BY_TYPE("EXPENSE"),
         );
 
-        const formattedData = (response.data || []).map((t) => ({
-          ...t,
-          date: dayjs(t.date).format("YYYY-MM-DD"),
-        }));
+        // const formattedData = (response.data || []).map((t) => ({
+        //   ...t,
+        //   date: dayjs(t.date).format("YYYY-MM-DD"),
+        // }));
 
-        dispatch(setTransactions(formattedData || []));
+        // dispatch(setTransactions(formattedData || []));
+        dispatch(setTransactions(response.data || []));
       } catch (err) {
         console.error(err);
       }
@@ -63,10 +64,11 @@ export default function ExpensePage() {
       );
 
       dispatch(
-        updateTransactionInRedux({
-          ...response.data,
-          date: dayjs(response.data.date).format("YYYY-MM-DD"),
-        }),
+        // updateTransactionInRedux({
+        //   ...response.data,
+        //   date: dayjs(response.data.date).format("YYYY-MM-DD"),
+        // }),
+        updateTransactionInRedux(response.data),
       );
 
       setEditingId(null);

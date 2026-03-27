@@ -17,7 +17,7 @@ export default function Sidebar({ isSidebarClose, toggleSidebar }) {
     <div
       className={`${
         isSidebarClose ? "w-20" : "w-64"
-      } bg-teal-100 transition-all duration-300 ease-in-out flex flex-col h-screen fixed top-0`}
+      } bg-teal-100 transition-all duration-300 ease-in-out flex flex-col h-screen fixed`}
     >
       <div className="h-16 flex items-center justify-center border-b">
         <p>simple BALANCE</p>
