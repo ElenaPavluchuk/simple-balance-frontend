@@ -1,5 +1,20 @@
 import { Trash2, Pencil } from "lucide-react";
 import dayjs from "dayjs";
+import PropTypes from "prop-types";
+
+TransactionCard.propTypes = {
+  transaction: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    amount: PropTypes.number.isRequired,
+    category_id: PropTypes.number.isRequired,
+    category_name: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+    notes: PropTypes.string.isRequired,
+  }).isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+};
 
 export default function TransactionCard({ transaction, onDelete, onEdit }) {
   return (

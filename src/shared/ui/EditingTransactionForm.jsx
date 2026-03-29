@@ -5,6 +5,21 @@ import axiosInstance from "../utils/axiosInstance";
 import { API_PATHS } from "../utils/apiPaths";
 import { transactionsValidate, clearFieldError } from "../utils/validate";
 import dayjs from "dayjs";
+import PropTypes from "prop-types";
+
+EditingTransactionForm.propTypes = {
+  transaction: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    amount: PropTypes.number.isRequired,
+    category_id: PropTypes.number.isRequired,
+    category_name: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+    notes: PropTypes.string.isRequired,
+  }).isRequired,
+  onSave: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+};
 
 export default function EditingTransactionForm({
   transaction,
