@@ -18,6 +18,9 @@ export default function TransactionCard({ transaction, onDelete, onEdit }) {
           </span>
           <span>{dayjs(transaction.date).format("DD-MM-YYYY")}</span>
         </div>
+        <p className="mt-4 italic">
+          Note: <span>{transaction.notes}</span>
+        </p>
       </div>
       <div className="flex flex-col gap-4 items-start">
         <button onClick={() => onEdit(transaction)} size={10}>

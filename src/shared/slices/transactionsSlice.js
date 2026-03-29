@@ -12,23 +12,13 @@ export const transactionsSlice = createSlice({
 
     addTransactionToRedux: (state, action) => {
       state.value.push(action.payload);
+      state.value.sort((a, b) => new Date(b.date) - new Date(a.date));
     },
 
     deleteTransactionFromRedux: (state, action) => {
       state.value = state.value.filter((t) => t.id !== action.payload);
     },
 
-    // updateTransactionInRedux: (state, action) => {
-    //   const { id, title, amount, category_name, date, notes } = action.payload;
-    //   const editedTransaction = state.value.find((t) => t.id === id);
-    //   if (editedTransaction) {
-    //     editedTransaction.title = title;
-    //     editedTransaction.amount = amount;
-    //     editedTransaction.category_name = category_name;
-    //     editedTransaction.date = date;
-    //     editedTransaction.notes = notes;
-    //   }
-    // },
     updateTransactionInRedux: (state, action) => {
       const updated = action.payload;
 

@@ -207,6 +207,8 @@ export default function CreateTransactionForm({ onClose }) {
           value={selectedCategory}
           onChange={handleChangeCategory}
           options={categoryOptions}
+          // TODO: getNewOptionData={}
+          // TODO: isLoading={}
         />
         {validateErrors.selectedCategory && (
           <p className="text-red-500 italic">
