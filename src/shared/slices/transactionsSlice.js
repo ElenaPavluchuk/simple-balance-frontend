@@ -12,7 +12,14 @@ export const transactionsSlice = createSlice({
 
     addTransactionToRedux: (state, action) => {
       state.value.push(action.payload);
-      state.value.sort((a, b) => new Date(b.date) - new Date(a.date));
+      state.value.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        if (dateA.getTime() !== dateB.getTime()) {
+          return dateB.getTime() - dateA.getTime();
+        }
+        return (b.id || 0) - (a.id || 0);
+      });
     },
 
     deleteTransactionFromRedux: (state, action) => {

@@ -87,7 +87,8 @@ const getUserTransactions = async ({ userId, type }) => {
       "c.symbol as currency_symbol",
       "cat.name as category_name",
     ])
-    .orderBy("t.date", "desc");
+    .orderBy("t.date", "desc")
+    .orderBy("t.id", "desc");
 
   return transactions;
 };
