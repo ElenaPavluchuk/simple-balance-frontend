@@ -29,7 +29,7 @@ export default function TransactionCard({ transaction, onDelete, onEdit }) {
         </div>
         <div className="flex justify-between items-center mt-2 text-sm text-gray-500 ">
           <span className="bg-gray-100 px-2 py-1 rounded-lg">
-            <p className="uppercase text-xs">{transaction.category_name}</p>
+            <p>{transaction.category_name}</p>
           </span>
           <span>{dayjs(transaction.date).format("DD-MM-YYYY")}</span>
         </div>

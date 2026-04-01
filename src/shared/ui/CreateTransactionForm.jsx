@@ -22,43 +22,37 @@ export default function CreateTransactionForm({ onClose }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    let cancelled = false;
-
     const getCategories = async () => {
+      setIsLoading(true);
       try {
         const response = await axiosInstance.get(
           API_PATHS.TRANSACTIONS.GET_CATEGORIES_BY_TYPE(type),
         );
 
-        if (cancelled) return;
-
-        const normolizedOptions = response?.data?.map((o) => ({
+        const normalizedOptions = response?.data?.map((o) => ({
           label: o.name,
           value: o.id,
         }));
 
-        setCategoryOptions(normolizedOptions || []);
+        setCategoryOptions(normalizedOptions || []);
 
-        const defaultCategory = normolizedOptions?.find(
+        const defaultCategory = normalizedOptions?.find(
           (o) => o.label === "Other",
         );
 
         setSelectedCategory(defaultCategory || null);
       } catch (err) {
-        if (cancelled) return;
         console.error(err);
         const message =
           err?.response?.data?.message ||
           "Something went wrong. Please try again";
         setApiError(message);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     getCategories();
-
-    return () => {
-      cancelled = true;
-    };
   }, [type]);
 
   const handleTypeChange = (newType) => {
@@ -106,13 +100,13 @@ export default function CreateTransactionForm({ onClose }) {
 
     const data = {
       type,
-      title,
+      title: title.trim(),
       amount: parseFloat(amount),
       currencyId: user.base_currency_id,
-      notes: note,
+      notes: note.trim(),
       date,
-      categoryId: selectedCategory?.__isNew__ ? null : selectedCategory.value,
-      categoryName: selectedCategory?.__isNew__ ? selectedCategory.label : null,
+      categoryId: selectedCategory?.isCustom ? null : selectedCategory?.value,
+      categoryName: selectedCategory?.isCustom ? selectedCategory?.label : null,
     };
 
     setIsLoading(true);
@@ -207,8 +201,12 @@ export default function CreateTransactionForm({ onClose }) {
           value={selectedCategory}
           onChange={handleChangeCategory}
           options={categoryOptions}
-          // TODO: getNewOptionData={}
-          // TODO: isLoading={}
+          getNewOptionData={(inputValue, label) => ({
+            label: label.trim(),
+            value: inputValue,
+            isCustom: true,
+          })}
+          isLoading={isLoading}
         />
         {validateErrors.selectedCategory && (
           <p className="text-red-500 italic">

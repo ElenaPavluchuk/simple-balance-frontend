@@ -88,14 +88,12 @@ export default function EditingTransactionForm({
 
     const data = {
       ...transaction,
-      title,
+      title: title.trim(),
       amount: parseFloat(amount),
       date,
-      categoryId: selectedCategory?.__isNew__ ? null : selectedCategory?.value,
-      categoryName: selectedCategory?.__isNew__
-        ? selectedCategory?.label
-        : null,
-      notes: note,
+      categoryId: selectedCategory?.isCustom ? null : selectedCategory?.value,
+      categoryName: selectedCategory?.isCustom ? selectedCategory?.label : null,
+      notes: note.trim(),
     };
 
     onSave(data);
@@ -152,8 +150,12 @@ export default function EditingTransactionForm({
               setSelectedCategory(option || null);
               clearFieldError("selectedCategory", setValidateErrors);
             }}
+            getNewOptionData={(inputValue, label) => ({
+              label: label.trim(),
+              value: inputValue,
+              isCustom: true,
+            })}
             isLoading={isLoading}
-            // TODO: getNewOptionData={}
           />
           {validateErrors.selectedCategory && (
             <p className="text-red-500 italic text-xs">
