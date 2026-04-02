@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import Button from "../shared/ui/Button/Button";
 import DialogModal from "../shared/ui/DialogModal/DialogModal";
 import CreateTransactionForm from "../shared/ui/CreateTransactionForm";
 import axiosInstance from "../shared/utils/axiosInstance";
@@ -13,7 +12,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import TransactionsList from "../shared/ui/TransactionsList";
 
-export default function ExpensePage() {
+export default function IncomePage() {
   const [openDialogModal, setOpenDialogModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [apiError, setApiError] = useState("");
@@ -24,7 +23,7 @@ export default function ExpensePage() {
     const getTransactions = async () => {
       try {
         const response = await axiosInstance.get(
-          API_PATHS.TRANSACTIONS.GET_TRANSACTIONS_BY_TYPE("EXPENSE"),
+          API_PATHS.TRANSACTIONS.GET_TRANSACTIONS_BY_TYPE("INCOME"),
         );
 
         dispatch(setTransactions(response.data || []));
@@ -73,13 +72,15 @@ export default function ExpensePage() {
       setApiError(message);
     }
   };
-
   return (
     <div className="flex flex-col gap-20 p-10 items-center">
       <div>
-        <Button onClick={() => setOpenDialogModal(true)} variant="primary">
+        <button
+          onClick={() => setOpenDialogModal(true)}
+          className="p-3 border rounded"
+        >
           Add Transaction
-        </Button>
+        </button>
       </div>
       <DialogModal
         isOpen={openDialogModal}
