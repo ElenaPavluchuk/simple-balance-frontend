@@ -7,11 +7,34 @@ const addUserTransaction = async ({
   amount,
   currencyId,
   categoryId,
+  categoryName,
   date,
   title,
   notes,
 }) => {
-  const [transaction] = await knex("transactions")
+  if (!categoryId && categoryName) {
+    let category = await knex("categories")
+      .where({
+        name: categoryName,
+        type,
+        user_id: userId,
+      })
+      .first();
+
+    if (!category) {
+      [category] = await knex("categories")
+        .insert({
+          name: categoryName,
+          type,
+          user_id: userId,
+          is_active: true,
+        })
+        .returning("*");
+    }
+    categoryId = category.id;
+  }
+
+  const [inserted] = await knex("transactions")
     .insert({
       user_id: userId,
       type,
@@ -24,14 +47,48 @@ const addUserTransaction = async ({
     })
     .returning("*");
 
+  const transaction = await knex("transactions as t")
+    .join("currencies as c", "t.currency_id", "c.id")
+    .join("categories as cat", "t.category_id", "cat.id")
+    .where("t.id", inserted.id)
+    .select([
+      "t.id",
+      "t.user_id",
+      "t.type",
+      "t.amount",
+      "t.date",
+      "t.title",
+      "t.notes",
+      "t.currency_id",
+      "t.category_id",
+      "c.symbol as currency_symbol",
+      "cat.name as category_name",
+    ])
+    .first();
+
   return transaction;
 };
 
 const getUserTransactions = async ({ userId, type }) => {
-  const transactions = await knex("transactions")
-    .where({ user_id: userId, type: type })
-    .select("*")
-    .orderBy("date", "desc");
+  const transactions = await knex("transactions as t")
+    .join("currencies as c", "t.currency_id", "c.id")
+    .join("categories as cat", "t.category_id", "cat.id")
+    .where({ "t.user_id": userId, "t.type": type })
+    .select([
+      "t.id",
+      "t.user_id",
+      "t.type",
+      "t.amount",
+      "t.currency_id",
+      "t.category_id",
+      "t.date",
+      "t.title",
+      "t.notes",
+      "c.symbol as currency_symbol",
+      "cat.name as category_name",
+    ])
+    .orderBy("t.date", "desc")
+    .orderBy("t.id", "desc");
 
   return transactions;
 };
@@ -53,6 +110,7 @@ const updateUserTransaction = async ({
   userId,
   amount,
   categoryId,
+  categoryName,
   date,
   title,
   notes,
@@ -66,6 +124,28 @@ const updateUserTransaction = async ({
 
   if (!transaction) {
     throw ApiError.notFound("Transaction not found");
+  }
+
+  if (!categoryId && categoryName) {
+    let category = await knex("categories")
+      .where({
+        name: categoryName,
+        type: transaction.type,
+        user_id: userId,
+      })
+      .first();
+
+    if (!category) {
+      [category] = await knex("categories")
+        .insert({
+          name: categoryName,
+          type: transaction.type,
+          user_id: userId,
+          is_active: true,
+        })
+        .returning("*");
+    }
+    categoryId = category.id;
   }
 
   const updateData = Object.fromEntries(
@@ -86,9 +166,23 @@ const updateUserTransaction = async ({
     .where({ id: transactionId, user_id: userId })
     .update(updateData);
 
-  const [updatedTransaction] = await knex("transactions")
-    .where({ id: transactionId, user_id: userId })
-    .select(["id", "amount", "date", "title", "notes", "category_id"]);
+  const [updatedTransaction] = await knex("transactions as t")
+    .join("currencies as c", "t.currency_id", "c.id")
+    .join("categories as cat", "t.category_id", "cat.id")
+    .where({ "t.id": transactionId, "t.user_id": userId })
+    .select([
+      "t.id",
+      "t.user_id",
+      "t.type",
+      "t.amount",
+      "t.date",
+      "t.title",
+      "t.notes",
+      "t.currency_id",
+      "t.category_id",
+      "c.symbol as currency_symbol",
+      "cat.name as category_name",
+    ]);
 
   return updatedTransaction;
 };
@@ -148,8 +242,7 @@ const getData = async (userId) => {
 const getAllCategories = async (type) => {
   const categories = await knex("categories")
     .where({ type })
-    .select("id", "name", "type", "user_id")
-    .orderBy("created_at", "desc");
+    .select("id", "name", "type", "user_id");
 
   return categories;
 };
