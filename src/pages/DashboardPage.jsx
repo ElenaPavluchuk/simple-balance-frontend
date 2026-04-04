@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
 import TotalCard from "../shared/ui/TotalCard";
 import { Home, Wallet, CreditCard } from "lucide-react";
+import RecentTransactionsCard from "../shared/ui/RecentTransactionsCard";
 
 export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState(null);
   const [apiError, setApiError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getDashboardData = async () => {
@@ -54,6 +57,11 @@ export default function DashboardPage() {
           total={dashboardData?.total?.totalExpense || 0}
           symbol={dashboardData?.total?.baseCurrencySymbol}
           color={"bg-cyan-500"}
+        />
+
+        <RecentTransactionsCard
+          transactions={dashboardData?.recent?.transactions}
+          onViewAll={() => navigate("/expense")}
         />
       </div>
 
