@@ -1,0 +1,44 @@
+import CustomPieChart from "./CustomPieChart";
+
+export default function FinanceOverviewCard({
+  totalBalance,
+  totalIncome,
+  totalExpense,
+  symbol,
+}) {
+  const balanceData = [
+    {
+      name: "Total Balance",
+      value: totalBalance,
+      symbol: symbol,
+      fill: "#ff8fab",
+    },
+    {
+      name: "Total Expense",
+      value: totalExpense,
+      symbol: symbol,
+      fill: "#ffcfd2",
+    },
+    {
+      name: "Total Income",
+      value: totalIncome,
+      symbol: symbol,
+      fill: "#ffc6ff",
+    },
+  ];
+  return (
+    <div className="card bg-white rounded h-[500px]">
+      <div className="flex items-center justify-between">
+        <h5 className="text-lg">Financial Overview</h5>
+      </div>
+
+      <CustomPieChart
+        data={balanceData}
+        label="Total Balance"
+        totalAmount={totalBalance}
+        symbol={symbol}
+        showTextAnchor
+      />
+    </div>
+  );
+}

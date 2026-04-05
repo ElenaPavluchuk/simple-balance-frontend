@@ -5,6 +5,7 @@ import { API_PATHS } from "../shared/utils/apiPaths";
 import TotalCard from "../shared/ui/TotalCard";
 import { Home, Wallet, CreditCard } from "lucide-react";
 import RecentTransactionsCard from "../shared/ui/RecentTransactionsCard";
+import FinanceOverviewCard from "../shared/ui/FinanceOverviewCard";
 
 export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState(null);
@@ -62,6 +63,13 @@ export default function DashboardPage() {
         <RecentTransactionsCard
           transactions={dashboardData?.recent?.transactions}
           onViewAll={() => navigate("/expense")}
+        />
+
+        <FinanceOverviewCard
+          totalBalance={dashboardData?.total?.totalBalance || 0}
+          totalIncome={dashboardData?.total?.totalIncome || 0}
+          totalExpense={dashboardData?.total?.totalExpense || 0}
+          symbol={dashboardData?.total?.baseCurrencySymbol}
         />
       </div>
 
