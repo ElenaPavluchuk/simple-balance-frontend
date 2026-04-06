@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
+// import { useNavigate } from "react-router";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
 import TotalCard from "../shared/ui/TotalCard";
@@ -10,7 +10,7 @@ import FinanceOverviewCard from "../shared/ui/FinanceOverviewCard";
 export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState(null);
   const [apiError, setApiError] = useState("");
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     const getDashboardData = async () => {
@@ -40,7 +40,7 @@ export default function DashboardPage() {
           icon={<Home />}
           label={"Total balance"}
           total={dashboardData?.total?.totalBalance || 0}
-          symbol={dashboardData?.total?.baseCurrencySymbol}
+          symbol={dashboardData?.symbol?.baseCurrencySymbol}
           color={"bg-teal-500"}
         />
 
@@ -48,7 +48,7 @@ export default function DashboardPage() {
           icon={<Wallet />}
           label={"Total income"}
           total={dashboardData?.total?.totalIncome || 0}
-          symbol={dashboardData?.total?.baseCurrencySymbol}
+          symbol={dashboardData?.symbol?.baseCurrencySymbol}
           color={"bg-pink-500"}
         />
 
@@ -56,22 +56,26 @@ export default function DashboardPage() {
           icon={<CreditCard />}
           label={"Total expense"}
           total={dashboardData?.total?.totalExpense || 0}
-          symbol={dashboardData?.total?.baseCurrencySymbol}
+          symbol={dashboardData?.symbol?.baseCurrencySymbol}
           color={"bg-cyan-500"}
         />
 
         <RecentTransactionsCard
-          transactions={dashboardData?.recent?.transactions}
-          onViewAll={() => navigate("/expense")}
+          transactions={dashboardData?.total?.recentTransactions}
         />
 
         <FinanceOverviewCard
           totalBalance={dashboardData?.total?.totalBalance || 0}
           totalIncome={dashboardData?.total?.totalIncome || 0}
           totalExpense={dashboardData?.total?.totalExpense || 0}
-          symbol={dashboardData?.total?.baseCurrencySymbol}
+          symbol={dashboardData?.symbol?.baseCurrencySymbol}
         />
       </div>
+
+      {/* <RecentTransactionsCard
+        transactions={dashboardData?.recent?.transactions}
+        onViewAll={() => navigate("/expense")}
+      /> */}
 
       <div>
         {apiError && (

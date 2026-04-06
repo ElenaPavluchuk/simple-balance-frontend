@@ -27,7 +27,7 @@ export default function FinanceOverviewCard({
     },
   ];
   return (
-    <div className="card bg-white rounded h-[500px]">
+    <div className="card bg-white rounded h-125">
       <div className="flex items-center justify-between">
         <h5 className="text-lg">Financial Overview</h5>
       </div>

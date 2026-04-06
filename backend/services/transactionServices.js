@@ -222,31 +222,43 @@ const getData = async (userId) => {
     `),
     );
 
-  const last30Income = Number(last30Totals.total_income);
-  const last30Expense = Number(last30Totals.total_expense);
+  const last30IncomeAmount = Number(last30Totals.total_income);
+  const last30ExpenseAmount = Number(last30Totals.total_expense);
 
-  const last30ByCategory = await knex("transactions as t")
+  const last30Transactions = await knex("transactions as t")
     .join("categories as c", "c.id", "t.category_id")
     .where("t.user_id", userId)
     .andWhere("t.date", ">=", date30DaysAgo)
-    .select("t.type", "t.category_id", "c.name as category_name")
-    .sum("t.amount as amount")
-    .groupBy("t.type", "t.category_id", "c.name");
+    .select(
+      "t.id",
+      "t.type",
+      "t.amount",
+      "t.date",
+      "t.title",
+      "t.currency_id",
+      "t.category_id",
+      "c.name as category_name",
+    )
+    .orderBy("t.date", "desc");
 
-  const income = [];
-  const expense = [];
+  const last30IncomeTransactions = [];
+  const last30ExpenseTransactions = [];
 
-  last30ByCategory.forEach((row) => {
+  last30Transactions.forEach((t) => {
     const item = {
-      category_id: row.category_id,
-      category_name: row.category_name,
-      amount: Number(row.amount),
+      id: t.id,
+      type: t.type,
+      amount: Number(t.amount),
+      date: t.date,
+      title: t.title,
+      category_name: t.category_name,
+      currency_symbol: baseCurrencySymbol,
     };
 
-    if (row.type === "INCOME") {
-      income.push(item);
+    if (t.type === "INCOME") {
+      last30IncomeTransactions.push(item);
     } else {
-      expense.push(item);
+      last30ExpenseTransactions.push(item);
     }
   });
 
@@ -266,21 +278,30 @@ const getData = async (userId) => {
     .orderBy("t.date", "desc")
     .limit(5);
 
+  const last5AllTime = last5.map((t) => ({
+    ...t,
+    amount: Number(t.amount),
+    baseCurrencySymbol,
+  }));
+
   return {
-    total: { totalBalance, totalIncome, totalExpense, baseCurrencySymbol },
+    total: {
+      totalBalance,
+      totalIncome,
+      totalExpense,
+      // baseCurrencySymbol,
+      recentTransactions: last5AllTime,
+    },
     last30Days: {
-      income: last30Income,
-      expense: last30Expense,
-      incomeByCategory: income,
-      expenseByCategory: expense,
+      incomeTotal: last30IncomeAmount,
+      expenseTotal: last30ExpenseAmount,
+      incomeTransactions: last30IncomeTransactions,
+      expenseTransactions: last30ExpenseTransactions,
     },
-    recent: {
-      transactions: last5.map((t) => ({
-        ...t,
-        amount: Number(t.amount),
-        baseCurrencySymbol,
-      })),
-    },
+    // recentAllTime: {
+    //   transactions: last5Transactions,
+    // },
+    symbol: { baseCurrencySymbol },
   };
 };
 
