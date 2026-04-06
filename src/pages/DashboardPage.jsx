@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-// import { useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
 import TotalCard from "../shared/ui/TotalCard";
@@ -10,7 +10,7 @@ import FinanceOverviewCard from "../shared/ui/FinanceOverviewCard";
 export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState(null);
   const [apiError, setApiError] = useState("");
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getDashboardData = async () => {
@@ -62,6 +62,8 @@ export default function DashboardPage() {
 
         <RecentTransactionsCard
           transactions={dashboardData?.total?.recentTransactions}
+          title={"Recent Transactions"}
+          hideBtn
         />
 
         <FinanceOverviewCard
@@ -72,10 +74,16 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* <RecentTransactionsCard
-        transactions={dashboardData?.recent?.transactions}
-        onViewAll={() => navigate("/expense")}
-      /> */}
+      <div className="max-w-sm mt-3">
+        <RecentTransactionsCard
+          transactions={dashboardData?.last30Days?.expenseTransactions?.slice(
+            0,
+            5,
+          )}
+          title={"Expense"}
+          onViewAll={() => navigate("/expense")}
+        />
+      </div>
 
       <div>
         {apiError && (
