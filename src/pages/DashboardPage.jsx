@@ -6,6 +6,7 @@ import TotalCard from "../shared/ui/TotalCard";
 import { Home, Wallet, CreditCard } from "lucide-react";
 import RecentTransactionsCard from "../shared/ui/RecentTransactionsCard";
 import FinanceOverviewCard from "../shared/ui/FinanceOverviewCard";
+import Last30DaysExpenseCard from "../shared/ui/Last30DaysExpenseCard";
 
 export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState(null);
@@ -76,12 +77,15 @@ export default function DashboardPage() {
 
       <div className="max-w-sm mt-3">
         <RecentTransactionsCard
-          transactions={dashboardData?.last30Days?.expenseTransactions?.slice(
-            0,
-            5,
-          )}
+          transactions={dashboardData?.last30Days?.expenseTransactions || []}
           title={"Expense"}
           onViewAll={() => navigate("/expense")}
+        />
+      </div>
+
+      <div className="max-w-sm mt-3 ml-3">
+        <Last30DaysExpenseCard
+          transactions={dashboardData?.last30Days?.expenseByCategory || []}
         />
       </div>
 
