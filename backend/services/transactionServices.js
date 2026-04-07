@@ -211,21 +211,6 @@ const getData = async (userId) => {
 
   const date30DaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
-  // TODO: remove because unused
-  // const last30Totals = await knex("transactions as t")
-  //   .join("categories as c", "c.id", "t.category_id")
-  //   .where("t.user_id", userId)
-  //   .andWhere("t.date", ">=", date30DaysAgo)
-  //   .first(
-  //     knex.raw(`
-  //     COALESCE(SUM(CASE WHEN t.type = 'INCOME'  THEN t.amount ELSE 0 END), 0) as total_income,
-  //     COALESCE(SUM(CASE WHEN t.type = 'EXPENSE' THEN t.amount ELSE 0 END), 0) as total_expense
-  //   `),
-  //   );
-
-  // const last30IncomeAmount = Number(last30Totals.total_income);
-  // const last30ExpenseAmount = Number(last30Totals.total_expense);
-
   const last30DaysTransactionsByCategory = await knex("transactions as t")
     .join("categories as c", "c.id", "t.category_id")
     .where("t.user_id", userId)
@@ -266,26 +251,6 @@ const getData = async (userId) => {
     )
     .orderBy("t.date", "desc")
     .orderBy("t.id", "desc");
-  // const last30IncomeTransactions = [];
-  // const last30ExpenseTransactions = [];
-
-  // last30Transactions.forEach((t) => {
-  //   const item = {
-  //     id: t.id,
-  //     type: t.type,
-  //     amount: Number(t.amount),
-  //     date: t.date,
-  //     title: t.title,
-  //     category_name: t.category_name,
-  //     currency_symbol: baseCurrencySymbol,
-  //   };
-
-  //   if (t.type === "INCOME") {
-  //     last30IncomeTransactions.push(item);
-  //   } else {
-  //     last30ExpenseTransactions.push(item);
-  //   }
-  // });
 
   const last30DaysIncomeTransactions = last30DaysTransactions
     .filter((t) => t.type === "INCOME")
@@ -344,8 +309,6 @@ const getData = async (userId) => {
       recentTransactions: last5TransactionsAllTime,
     },
     last30Days: {
-      // incomeTotal: last30IncomeAmount,
-      // expenseTotal: last30ExpenseAmount,
       incomeByCategory: last30DaysIncomeByCategory,
       expenseByCategory: last30DaysExpenseByCategory,
       incomeTransactions: last30DaysIncomeTransactions,
