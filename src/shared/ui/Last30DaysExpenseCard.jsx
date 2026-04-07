@@ -1,9 +1,10 @@
 import CustomBarChart from "./CustomBarChart";
 
 export default function Last30DaysExpenseCard({ transactions }) {
-  const data = transactions.map((t) => ({
+  const data = transactions.map((t, index) => ({
     category: t?.category_name,
     amount: t?.amount,
+    fill: index % 2 === 0 ? "#ffb3c6" : "#ffe5ec",
   }));
 
   return (

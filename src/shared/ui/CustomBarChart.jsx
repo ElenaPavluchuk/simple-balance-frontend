@@ -6,15 +6,10 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Cell,
 } from "recharts";
 // import CustomTooltip from "./CustomTooltip";
 
 export default function CustomBarChart({ data }) {
-  const getBarColor = (index) => {
-    return index % 2 === 0 ? "#ffb3c6" : "#ffe5ec";
-  };
-
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       return (
@@ -34,6 +29,7 @@ export default function CustomBarChart({ data }) {
     }
     return null;
   };
+
   return (
     <div className="bg-white mt-6">
       <ResponsiveContainer width="100%" height={300}>
@@ -52,11 +48,7 @@ export default function CustomBarChart({ data }) {
             radius={[10, 10, 0, 0]}
             activeDot={{ r: 8, fill: "yellow" }}
             activeStyle={{ fill: "green" }}
-          >
-            {data.map((entry, index) => (
-              <Cell key={index} fill={getBarColor(index)} />
-            ))}
-          </Bar>
+          ></Bar>
         </BarChart>
       </ResponsiveContainer>
     </div>

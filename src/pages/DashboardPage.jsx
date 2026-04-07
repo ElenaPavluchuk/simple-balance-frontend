@@ -73,17 +73,13 @@ export default function DashboardPage() {
           totalExpense={dashboardData?.total?.totalExpense || 0}
           symbol={dashboardData?.symbol?.baseCurrencySymbol}
         />
-      </div>
 
-      <div className="max-w-sm mt-3">
         <RecentTransactionsCard
           transactions={dashboardData?.last30Days?.expenseTransactions || []}
           title={"Expense"}
           onViewAll={() => navigate("/expense")}
         />
-      </div>
 
-      <div className="max-w-sm mt-3 ml-3">
         <Last30DaysExpenseCard
           transactions={dashboardData?.last30Days?.expenseByCategory || []}
         />
