@@ -1,4 +1,4 @@
-import CustomPieChart from "./CustomPieChart";
+import CustomPieChart from "../Charts/CustomPieChart";
 
 export default function FinanceOverviewCard({
   totalBalance,

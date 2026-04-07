@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
-import TotalCard from "../shared/ui/TotalCard";
+import TotalCard from "../shared/ui/Dashboard/Cards/TotalCard";
 import { Home, Wallet, CreditCard } from "lucide-react";
-import RecentTransactionsCard from "../shared/ui/RecentTransactionsCard";
-import FinanceOverviewCard from "../shared/ui/FinanceOverviewCard";
-import Last30DaysExpenseCard from "../shared/ui/Last30DaysExpenseCard";
+import RecentTransactionsCard from "../shared/ui/Dashboard/Cards/RecentTransactionsCard";
+import FinanceOverviewCard from "../shared/ui/Dashboard/Cards/FinanceOverviewCard";
+import Last30DaysTransactionsCard from "../shared/ui/Dashboard/Cards/Last30DaysTransactionsCard";
 
 export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState(null);
@@ -32,12 +32,34 @@ export default function DashboardPage() {
 
     getDashboardData();
   }, []);
+
+  const totalCards = [
+    {
+      icon: <Home />,
+      label: "Total balance",
+      total: dashboardData?.total?.totalBalance || 0,
+      color: "bg-teal-500",
+    },
+    {
+      icon: <Wallet />,
+      label: "Total income",
+      total: dashboardData?.total?.totalIncome || 0,
+      color: "bg-pink-500",
+    },
+    {
+      icon: <CreditCard />,
+      label: "Total expense",
+      total: dashboardData?.total?.totalExpense || 0,
+      color: "bg-cyan-500",
+    },
+  ];
+
   return (
     <div className="m-5">
       <h1 className="mb-5 text-center font-bold">Dashboard Page</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <TotalCard
+        {/* <TotalCard
           icon={<Home />}
           label={"Total balance"}
           total={dashboardData?.total?.totalBalance || 0}
@@ -59,13 +81,18 @@ export default function DashboardPage() {
           total={dashboardData?.total?.totalExpense || 0}
           symbol={dashboardData?.symbol?.baseCurrencySymbol}
           color={"bg-cyan-500"}
-        />
+        /> */}
 
-        <RecentTransactionsCard
-          transactions={dashboardData?.total?.recentTransactions}
-          title={"Recent Transactions"}
-          hideBtn
-        />
+        {totalCards.map((card, index) => (
+          <TotalCard
+            key={index}
+            icon={card.icon}
+            label={card.label}
+            total={card.total}
+            color={card.color}
+            symbol={dashboardData?.symbol?.baseCurrencySymbol}
+          />
+        ))}
 
         <FinanceOverviewCard
           totalBalance={dashboardData?.total?.totalBalance || 0}
@@ -75,13 +102,31 @@ export default function DashboardPage() {
         />
 
         <RecentTransactionsCard
+          transactions={dashboardData?.total?.recentTransactions}
+          title={"Recent Transactions"}
+          hideBtn
+        />
+
+        <RecentTransactionsCard
           transactions={dashboardData?.last30Days?.expenseTransactions || []}
           title={"Expense"}
           onViewAll={() => navigate("/expense")}
         />
 
-        <Last30DaysExpenseCard
+        <Last30DaysTransactionsCard
           transactions={dashboardData?.last30Days?.expenseByCategory || []}
+          title={"expense"}
+        />
+
+        <RecentTransactionsCard
+          transactions={dashboardData?.last30Days?.incomeTransactions || []}
+          title={"Income"}
+          onViewAll={() => navigate("/income")}
+        />
+
+        <Last30DaysTransactionsCard
+          transactions={dashboardData?.last30Days?.incomeByCategory || []}
+          title={"income"}
         />
       </div>
 
