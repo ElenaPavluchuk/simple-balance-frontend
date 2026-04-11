@@ -188,13 +188,21 @@ const updateUserTransaction = async ({
 };
 
 const getData = async (userId) => {
-  const [totals] = await knex("transactions")
+  const user = await knex("users")
+    .join("currencies", "users.base_currency_id", "currencies.id")
+    .where("users.id", userId)
+    .select("currencies.id as currency_id", "currencies.symbol as symbol")
+    .first();
+
+  const baseCurrencySymbol = user.symbol;
+
+  const totals = await knex("transactions")
     .where({ user_id: userId })
-    .select(
+    .first(
       knex.raw(`
-          COALESCE(SUM(CASE WHEN type = 'INCOME'  THEN amount ELSE 0 END), 0) as total_income,
-          COALESCE(SUM(CASE WHEN type = 'EXPENSE' THEN amount ELSE 0 END), 0) as total_expense
-        `),
+      COALESCE(SUM(CASE WHEN type = 'INCOME'  THEN amount ELSE 0 END), 0) as total_income,
+      COALESCE(SUM(CASE WHEN type = 'EXPENSE' THEN amount ELSE 0 END), 0) as total_expense
+    `),
     );
 
   const totalIncome = Number(totals.total_income);
@@ -202,40 +210,111 @@ const getData = async (userId) => {
   const totalBalance = totalIncome - totalExpense;
 
   const date30DaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-  const [last30Totals] = await knex("transactions")
-    .where("user_id", userId)
-    .andWhere("date", ">=", date30DaysAgo)
-    .select(
-      knex.raw(`
-          COALESCE(SUM(CASE WHEN type = 'INCOME'  THEN amount ELSE 0 END), 0) as total_income,
-          COALESCE(SUM(CASE WHEN type = 'EXPENSE' THEN amount ELSE 0 END), 0) as total_expense
-        `),
-    );
 
-  const last30Income = Number(last30Totals.total_income);
-  const last30Expense = Number(last30Totals.total_expense);
+  const last30DaysTransactionsByCategory = await knex("transactions as t")
+    .join("categories as c", "c.id", "t.category_id")
+    .where("t.user_id", userId)
+    .andWhere("t.date", ">=", date30DaysAgo)
+    .select("t.type", "t.category_id", "c.name as category_name")
+    .sum("t.amount as amount")
+    .groupBy("t.type", "t.category_id", "c.name");
 
-  const last5 = await knex("transactions")
-    .where({ user_id: userId })
+  const last30DaysIncomeByCategory = [];
+  const last30DaysExpenseByCategory = [];
+
+  last30DaysTransactionsByCategory.forEach((row) => {
+    const item = {
+      amount: Number(row.amount),
+      category_name: row.category_name,
+    };
+
+    if (row.type === "INCOME") {
+      last30DaysIncomeByCategory.push(item);
+    } else {
+      last30DaysExpenseByCategory.push(item);
+    }
+  });
+
+  const last30DaysTransactions = await knex("transactions as t")
+    .join("categories as c", "c.id", "t.category_id")
+    .where("t.user_id", userId)
+    .andWhere("t.date", ">=", date30DaysAgo)
     .select(
-      "id",
-      "type",
-      "amount",
-      "date",
-      "title",
-      "currency_id",
-      "category_id",
+      "t.id",
+      "t.type",
+      "t.amount",
+      "t.date",
+      "t.title",
+      "t.currency_id",
+      "t.category_id",
+      "c.name as category_name",
     )
-    .orderBy("date", "desc")
+    .orderBy("t.date", "desc")
+    .orderBy("t.id", "desc");
+
+  const last30DaysIncomeTransactions = last30DaysTransactions
+    .filter((t) => t.type === "INCOME")
+    .slice(0, 5)
+    .map((t) => ({
+      id: t.id,
+      type: t.type,
+      amount: Number(t.amount),
+      date: t.date,
+      title: t.title,
+      category_name: t.category_name,
+      currency_symbol: baseCurrencySymbol,
+    }));
+
+  const last30DaysExpenseTransactions = last30DaysTransactions
+    .filter((t) => t.type !== "INCOME")
+    .slice(0, 5)
+    .map((t) => ({
+      id: t.id,
+      type: t.type,
+      amount: Number(t.amount),
+      date: t.date,
+      title: t.title,
+      category_name: t.category_name,
+      currency_symbol: baseCurrencySymbol,
+    }));
+
+  const last5Transactions = await knex("transactions as t")
+    .join("categories as c", "c.id", "t.category_id")
+    .where({ "t.user_id": userId })
+    .select(
+      "t.id",
+      "t.type",
+      "t.amount",
+      "t.date",
+      "t.title",
+      "t.currency_id",
+      "t.category_id",
+      "c.name as category_name",
+    )
+    .orderBy("t.date", "desc")
+    .orderBy("t.id", "desc")
     .limit(5);
 
+  const last5TransactionsAllTime = last5Transactions.map((t) => ({
+    ...t,
+    amount: Number(t.amount),
+    baseCurrencySymbol,
+  }));
+
   return {
-    total: { totalBalance, totalIncome, totalExpense },
-    last30Days: {
-      income: last30Income,
-      expense: last30Expense,
+    total: {
+      totalBalance,
+      totalIncome,
+      totalExpense,
+      recentTransactions: last5TransactionsAllTime,
     },
-    recent: { transactions: last5 },
+    last30Days: {
+      incomeByCategory: last30DaysIncomeByCategory,
+      expenseByCategory: last30DaysExpenseByCategory,
+      incomeTransactions: last30DaysIncomeTransactions,
+      expenseTransactions: last30DaysExpenseTransactions,
+    },
+    symbol: { baseCurrencySymbol },
   };
 };
 

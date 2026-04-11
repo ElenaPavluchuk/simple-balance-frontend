@@ -1,5 +1,5 @@
-import TransactionCard from "./TransactionCard";
-import EditingTransactionForm from "./EditingTransactionForm";
+import TransactionCard from "./Cards/TransactionCard";
+import EditingTransactionForm from "./Forms/EditingTransactionForm";
 import PropTypes from "prop-types";
 
 TransactionsList.propTypes = {

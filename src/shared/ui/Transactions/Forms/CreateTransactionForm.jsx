@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import CreatableSelect from "react-select/creatable";
-import axiosInstance from "../utils/axiosInstance";
-import { API_PATHS } from "../utils/apiPaths";
-import { useAuth } from "../context/auth/useAuth";
-import { transactionsValidate, clearFieldError } from "../utils/validate";
+import axiosInstance from "../../../utils/axiosInstance";
+import { API_PATHS } from "../../../utils/apiPaths";
+import { useAuth } from "../../../context/auth/useAuth";
+import { transactionsValidate, clearFieldError } from "../../../utils/validate";
 import { useDispatch } from "react-redux";
-import { addTransactionToRedux } from "../slices/transactionsSlice";
+import { addTransactionToRedux } from "../../../slices/transactionsSlice";
 
 export default function CreateTransactionForm({ onClose }) {
   const [type, setType] = useState("EXPENSE");

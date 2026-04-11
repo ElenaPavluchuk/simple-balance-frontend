@@ -1,6 +1,6 @@
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
-import Button from "../Button/Button";
+import Button from "./Button";
 
 export default function DialogModal({ isOpen, onClose, title, children }) {
   if (!isOpen) return null;
@@ -25,6 +25,6 @@ export default function DialogModal({ isOpen, onClose, title, children }) {
         <div>{children}</div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }

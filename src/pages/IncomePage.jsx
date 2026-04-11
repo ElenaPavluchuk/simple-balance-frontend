@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import DialogModal from "../shared/ui/DialogModal/DialogModal";
-import CreateTransactionForm from "../shared/ui/CreateTransactionForm";
+import DialogModal from "../shared/ui/DialogModal";
+import CreateTransactionForm from "../shared/ui/Transactions/Forms/CreateTransactionForm";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
 import {
@@ -10,7 +10,7 @@ import {
   selectTransactions,
 } from "../shared/slices/transactionsSlice";
 import { useSelector, useDispatch } from "react-redux";
-import TransactionsList from "../shared/ui/TransactionsList";
+import TransactionsList from "../shared/ui/Transactions/TransactionsList";
 
 export default function IncomePage() {
   const [openDialogModal, setOpenDialogModal] = useState(false);
