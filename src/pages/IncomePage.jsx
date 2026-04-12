@@ -87,7 +87,10 @@ export default function IncomePage() {
         onClose={() => setOpenDialogModal(false)}
         title="Add transaction"
       >
-        <CreateTransactionForm onClose={() => setOpenDialogModal(false)} />
+        <CreateTransactionForm
+          type={"INCOME"}
+          onClose={() => setOpenDialogModal(false)}
+        />
       </DialogModal>
       <div className="min-w-xl mx-auto">
         <ul className="space-y-4">
