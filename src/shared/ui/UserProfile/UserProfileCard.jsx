@@ -1,10 +1,6 @@
-import { useAuth } from "../../context/auth/useAuth";
-
-export default function UserProfileCard() {
-  const { user } = useAuth();
-
+export default function UserProfileCard({ user, onEdit }) {
   return (
-    <div className="mt-5 flex flex-col gap-3 bg-white p-4 shadow-md rounded">
+    <div className="flex flex-col gap-3 bg-white p-4 shadow-md rounded w-md">
       <p className="text-md">
         <span className="italic text-sm">Full name: </span>
         {user.full_name}
@@ -21,6 +17,13 @@ export default function UserProfileCard() {
           {user.user_role}
         </p>
       )}
+
+      <button
+        onClick={onEdit}
+        className="w-full bg-rose-400 text-white rounded py-2 mt-6"
+      >
+        Edit Profile
+      </button>
     </div>
   );
 }

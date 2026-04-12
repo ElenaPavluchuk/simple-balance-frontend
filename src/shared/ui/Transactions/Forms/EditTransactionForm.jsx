@@ -7,7 +7,7 @@ import { transactionsValidate, clearFieldError } from "../../../utils/validate";
 import dayjs from "dayjs";
 import PropTypes from "prop-types";
 
-EditingTransactionForm.propTypes = {
+EditTransactionForm.propTypes = {
   transaction: PropTypes.shape({
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
@@ -21,11 +21,7 @@ EditingTransactionForm.propTypes = {
   onCancel: PropTypes.func.isRequired,
 };
 
-export default function EditingTransactionForm({
-  transaction,
-  onCancel,
-  onSave,
-}) {
+export default function EditTransactionForm({ transaction, onCancel, onSave }) {
   const [title, setTitle] = useState(transaction.title);
   const [amount, setAmount] = useState(transaction.amount);
   const [date, setDate] = useState(

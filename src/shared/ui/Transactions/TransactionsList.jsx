@@ -1,5 +1,5 @@
 import TransactionCard from "./Cards/TransactionCard";
-import EditingTransactionForm from "./Forms/EditingTransactionForm";
+import EditTransactionForm from "./Forms/EditTransactionForm";
 import PropTypes from "prop-types";
 
 TransactionsList.propTypes = {
@@ -30,7 +30,7 @@ export default function TransactionsList({
   return (
     <li className="bg-white flex flex-row justify-between gap-10 rounded-2xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition">
       {isEditing ? (
-        <EditingTransactionForm
+        <EditTransactionForm
           transaction={transaction}
           onCancel={onCancel}
           onSave={onSave}
