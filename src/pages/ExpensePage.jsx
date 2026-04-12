@@ -86,7 +86,10 @@ export default function ExpensePage() {
         onClose={() => setOpenDialogModal(false)}
         title="Add transaction"
       >
-        <CreateTransactionForm onClose={() => setOpenDialogModal(false)} />
+        <CreateTransactionForm
+          type={"EXPENSE"}
+          onClose={() => setOpenDialogModal(false)}
+        />
       </DialogModal>
       <div className="min-w-xl mx-auto">
         <ul className="space-y-4">

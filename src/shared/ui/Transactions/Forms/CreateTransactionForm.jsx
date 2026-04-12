@@ -7,8 +7,7 @@ import { transactionsValidate, clearFieldError } from "../../../utils/validate";
 import { useDispatch } from "react-redux";
 import { addTransactionToRedux } from "../../../slices/transactionsSlice";
 
-export default function CreateTransactionForm({ onClose }) {
-  const [type, setType] = useState("EXPENSE");
+export default function CreateTransactionForm({ type, onClose }) {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -55,12 +54,6 @@ export default function CreateTransactionForm({ onClose }) {
     getCategories();
   }, [type]);
 
-  const handleTypeChange = (newType) => {
-    setType(newType);
-    setSelectedCategory(null);
-    clearFieldError("type", setValidateErrors);
-  };
-
   const handleTitleChange = (value) => {
     setTitle(value);
     clearFieldError("title", setValidateErrors);
@@ -88,7 +81,6 @@ export default function CreateTransactionForm({ onClose }) {
     setApiError("");
 
     const errors = transactionsValidate({
-      type,
       title,
       amount,
       selectedCategory,
@@ -136,33 +128,6 @@ export default function CreateTransactionForm({ onClose }) {
       onSubmit={handleSubmit}
       className="bg-pink-100 w-96 max-w-full flex flex-col gap-6 p-6 rounded-lg shadow-lg"
     >
-      <div className="flex justify-center gap-4">
-        {["EXPENSE", "INCOME"].map((t) => (
-          <label key={t} className="flex items-center cursor-pointer">
-            <input
-              type="radio"
-              value={t}
-              checked={t === type}
-              onChange={() => handleTypeChange(t)}
-              className="hidden peer"
-            />
-            <span
-              className={`px-6 py-2 rounded-lg text-sm font-medium transition-all capitalize
-                  ${
-                    t === type
-                      ? "bg-green-500 text-white shadow-md"
-                      : "bg-white text-gray-700 hover:bg-gray-100"
-                  }`}
-            >
-              {t}
-            </span>
-          </label>
-        ))}
-        {validateErrors.type && (
-          <p className="text-red-500 italic">{validateErrors.type}</p>
-        )}
-      </div>
-
       <div>
         <label>Title</label>
         <input

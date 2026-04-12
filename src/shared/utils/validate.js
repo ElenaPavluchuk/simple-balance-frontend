@@ -33,11 +33,7 @@ export const authValidate = (values) => {
 
 export const transactionsValidate = (values) => {
   const errors = {};
-  const { type, title, amount, selectedCategory, date } = values;
-
-  if ("type" in values && !type) {
-    errors.type = "Type is required";
-  }
+  const { title, amount, selectedCategory, date } = values;
 
   if ("title" in values) {
     if (!title.trim()) {
