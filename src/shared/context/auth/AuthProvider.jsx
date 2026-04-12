@@ -31,7 +31,6 @@ const AuthProvider = ({ children }) => {
     loadUser();
   }, []);
 
-  // const updateUser = (userData) => setUser(userData);
   const login = ({ token, user }) => {
     localStorage.setItem("token", token);
     setUser(user);
@@ -42,11 +41,13 @@ const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const updateUser = (userData) => setUser(userData);
+
   const value = useMemo(
     () => ({
       user,
       isLoading,
-      // updateUser,
+      updateUser,
       login,
       logout,
     }),
