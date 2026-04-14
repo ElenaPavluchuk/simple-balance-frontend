@@ -61,7 +61,7 @@ const updateUserById = async ({
     const isValid = await bcrypt.compare(currentPassword, user.password_hash);
 
     if (!isValid) {
-      throw ApiError.forbidden("Incorrect password");
+      throw ApiError.forbidden("Incorrect current password");
     }
 
     updateData.password_hash = await bcrypt.hash(newPassword, 7);
@@ -74,7 +74,14 @@ const updateUserById = async ({
   const [updatedUser] = await knex("users")
     .where({ id: userId })
     .update(updateData)
-    .returning(["id", "full_name", "profile_image_url"]);
+    .returning([
+      "id",
+      "email",
+      "full_name",
+      "profile_image_url",
+      "user_role",
+      "base_currency_id",
+    ]);
 
   return updatedUser;
 };

@@ -1,12 +1,49 @@
 import { useState } from "react";
+import { authValidate, clearFieldError } from "../../utils/validate";
 
-export default function EditUserProfileForm({ user, onSave, onCancel }) {
+export default function EditUserProfileForm({
+  user,
+  onSave,
+  onCancel,
+  isLoading,
+}) {
   const [newFullName, setNewFullName] = useState(user.full_name);
+  const [isEditPassword, setIsEditPassword] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [validateErrors, setValidateErrors] = useState({});
+
+  const togglePasswordEdit = () => {
+    setIsEditPassword((prev) => !prev);
+
+    if (isEditPassword) {
+      setCurrentPassword("");
+      setNewPassword("");
+      clearFieldError("password", setValidateErrors);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const data = { ...user, fullName: newFullName.trim() };
+    const validatePayload = { fullName: newFullName };
+    if (isEditPassword) {
+      validatePayload.password = newPassword;
+    }
+
+    const errors = authValidate(validatePayload);
+
+    setValidateErrors(errors);
+    if (Object.keys(errors).length) return;
+
+    const data = {
+      fullName: newFullName.trim(),
+      ...(isEditPassword && {
+        currentPassword,
+        newPassword,
+      }),
+    };
+
     onSave(data);
   };
 
@@ -20,24 +57,63 @@ export default function EditUserProfileForm({ user, onSave, onCancel }) {
         Full name:{" "}
         <input
           value={newFullName}
-          onChange={(e) => setNewFullName(e.target.value)}
+          onChange={(e) => {
+            setNewFullName(e.target.value);
+            clearFieldError("fullName", setValidateErrors);
+          }}
           placeholder="Change full name"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
         />
       </label>
+      {validateErrors.fullName && (
+        <p className="text-red-500 italic">{validateErrors.fullName}</p>
+      )}
+
+      <button
+        type="button"
+        onClick={togglePasswordEdit}
+        className="w-full px-3 py-2 border border-red-500 rounded text-red-500 mt-3"
+      >
+        {isEditPassword ? "Cancel" : "Change password"}
+      </button>
+      {isEditPassword && (
+        <div className="flex flex-col gap-2">
+          <input
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+            placeholder="Current password"
+            type="password"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+          <input
+            value={newPassword}
+            onChange={(e) => {
+              setNewPassword(e.target.value);
+              clearFieldError("password", setValidateErrors);
+            }}
+            placeholder="New password"
+            type="password"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+          {validateErrors.password && (
+            <p className="text-red-500 italic">{validateErrors.password}</p>
+          )}
+        </div>
+      )}
 
       <button
         type="submit"
-        className="w-full bg-rose-400 text-white rounded py-2 mt-6"
+        disabled={isLoading}
+        className="w-full bg-rose-400 text-white rounded py-2 mt-8"
       >
-        Save edit
+        Update profile
       </button>
       <button
         type="button"
         onClick={onCancel}
         className="w-full border border-gray-700 text-gray-700 rounded py-2"
       >
-        Cancel edit
+        Cancel edit profile
       </button>
     </form>
   );

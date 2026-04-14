@@ -20,7 +20,7 @@ export default function UserProfileCard({ user, onEdit }) {
 
       <button
         onClick={onEdit}
-        className="w-full bg-rose-400 text-white rounded py-2 mt-6"
+        className="w-full bg-rose-400 text-white rounded py-2 mt-8"
       >
         Edit Profile
       </button>
