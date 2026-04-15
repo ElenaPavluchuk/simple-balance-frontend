@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { authValidate, clearFieldError } from "../../utils/validate";
+import ImageSelector from "./ImageSelector";
 
 export default function EditUserProfileForm({
   user,
@@ -7,6 +8,11 @@ export default function EditUserProfileForm({
   onCancel,
   isLoading,
 }) {
+  const [newProfileImage, setNewProfileImage] = useState(
+    user.profile_image_url || null,
+  ); // файл новой фотографии profilePic
+  // const [previewUrl, setPreviewUrl] = useState(user.profile_image_url || null); // ссылка для предпросмотра изображения
+  const isImageChanged = newProfileImage !== user.profile_image_url;
   const [newFullName, setNewFullName] = useState(user.full_name);
   const [isEditPassword, setIsEditPassword] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
@@ -38,11 +44,14 @@ export default function EditUserProfileForm({
 
     const data = {
       fullName: newFullName.trim(),
+      ...(isImageChanged && { profileImage: newProfileImage }), // console: { profileImage: File }
       ...(isEditPassword && {
         currentPassword,
         newPassword,
       }),
     };
+
+    console.log("data from form: ", data);
 
     onSave(data);
   };
@@ -53,6 +62,7 @@ export default function EditUserProfileForm({
       className="flex flex-col gap-3 bg-white p-4 shadow-md rounded w-md"
     >
       <h3 className="font-semibold text-center">Edit Profile</h3>
+      <ImageSelector image={newProfileImage} setImage={setNewProfileImage} />
       <label>
         Full name:{" "}
         <input

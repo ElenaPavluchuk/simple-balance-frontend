@@ -15,11 +15,50 @@ export default function UserProfilePage() {
 
   const handleSaveEdit = async (data) => {
     setIsLoading(true);
+
     try {
-      const response = await axiosInstance.put(
-        API_PATHS.USERS.USER_PROFILE,
-        data,
-      );
+      let response;
+
+      const isFile = data.profileImage instanceof File;
+
+      if (isFile) {
+        const formData = new FormData();
+
+        formData.append("fullName", data.fullName);
+        formData.append("profileImage", data.profileImage);
+
+        if (data.currentPassword) {
+          formData.append("currentPassword", data.currentPassword);
+          formData.append("newPassword", data.newPassword);
+        }
+
+        response = await axiosInstance.put(
+          API_PATHS.USERS.USER_PROFILE,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          },
+        );
+      } else {
+        // если картинка не менялась
+        // const data = {
+        //   fullName: data.fullName,
+        //   ...(data.currentPassword && {
+        //     currentPassword: data.currentPassword,
+        //     newPassword: data.newPassword,
+        //   }),
+        // };
+
+        response = await axiosInstance.put(API_PATHS.USERS.USER_PROFILE, data);
+        console.log("data from profile page: ", data);
+      }
+
+      // const response = await axiosInstance.put(
+      //   API_PATHS.USERS.USER_PROFILE,
+      //   data,
+      // );
 
       updateUser(response?.data?.updatedUser);
       setIsEdit(false);
