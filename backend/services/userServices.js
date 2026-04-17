@@ -44,7 +44,7 @@ const updateUserById = async ({
   }
 
   if (imageUrl) {
-    updateData.profile_image_url = imageUrl.path;
+    updateData.profile_image_url = imageUrl;
   }
 
   if (currentPassword && newPassword) {

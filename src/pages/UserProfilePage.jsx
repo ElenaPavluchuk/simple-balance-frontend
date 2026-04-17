@@ -11,6 +11,8 @@ export default function UserProfilePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState("");
 
+  console.log("user: ", user);
+
   const handleEdit = () => setIsEdit(true);
 
   const handleSaveEdit = async (data) => {

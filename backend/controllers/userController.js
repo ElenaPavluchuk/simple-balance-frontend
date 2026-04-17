@@ -32,6 +32,9 @@ const deleteUser = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
   const userId = req.user.id;
   const { fullName, currentPassword, newPassword } = req.body;
+  const imageUrl = req.file
+    ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
+    : undefined;
 
   try {
     const updatedUser = await updateUserById({
@@ -39,7 +42,7 @@ const updateUser = async (req, res, next) => {
       fullName,
       currentPassword,
       newPassword,
-      imageUrl: req.file,
+      imageUrl,
     });
 
     return res

@@ -1,6 +1,12 @@
 export default function UserProfileCard({ user, onEdit }) {
   return (
     <div className="flex flex-col gap-3 bg-white p-4 shadow-md rounded w-md">
+      <img
+        src={user?.profile_image_url || ""}
+        alt="Image"
+        className="w-20 h-20 bg-slate-400 rounded-full"
+      />
+
       <p className="text-md">
         <span className="italic text-sm">Full name: </span>
         {user.full_name}
