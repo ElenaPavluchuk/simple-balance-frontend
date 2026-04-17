@@ -11,8 +11,6 @@ export default function UserProfilePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState("");
 
-  console.log("user: ", user);
-
   const handleEdit = () => setIsEdit(true);
 
   const handleSaveEdit = async (data) => {
@@ -44,23 +42,8 @@ export default function UserProfilePage() {
           },
         );
       } else {
-        // если картинка не менялась
-        // const data = {
-        //   fullName: data.fullName,
-        //   ...(data.currentPassword && {
-        //     currentPassword: data.currentPassword,
-        //     newPassword: data.newPassword,
-        //   }),
-        // };
-
         response = await axiosInstance.put(API_PATHS.USERS.USER_PROFILE, data);
-        console.log("data from profile page: ", data);
       }
-
-      // const response = await axiosInstance.put(
-      //   API_PATHS.USERS.USER_PROFILE,
-      //   data,
-      // );
 
       updateUser(response?.data?.updatedUser);
       setIsEdit(false);

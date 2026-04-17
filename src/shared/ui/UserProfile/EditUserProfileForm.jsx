@@ -10,9 +10,9 @@ export default function EditUserProfileForm({
 }) {
   const [newProfileImage, setNewProfileImage] = useState(
     user.profile_image_url || null,
-  ); // файл новой фотографии profilePic
-  // const [previewUrl, setPreviewUrl] = useState(user.profile_image_url || null); // ссылка для предпросмотра изображения
+  );
   const isImageChanged = newProfileImage !== user.profile_image_url;
+  const [isRemoveImage, setIsRemoveImage] = useState(false);
   const [newFullName, setNewFullName] = useState(user.full_name);
   const [isEditPassword, setIsEditPassword] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
@@ -44,14 +44,16 @@ export default function EditUserProfileForm({
 
     const data = {
       fullName: newFullName.trim(),
-      ...(isImageChanged && { profileImage: newProfileImage }), // console: { profileImage: File }
+      ...(isRemoveImage && { removeProfileImage: true }),
+      ...(isImageChanged &&
+        newProfileImage instanceof File && {
+          profileImage: newProfileImage,
+        }),
       ...(isEditPassword && {
         currentPassword,
         newPassword,
       }),
     };
-
-    console.log("data from form: ", data);
 
     onSave(data);
   };
@@ -62,7 +64,11 @@ export default function EditUserProfileForm({
       className="flex flex-col gap-3 bg-white p-4 shadow-md rounded w-md"
     >
       <h3 className="font-semibold text-center">Edit Profile</h3>
-      <ImageSelector image={newProfileImage} setImage={setNewProfileImage} />
+      <ImageSelector
+        image={newProfileImage}
+        setImage={setNewProfileImage}
+        onRemoveImage={setIsRemoveImage}
+      />
       <label>
         Full name:{" "}
         <input

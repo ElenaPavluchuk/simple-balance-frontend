@@ -1,6 +1,8 @@
 const knex = require("../db.js");
 const ApiError = require("../errors/apiError.js");
 const bcrypt = require("bcrypt");
+const fs = require("fs");
+const path = require("path");
 
 const getUserById = async (id) => {
   const user = await knex("users")
@@ -34,6 +36,7 @@ const updateUserById = async ({
   currentPassword,
   newPassword,
   imageUrl,
+  removeProfileImage,
 }) => {
   const user = await knex("users").where({ id: userId }).first();
 
@@ -43,7 +46,41 @@ const updateUserById = async ({
     updateData.full_name = fullName.trim();
   }
 
+  if (removeProfileImage && user.profile_image_url) {
+    try {
+      const oldImagePath = path.join(
+        __dirname,
+        "..",
+        "uploads",
+        path.basename(user.profile_image_url),
+      );
+
+      if (fs.existsSync(oldImagePath)) {
+        fs.unlinkSync(oldImagePath);
+      }
+    } catch (err) {
+      console.error("Error deleting image:", err.message);
+    }
+
+    updateData.profile_image_url = null;
+  }
+
   if (imageUrl) {
+    if (imageUrl && user.profile_image_url) {
+      try {
+        const oldImagePath = path.join(
+          __dirname,
+          "..",
+          "uploads",
+          path.basename(user.profile_image_url),
+        );
+
+        fs.unlinkSync(oldImagePath);
+      } catch (err) {
+        console.error("Error deleting old image:", err.message);
+      }
+    }
+
     updateData.profile_image_url = imageUrl;
   }
 

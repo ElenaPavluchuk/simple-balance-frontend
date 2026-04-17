@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { User, ImageUp, Trash } from "lucide-react";
 
-export default function ImageSelector({ image, setImage }) {
+export default function ImageSelector({ image, setImage, onRemoveImage }) {
   const inputRef = useRef(null);
   const [previewUrl, setPreviewUrl] = useState(image || null);
 
@@ -17,12 +17,14 @@ export default function ImageSelector({ image, setImage }) {
       setImage(file);
       const preview = URL.createObjectURL(file);
       setPreviewUrl(preview);
+      onRemoveImage(false);
     }
   };
 
   const handleRemoveImage = () => {
     setImage(null);
     setPreviewUrl(null);
+    onRemoveImage(true);
   };
 
   const onChooseFile = () => {

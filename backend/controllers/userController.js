@@ -31,7 +31,9 @@ const deleteUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   const userId = req.user.id;
-  const { fullName, currentPassword, newPassword } = req.body;
+  const { fullName, currentPassword, newPassword, removeProfileImage } =
+    req.body;
+
   const imageUrl = req.file
     ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
     : undefined;
@@ -43,6 +45,7 @@ const updateUser = async (req, res, next) => {
       currentPassword,
       newPassword,
       imageUrl,
+      removeProfileImage,
     });
 
     return res
