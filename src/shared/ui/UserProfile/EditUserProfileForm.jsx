@@ -122,7 +122,7 @@ export default function EditUserProfileForm({
         disabled={isLoading}
         className="w-full bg-rose-400 text-white rounded py-2 mt-8"
       >
-        Update profile
+        {isLoading ? "Updating..." : "Update profile"}
       </button>
       <button
         type="button"
