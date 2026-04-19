@@ -1,8 +1,7 @@
 const knex = require("../db.js");
 const ApiError = require("../errors/apiError.js");
 const bcrypt = require("bcrypt");
-const fs = require("fs");
-const path = require("path");
+const deleteImageFile = require("../utils/deleteImageFile.js");
 
 const getUserById = async (id) => {
   const user = await knex("users")
@@ -21,13 +20,19 @@ const getUserById = async (id) => {
 };
 
 const deleteUserById = async (id) => {
+  const user = await knex("users").where({ id }).first();
+
+  if (user.profile_image_url) {
+    deleteImageFile(user.profile_image_url);
+  }
+
   const deletedCount = await knex("users").where({ id }).del();
 
   if (!deletedCount || deletedCount === 0) {
     throw ApiError.notFound("User to delete not found");
   }
 
-  return;
+  return deletedCount;
 };
 
 const updateUserById = async ({
@@ -47,38 +52,13 @@ const updateUserById = async ({
   }
 
   if (removeProfileImage && user.profile_image_url) {
-    try {
-      const oldImagePath = path.join(
-        __dirname,
-        "..",
-        "uploads",
-        path.basename(user.profile_image_url),
-      );
-
-      if (fs.existsSync(oldImagePath)) {
-        fs.unlinkSync(oldImagePath);
-      }
-    } catch (err) {
-      console.error("Error deleting image:", err.message);
-    }
-
+    deleteImageFile(user.profile_image_url);
     updateData.profile_image_url = null;
   }
 
   if (imageUrl) {
     if (imageUrl && user.profile_image_url) {
-      try {
-        const oldImagePath = path.join(
-          __dirname,
-          "..",
-          "uploads",
-          path.basename(user.profile_image_url),
-        );
-
-        fs.unlinkSync(oldImagePath);
-      } catch (err) {
-        console.error("Error deleting old image:", err.message);
-      }
+      deleteImageFile(user.profile_image_url);
     }
 
     updateData.profile_image_url = imageUrl;

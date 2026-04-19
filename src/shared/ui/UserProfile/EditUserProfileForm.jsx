@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { authValidate, clearFieldError } from "../../utils/validate";
 import ImageSelector from "./ImageSelector";
+import DialogModal from "../DialogModal";
+import DeleteAlert from "../DeleteAlert";
 
 export default function EditUserProfileForm({
   user,
   onSave,
   onCancel,
   isLoading,
+  onDeleteUser,
 }) {
   const [newProfileImage, setNewProfileImage] = useState(
     user.profile_image_url || null,
@@ -18,6 +21,7 @@ export default function EditUserProfileForm({
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [validateErrors, setValidateErrors] = useState({});
+  const [openDialogModal, setOpenDialogModal] = useState(false);
 
   const togglePasswordEdit = () => {
     setIsEditPassword((prev) => !prev);
@@ -131,6 +135,37 @@ export default function EditUserProfileForm({
       >
         Cancel edit profile
       </button>
+
+      <div className="bg-red-200 px-5 py-2 rounded mt-5">
+        <h4 className="text-red-500 font-semibold text-lg my-3 mx-2">
+          Danger zone
+        </h4>
+        <div className="bg-white rounded px-3 py-2 flex flex-row items-center">
+          <div>
+            <h4 className="text-lg py-2">Delete account</h4>
+            <p>Delete this user account and any excisting information</p>
+          </div>
+          <button
+            onClick={() => setOpenDialogModal(true)}
+            type="button"
+            className="px-4 py-2 bg-red-500 rounded text-white h-15"
+          >
+            Delete account
+          </button>
+        </div>
+      </div>
+
+      <DialogModal
+        isOpen={openDialogModal}
+        onClose={() => setOpenDialogModal(false)}
+        title="Permanantly delete this account?"
+      >
+        <DeleteAlert
+          content="The account with any exsisting information will be removed"
+          onDelete={onDeleteUser}
+          onClose={() => setOpenDialogModal(false)}
+        />
+      </DialogModal>
     </form>
   );
 }

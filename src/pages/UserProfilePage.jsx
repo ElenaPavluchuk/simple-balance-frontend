@@ -7,7 +7,7 @@ import { API_PATHS } from "../shared/utils/apiPaths";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function UserProfilePage() {
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, logout } = useAuth();
   const [isEdit, setIsEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -59,6 +59,24 @@ export default function UserProfilePage() {
   };
 
   const handleCancelEdit = () => setIsEdit(false);
+
+  const handleDelete = async () => {
+    setIsLoading(true);
+
+    try {
+      const response = await axiosInstance.delete(API_PATHS.USERS.USER_PROFILE);
+      toast.success(response?.data?.message);
+
+      logout();
+    } catch (err) {
+      console.error(err);
+      toast.error(
+        err.response?.data?.message || "Something went wrong. Please try again",
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="m-10 flex flex-col items-center w-fit gap-5">
       <h2 className="font-bold">UserProfilePage</h2>
@@ -73,6 +91,7 @@ export default function UserProfilePage() {
           onSave={handleSaveEdit}
           onCancel={handleCancelEdit}
           isLoading={isLoading}
+          onDeleteUser={handleDelete}
         />
       ) : (
         <UserProfileCard user={user} onEdit={handleEdit} />
