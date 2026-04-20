@@ -1,6 +1,7 @@
 const knex = require("../db.js");
 const ApiError = require("../errors/apiError.js");
 const bcrypt = require("bcrypt");
+const deleteImageFile = require("../utils/deleteImageFile.js");
 
 const getUserById = async (id) => {
   const user = await knex("users")
@@ -19,13 +20,19 @@ const getUserById = async (id) => {
 };
 
 const deleteUserById = async (id) => {
+  const user = await knex("users").where({ id }).first();
+
+  if (user.profile_image_url) {
+    deleteImageFile(user.profile_image_url);
+  }
+
   const deletedCount = await knex("users").where({ id }).del();
 
   if (!deletedCount || deletedCount === 0) {
     throw ApiError.notFound("User to delete not found");
   }
 
-  return;
+  return deletedCount;
 };
 
 const updateUserById = async ({
@@ -34,6 +41,7 @@ const updateUserById = async ({
   currentPassword,
   newPassword,
   imageUrl,
+  removeProfileImage,
 }) => {
   const user = await knex("users").where({ id: userId }).first();
 
@@ -43,8 +51,17 @@ const updateUserById = async ({
     updateData.full_name = fullName.trim();
   }
 
+  if (removeProfileImage && user.profile_image_url) {
+    deleteImageFile(user.profile_image_url);
+    updateData.profile_image_url = null;
+  }
+
   if (imageUrl) {
-    updateData.profile_image_url = imageUrl.path;
+    if (imageUrl && user.profile_image_url) {
+      deleteImageFile(user.profile_image_url);
+    }
+
+    updateData.profile_image_url = imageUrl;
   }
 
   if (currentPassword && newPassword) {
@@ -61,7 +78,7 @@ const updateUserById = async ({
     const isValid = await bcrypt.compare(currentPassword, user.password_hash);
 
     if (!isValid) {
-      throw ApiError.forbidden("Incorrect password");
+      throw ApiError.forbidden("Incorrect current password");
     }
 
     updateData.password_hash = await bcrypt.hash(newPassword, 7);
@@ -74,7 +91,14 @@ const updateUserById = async ({
   const [updatedUser] = await knex("users")
     .where({ id: userId })
     .update(updateData)
-    .returning(["id", "full_name", "profile_image_url"]);
+    .returning([
+      "id",
+      "email",
+      "full_name",
+      "profile_image_url",
+      "user_role",
+      "base_currency_id",
+    ]);
 
   return updatedUser;
 };
