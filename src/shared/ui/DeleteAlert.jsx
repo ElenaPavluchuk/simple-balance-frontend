@@ -1,7 +1,7 @@
-export default function DeleteAlert({ content, onDelete, onClose }) {
+export default function DeleteAlert({ content, onDelete, onClose, isLoading }) {
   return (
     <div>
-      <p className="text-sm"> {content}</p>
+      <p className="text-sm">{content}</p>
 
       <div className="flex justify-between mt-6">
         <button
@@ -16,8 +16,9 @@ export default function DeleteAlert({ content, onDelete, onClose }) {
           type="button"
           className="p-3 bg-red-500 text-white rounded"
           onClick={onDelete}
+          disabled={isLoading}
         >
-          Delete
+          {isLoading ? "Loading..." : "Delete"}
         </button>
       </div>
     </div>

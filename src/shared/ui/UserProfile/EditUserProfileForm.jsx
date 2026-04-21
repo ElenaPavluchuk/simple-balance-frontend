@@ -164,6 +164,7 @@ export default function EditUserProfileForm({
           content="The account with any exsisting information will be removed"
           onDelete={onDeleteUser}
           onClose={() => setOpenDialogModal(false)}
+          isLoading={isLoading}
         />
       </DialogModal>
     </form>
