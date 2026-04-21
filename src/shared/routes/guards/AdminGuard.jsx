@@ -1,7 +1,7 @@
 import { Navigate } from "react-router";
 import { useAuth } from "../../context/auth/useAuth";
 
-export function AuthGuard({ children }) {
+export function AdminGuard({ children }) {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
@@ -10,6 +10,10 @@ export function AuthGuard({ children }) {
 
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (user.user_role !== "ADMIN") {
+    return <Navigate to="/" replace />;
   }
 
   return children;
