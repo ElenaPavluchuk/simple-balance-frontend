@@ -11,7 +11,15 @@ Sidebar.propTypes = {
 
 export default function Sidebar({ isSidebarClose, toggleSidebar }) {
   const location = useLocation();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
+
+  const filteredData = data.filter((item) => {
+    if (item.key === "manage-users") {
+      return user?.user_role === "ADMIN";
+    }
+
+    return true;
+  });
 
   return (
     <div
@@ -25,7 +33,7 @@ export default function Sidebar({ isSidebarClose, toggleSidebar }) {
 
       <nav className="flex-1 pt-4 bg-white">
         <ul className="space-y-2 px-3">
-          {data.map((item) => (
+          {filteredData.map((item) => (
             <li key={item.key}>
               <Link
                 to={item.path}

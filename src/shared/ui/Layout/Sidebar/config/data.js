@@ -1,4 +1,4 @@
-import { Home, Wallet, CreditCard, User } from "lucide-react";
+import { Home, Wallet, CreditCard, User, Users } from "lucide-react";
 
 export const data = [
   {
@@ -24,5 +24,11 @@ export const data = [
     label: "Profile",
     icon: User,
     path: "/profile",
+  },
+  {
+    key: "manage-users",
+    label: "Manage users",
+    icon: Users,
+    path: "/manage-users",
   },
 ];
