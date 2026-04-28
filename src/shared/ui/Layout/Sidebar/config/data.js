@@ -1,4 +1,4 @@
-import { Home, Wallet, CreditCard, User, Users } from "lucide-react";
+import { Home, Wallet, CreditCard, User, Users, Orbit } from "lucide-react";
 
 export const data = [
   {
@@ -30,5 +30,11 @@ export const data = [
     label: "Manage users",
     icon: Users,
     path: "/manage-users",
+  },
+  {
+    key: "content",
+    label: "Currencies and News",
+    icon: Orbit,
+    path: "/content",
   },
 ];
