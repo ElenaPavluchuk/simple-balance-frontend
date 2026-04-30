@@ -3,9 +3,9 @@ const generateAccessToken = require("../utils/jwt.js");
 const ApiError = require("../errors/apiError.js");
 
 const register = async (req, res, next) => {
-  const { email, password, fullName, currencyId } = req.body;
+  const { email, password, userName, currencyId } = req.body;
 
-  if (!email?.trim() || !password.trim() || !fullName?.trim() || !currencyId) {
+  if (!email?.trim() || !password.trim() || !userName?.trim() || !currencyId) {
     return next(ApiError.badRequest("All fields are required"));
   }
 
@@ -14,7 +14,7 @@ const register = async (req, res, next) => {
   }
 
   try {
-    const user = await registerUser({ email, password, fullName, currencyId });
+    const user = await registerUser({ email, password, userName, currencyId });
     const token = generateAccessToken(user.id, user.user_role);
 
     return res.status(201).json({

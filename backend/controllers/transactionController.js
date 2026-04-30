@@ -20,7 +20,7 @@ const addTransaction = async (req, res, next) => {
     categoryName,
     date,
     title,
-    notes,
+    note,
   } = req.body;
 
   if (
@@ -48,7 +48,7 @@ const addTransaction = async (req, res, next) => {
       categoryName,
       date,
       title,
-      notes,
+      note,
     });
 
     return res.status(201).json(transaction);

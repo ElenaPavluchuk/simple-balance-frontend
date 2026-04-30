@@ -12,8 +12,8 @@ export default function UserProfileCard({ user, onEdit }) {
       )}
 
       <p className="text-md">
-        <span className="italic text-sm">Full name: </span>
-        {user.full_name}
+        <span className="italic text-sm">Name: </span>
+        {user.user_name}
       </p>
 
       <p className="text-md">

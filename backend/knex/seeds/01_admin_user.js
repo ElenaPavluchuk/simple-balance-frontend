@@ -20,7 +20,7 @@ exports.seed = async function (knex) {
         process.env.ADMIN_PASSWORD,
         bcrypt.genSaltSync(7),
       ),
-      full_name: "System Admin",
+      user_name: "System Admin",
       profile_image_url: null,
       user_role: "ADMIN",
       base_currency_id: usd.id,

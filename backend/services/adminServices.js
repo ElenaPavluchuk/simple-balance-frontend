@@ -5,7 +5,7 @@ const getAllUsers = async () => {
   const allUsers = await knex("users").select(
     "id",
     "email",
-    "full_name",
+    "user_name",
     "profile_image_url",
     "user_role",
     "base_currency_id",

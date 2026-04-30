@@ -31,7 +31,7 @@ const deleteUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   const userId = req.user.id;
-  const { fullName, currentPassword, newPassword, removeProfileImage } =
+  const { userName, currentPassword, newPassword, removeProfileImage } =
     req.body;
 
   const imageUrl = req.file
@@ -41,7 +41,7 @@ const updateUser = async (req, res, next) => {
   try {
     const updatedUser = await updateUserById({
       userId,
-      fullName,
+      userName,
       currentPassword,
       newPassword,
       imageUrl,

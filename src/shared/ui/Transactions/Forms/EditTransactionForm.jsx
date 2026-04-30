@@ -15,7 +15,7 @@ EditTransactionForm.propTypes = {
     category_id: PropTypes.number.isRequired,
     category_name: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
-    notes: PropTypes.string.isRequired,
+    note: PropTypes.string.isRequired,
   }).isRequired,
   onSave: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
@@ -29,7 +29,7 @@ export default function EditTransactionForm({ transaction, onCancel, onSave }) {
   );
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categoryOptions, setCategoryOptions] = useState([]);
-  const [note, setNote] = useState(transaction.notes);
+  const [note, setNote] = useState(transaction.note);
   const [validateErrors, setValidateErrors] = useState({});
   const [apiError, setApiError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -89,7 +89,7 @@ export default function EditTransactionForm({ transaction, onCancel, onSave }) {
       date,
       categoryId: selectedCategory?.isCustom ? null : selectedCategory?.value,
       categoryName: selectedCategory?.isCustom ? selectedCategory?.label : null,
-      notes: note.trim(),
+      note: note.trim(),
     };
 
     onSave(data);

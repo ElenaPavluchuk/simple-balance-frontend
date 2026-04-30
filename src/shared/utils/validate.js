@@ -2,17 +2,17 @@ export const authValidate = (values) => {
   const errors = {};
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  const { selectedCurrency, fullName, email, password } = values;
+  const { selectedCurrency, userName, email, password } = values;
 
   if ("selectedCurrency" in values && !selectedCurrency) {
     errors.selectedCurrency = "Currency is required";
   }
 
-  if ("fullName" in values) {
-    if (!fullName.trim()) {
-      errors.fullName = "Full name is required";
-    } else if (fullName.length > 100) {
-      errors.fullName = "Full name must be no more than 100 characters long";
+  if ("userName" in values) {
+    if (!userName.trim()) {
+      errors.userName = "User name is required";
+    } else if (userName.length > 100) {
+      errors.userName = "User name must be no more than 100 characters long";
     }
   }
 

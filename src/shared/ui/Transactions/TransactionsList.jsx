@@ -10,7 +10,7 @@ TransactionsList.propTypes = {
     category_id: PropTypes.number.isRequired,
     category_name: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
-    notes: PropTypes.string.isRequired,
+    note: PropTypes.string.isRequired,
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,

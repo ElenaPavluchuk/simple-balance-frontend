@@ -9,7 +9,7 @@ const getUserById = async (id) => {
     .select([
       "id",
       "email",
-      "full_name",
+      "user_name",
       "profile_image_url",
       "user_role",
       "base_currency_id",
@@ -37,7 +37,7 @@ const deleteUserById = async (id) => {
 
 const updateUserById = async ({
   userId,
-  fullName,
+  userName,
   currentPassword,
   newPassword,
   imageUrl,
@@ -47,8 +47,8 @@ const updateUserById = async ({
 
   const updateData = {};
 
-  if (fullName) {
-    updateData.full_name = fullName.trim();
+  if (userName) {
+    updateData.user_name = userName.trim();
   }
 
   if (removeProfileImage && user.profile_image_url) {
@@ -94,7 +94,7 @@ const updateUserById = async ({
     .returning([
       "id",
       "email",
-      "full_name",
+      "user_name",
       "profile_image_url",
       "user_role",
       "base_currency_id",

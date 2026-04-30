@@ -2,7 +2,7 @@ const knex = require("../db.js");
 const bcrypt = require("bcrypt");
 const ApiError = require("../errors/apiError.js");
 
-const registerUser = async ({ email, fullName, password, currencyId }) => {
+const registerUser = async ({ email, userName, password, currencyId }) => {
   const existingUser = await knex("users").where({ email }).first();
 
   if (existingUser) {
@@ -22,16 +22,14 @@ const registerUser = async ({ email, fullName, password, currencyId }) => {
     .insert({
       email: email,
       password_hash: passwordHash,
-      full_name: fullName,
+      user_name: userName,
       user_role: "MEMBER",
       base_currency_id: baseCurrency.id,
-      // TODO: задавать image url на этапе регистрации
-      // profile_image_url: ...
     })
     .returning([
       "id",
       "email",
-      "full_name",
+      "user_name",
       "profile_image_url",
       "user_role",
       "base_currency_id",
@@ -47,7 +45,7 @@ const loginUser = async ({ email, password }) => {
       "id",
       "password_hash",
       "email",
-      "full_name",
+      "user_name",
       "profile_image_url",
       "user_role",
       "base_currency_id",

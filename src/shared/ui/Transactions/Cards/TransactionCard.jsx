@@ -9,7 +9,7 @@ TransactionCard.propTypes = {
     amount: PropTypes.number.isRequired,
     category_name: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
-    notes: PropTypes.string.isRequired,
+    note: PropTypes.string.isRequired,
     currency_symbol: PropTypes.string.isRequired,
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
@@ -43,7 +43,7 @@ export default function TransactionCard({
         </div>
         {!hideDetails && (
           <p className="mt-4 italic">
-            Note: <span>{transaction.notes}</span>
+            Note: <span>{transaction.note}</span>
           </p>
         )}
       </div>
