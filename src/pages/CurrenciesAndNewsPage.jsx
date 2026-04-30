@@ -6,6 +6,7 @@ import ExchangeRateCard from "../shared/ui/CurrenciesAndNews/ExchangeRateCard";
 
 export default function CurrenciesAndNewsPage() {
   const [exchangeRates, setExchangeRates] = useState([]);
+  const [currentDate, setCurrentDate] = useState("");
   const { user } = useAuth();
   const userBaseCurrency = user.base_currency_id === 1 ? "USD" : "RUB";
   const today = dayjs().format("YYYY-MM-DD");
@@ -40,7 +41,9 @@ export default function CurrenciesAndNewsPage() {
         }));
 
         console.log("normalizedRates: ", normalizedRates);
+        console.log("response data: ", response.data);
         setExchangeRates(normalizedRates);
+        setCurrentDate(response?.data?.end_date);
       } catch (error) {
         console.error(error);
       }
@@ -56,7 +59,7 @@ export default function CurrenciesAndNewsPage() {
       <ul className="grid gap-4">
         {exchangeRates?.map((rate) => (
           <li key={rate.currency}>
-            <ExchangeRateCard rate={rate} />
+            <ExchangeRateCard rate={rate} date={currentDate} />
           </li>
         ))}
       </ul>
