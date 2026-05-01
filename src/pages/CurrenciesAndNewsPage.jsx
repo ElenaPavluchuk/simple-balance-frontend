@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../shared/context/auth/useAuth";
 import axios from "axios";
 import dayjs from "dayjs";
+import axiosInstance from "../shared/utils/axiosInstance";
+import { API_PATHS } from "../shared/utils/apiPaths";
 import ExchangeRateCard from "../shared/ui/CurrenciesAndNews/ExchangeRateCard";
 
 export default function CurrenciesAndNewsPage() {

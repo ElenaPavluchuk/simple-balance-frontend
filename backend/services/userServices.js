@@ -111,4 +111,39 @@ const getAllNews = async () => {
   return allNews;
 };
 
-module.exports = { getUserById, deleteUserById, updateUserById, getAllNews };
+const getCurrentRates = async (baseCurrencyCode, targetCurrencyCodes) => {
+  const rows = await knex
+    .select("c2.code as currency", "er.rate as value", "er.date")
+    .from(
+      knex.raw(
+        `
+        (
+          SELECT DISTINCT ON (er.target_currency_id)
+            er.*
+          FROM exchange_rates er
+          JOIN currencies c1 ON c1.id = er.base_currency_id
+          JOIN currencies c2 ON c2.id = er.target_currency_id
+          WHERE c1.code = ?
+            AND c2.code = ANY(?)
+          ORDER BY er.target_currency_id, er.date DESC
+        ) as er
+      `,
+        [baseCurrencyCode, targetCurrencyCodes],
+      ),
+    )
+    .join("currencies as c2", "c2.id", "er.target_currency_id");
+
+  if (!rows) {
+    throw ApiError.notFound("Exchange rates not found");
+  }
+
+  return rows;
+};
+
+module.exports = {
+  getUserById,
+  deleteUserById,
+  updateUserById,
+  getAllNews,
+  getCurrentRates,
+};

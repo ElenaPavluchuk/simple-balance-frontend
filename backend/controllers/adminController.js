@@ -3,6 +3,7 @@ const {
   createNews,
   deleteNewsById,
   updateNewsById,
+  addRates,
 } = require("../services/adminServices.js");
 const { deleteUserById } = require("../services/userServices.js");
 const ApiError = require("../errors/apiError.js");
@@ -71,10 +72,23 @@ const updateNews = async (req, res, next) => {
   }
 };
 
+const addCurrencyRates = async (req, res, next) => {
+  const userId = req.user.id;
+  const { base, date, rates } = req.body;
+  try {
+    const currencydRates = await addRates({ userId, base, date, rates });
+
+    return res.status(200).json(currencydRates);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getUsers,
   deleteUser,
   addNews,
   deleteNews,
   updateNews,
+  addCurrencyRates,
 };

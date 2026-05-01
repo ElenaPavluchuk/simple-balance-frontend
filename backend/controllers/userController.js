@@ -3,6 +3,7 @@ const {
   deleteUserById,
   updateUserById,
   getAllNews,
+  getCurrentRates,
 } = require("../services/userServices.js");
 
 const getUser = async (req, res, next) => {
@@ -66,4 +67,16 @@ const getNews = async (_req, res, next) => {
   }
 };
 
-module.exports = { getUser, deleteUser, updateUser, getNews };
+const getExchangeRates = async (req, res, next) => {
+  const { baseCurrency, symbols } = req.query;
+  try {
+    const targetCurrencies = symbols.split(",");
+    const exchangeRates = await getCurrentRates(baseCurrency, targetCurrencies);
+
+    return res.status(200).json(exchangeRates);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { getUser, deleteUser, updateUser, getNews, getExchangeRates };
