@@ -6,7 +6,8 @@ export const API_PATHS = {
   USERS: {
     USER_PROFILE: "/api/users/profile",
     GET_NEWS: "/api/users/news",
-    GET_EXCHANGE_RATES: "/api/users/rates",
+    GET_EXCHANGE_RATES: (baseCurrency, targetCurrencies) =>
+      `/api/users/rates?baseCurrency=${baseCurrency}&targetCurrencies=${targetCurrencies}`,
   },
   ADMINS: {
     GET_ALL_USERS: "/api/admins/users",

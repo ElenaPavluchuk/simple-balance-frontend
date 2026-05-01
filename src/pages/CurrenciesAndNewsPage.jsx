@@ -9,8 +9,10 @@ import ExchangeRateCard from "../shared/ui/CurrenciesAndNews/ExchangeRateCard";
 export default function CurrenciesAndNewsPage() {
   const [exchangeRates, setExchangeRates] = useState([]);
   const [currentDate, setCurrentDate] = useState("");
+  // TODO: need currency code in user context and change this:
   const { user } = useAuth();
   const userBaseCurrency = user.base_currency_id === 1 ? "USD" : "RUB";
+  const targetCurrencies = userBaseCurrency === "USD" ? "EUR,RUB" : "EUR,USD";
   const today = dayjs().format("YYYY-MM-DD");
 
   useEffect(() => {
@@ -22,7 +24,7 @@ export default function CurrenciesAndNewsPage() {
           start_date: today,
           end_date: today,
           base: userBaseCurrency,
-          symbols: userBaseCurrency === "USD" ? "EUR, RUB" : "EUR, USD",
+          symbols: targetCurrencies,
         },
         headers: {
           "x-rapidapi-key": import.meta.env.VITE_RAPIDAPI_KEY,
@@ -46,8 +48,24 @@ export default function CurrenciesAndNewsPage() {
         console.log("response data: ", response.data); // {"success": true,"timeseries": true,"start_date": "2026-04-30","end_date": "2026-04-30","base": "USD","rates": {"2026-04-30": {"EUR": 0.85516,"RUB": 74.896461}}}
         setExchangeRates(normalizedRates);
         setCurrentDate(response?.data?.end_date);
-      } catch (error) {
-        console.error(error);
+      } catch (err) {
+        console.warn("API failed, fallback to DB", err);
+
+        try {
+          const fallback = await axiosInstance.get(
+            API_PATHS.USERS.GET_EXCHANGE_RATES(
+              userBaseCurrency,
+              targetCurrencies,
+            ),
+          );
+
+          setExchangeRates(fallback?.data);
+          setCurrentDate(
+            dayjs(fallback?.data?.[0]?.date ?? "").format("YYYY-MM-DD"),
+          );
+        } catch (fallbackError) {
+          console.error("Fallback also failed", fallbackError);
+        }
       }
     };
 

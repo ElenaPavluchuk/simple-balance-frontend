@@ -68,10 +68,13 @@ const getNews = async (_req, res, next) => {
 };
 
 const getExchangeRates = async (req, res, next) => {
-  const { baseCurrency, symbols } = req.query;
+  const { baseCurrency, targetCurrencies } = req.query;
   try {
-    const targetCurrencies = symbols.split(",");
-    const exchangeRates = await getCurrentRates(baseCurrency, targetCurrencies);
+    const formattedTargetCurrencies = targetCurrencies.split(",");
+    const exchangeRates = await getCurrentRates(
+      baseCurrency,
+      formattedTargetCurrencies,
+    );
 
     return res.status(200).json(exchangeRates);
   } catch (err) {
