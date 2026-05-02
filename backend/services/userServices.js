@@ -88,17 +88,22 @@ const updateUserById = async ({
     throw ApiError.badRequest("No fields to update");
   }
 
-  const [updatedUser] = await knex("users")
-    .where({ id: userId })
-    .update(updateData)
-    .returning([
-      "id",
-      "email",
-      "user_name",
-      "profile_image_url",
-      "user_role",
-      "base_currency_id",
-    ]);
+  await knex("users").where({ id: userId }).update(updateData);
+
+  const updatedUser = await knex("users")
+    .join("currencies", "users.base_currency_id", "currencies.id")
+    .where("users.id", user.id)
+    .select(
+      "users.id",
+      "users.email",
+      "users.user_name",
+      "users.profile_image_url",
+      "users.user_role",
+      "users.base_currency_id",
+      "currencies.code as currency_code",
+      "currencies.symbol as currency_symbol",
+    )
+    .first();
 
   return updatedUser;
 };
