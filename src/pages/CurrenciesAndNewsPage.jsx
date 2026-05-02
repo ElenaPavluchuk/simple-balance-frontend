@@ -9,6 +9,7 @@ import ExchangeRateCard from "../shared/ui/CurrenciesAndNews/ExchangeRateCard";
 export default function CurrenciesAndNewsPage() {
   const [exchangeRates, setExchangeRates] = useState([]);
   const [currentDate, setCurrentDate] = useState("");
+  const [apiError, setApiError] = useState("");
   const { user } = useAuth();
   const targetCurrencies = ["USD", "RUB", "EUR"]
     .filter((currency) => currency !== user.currency_code)
@@ -47,7 +48,7 @@ export default function CurrenciesAndNewsPage() {
         console.log("normalizedRates: ", normalizedRates); // [{"currency": "EUR","value": 0.85516},{"currency": "RUB","value": 74.896461}s]
         console.log("response data: ", response.data); // {"success": true,"timeseries": true,"start_date": "2026-04-30","end_date": "2026-04-30","base": "USD","rates": {"2026-04-30": {"EUR": 0.85516,"RUB": 74.896461}}}
         setExchangeRates(normalizedRates);
-        setCurrentDate(response?.data?.end_date);
+        setCurrentDate(dayjs(response?.data?.end_date).format("DD-MM-YYYY"));
       } catch (err) {
         console.warn("API failed, fallback to DB", err);
 
@@ -62,10 +63,11 @@ export default function CurrenciesAndNewsPage() {
           setExchangeRates(fallback?.data);
           console.log("fallback response: ", fallback?.data);
           setCurrentDate(
-            dayjs(fallback?.data?.[0]?.date ?? "").format("YYYY-MM-DD"),
+            dayjs(fallback?.data?.[0]?.date ?? "").format("DD-MM-YYYY"),
           );
         } catch (fallbackError) {
           console.error("Fallback also failed", fallbackError);
+          setApiError("Sorry, rates are not available. Please try again later");
         }
       }
     };
@@ -77,13 +79,22 @@ export default function CurrenciesAndNewsPage() {
     <div className="m-5">
       <h2 className="mb-5 text-center font-bold">Currencies And News Page</h2>
 
-      <ul className="grid gap-4">
-        {exchangeRates?.map((rate) => (
-          <li key={rate.currency}>
-            <ExchangeRateCard rate={rate} date={currentDate} />
-          </li>
-        ))}
-      </ul>
+      <div className="bg-cyan-50 p-5 rounded w-md">
+        <h3 className="font-semibold p-2 text-center">Exchange rates</h3>
+        {apiError ? (
+          <div className="w-md h-28 flex items-center justify-center">
+            <p className="italic">{apiError}</p>
+          </div>
+        ) : (
+          <ul className="grid gap-4">
+            {exchangeRates?.map((rate) => (
+              <li key={rate.currency}>
+                <ExchangeRateCard rate={rate} date={currentDate} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

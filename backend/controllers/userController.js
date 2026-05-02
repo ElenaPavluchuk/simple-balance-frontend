@@ -1,3 +1,4 @@
+const ApiError = require("../errors/apiError.js");
 const {
   getUserById,
   deleteUserById,
@@ -69,6 +70,17 @@ const getNews = async (_req, res, next) => {
 
 const getExchangeRates = async (req, res, next) => {
   const { baseCurrency, targetCurrencies } = req.query;
+
+  if (
+    !baseCurrency ||
+    baseCurrency === "undefined" ||
+    !targetCurrencies ||
+    targetCurrencies === "undefined" ||
+    targetCurrencies.trim() === ""
+  ) {
+    return next(ApiError.badRequest("Base and target are required"));
+  }
+
   try {
     const formattedTargetCurrencies = targetCurrencies.split(",");
     const exchangeRates = await getCurrentRates(
