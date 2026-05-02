@@ -9,10 +9,10 @@ import ExchangeRateCard from "../shared/ui/CurrenciesAndNews/ExchangeRateCard";
 export default function CurrenciesAndNewsPage() {
   const [exchangeRates, setExchangeRates] = useState([]);
   const [currentDate, setCurrentDate] = useState("");
-  // TODO: need currency code in user context and change this:
   const { user } = useAuth();
-  const userBaseCurrency = user.base_currency_id === 1 ? "USD" : "RUB";
-  const targetCurrencies = userBaseCurrency === "USD" ? "EUR,RUB" : "EUR,USD";
+  const targetCurrencies = ["USD", "RUB", "EUR"]
+    .filter((currency) => currency !== user.currency_code)
+    .join(",");
   const today = dayjs().format("YYYY-MM-DD");
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function CurrenciesAndNewsPage() {
         params: {
           start_date: today,
           end_date: today,
-          base: userBaseCurrency,
+          base: user.currency_code,
           symbols: targetCurrencies,
         },
         headers: {
@@ -54,12 +54,13 @@ export default function CurrenciesAndNewsPage() {
         try {
           const fallback = await axiosInstance.get(
             API_PATHS.USERS.GET_EXCHANGE_RATES(
-              userBaseCurrency,
+              user.currency_code,
               targetCurrencies,
             ),
           );
 
           setExchangeRates(fallback?.data);
+          console.log("fallback response: ", fallback?.data);
           setCurrentDate(
             dayjs(fallback?.data?.[0]?.date ?? "").format("YYYY-MM-DD"),
           );

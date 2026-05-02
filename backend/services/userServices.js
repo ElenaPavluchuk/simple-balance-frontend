@@ -5,14 +5,17 @@ const deleteImageFile = require("../utils/deleteImageFile.js");
 
 const getUserById = async (id) => {
   const user = await knex("users")
-    .where({ id })
+    .join("currencies", "users.base_currency_id", "currencies.id")
+    .where("users.id", id)
     .select([
-      "id",
-      "email",
-      "user_name",
-      "profile_image_url",
-      "user_role",
-      "base_currency_id",
+      "users.id",
+      "users.email",
+      "users.user_name",
+      "users.profile_image_url",
+      "users.user_role",
+      "users.base_currency_id",
+      "currencies.code as currency_code",
+      "currencies.symbol as currency_symbol",
     ])
     .first();
 
