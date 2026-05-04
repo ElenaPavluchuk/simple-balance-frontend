@@ -14,6 +14,7 @@ export const API_PATHS = {
     DELETE_USER: (userId) => `/api/admins/users/${userId}`,
     ADD_NEWS: "/api/admins/news",
     NEWS_BY_ID: (id) => `/api/admins/news/${id}`,
+    ADD_EXCHANGE_RATES: "/api/admins/rates",
   },
   TRANSACTIONS: {
     ADD_TRANSACTION: "/api/transactions",
