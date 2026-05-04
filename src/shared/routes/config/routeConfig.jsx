@@ -9,6 +9,7 @@ import IncomePage from "../../../pages/IncomePage";
 import UserProfilePage from "../../../pages/UserProfilePage";
 import ManageUsersPage from "../../../pages/ManageUsersPage";
 import CurrenciesAndNewsPage from "../../../pages/CurrenciesAndNewsPage";
+import ManageContentPage from "../../../pages/ManageContentPage";
 
 export const routeConfig = [
   {
@@ -29,6 +30,14 @@ export const routeConfig = [
         element: (
           <AdminGuard>
             <ManageUsersPage />
+          </AdminGuard>
+        ),
+      },
+      {
+        path: "manage-content",
+        element: (
+          <AdminGuard>
+            <ManageContentPage />
           </AdminGuard>
         ),
       },
