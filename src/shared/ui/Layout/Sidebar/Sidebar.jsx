@@ -14,7 +14,7 @@ export default function Sidebar({ isSidebarClose, toggleSidebar }) {
   const { user, logout } = useAuth();
 
   const filteredData = data.filter((item) => {
-    if (item.key === "manage-users") {
+    if (item.key === "manage-users" || item.key === "manage-content") {
       return user?.user_role === "ADMIN";
     }
 
