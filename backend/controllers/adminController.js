@@ -74,11 +74,16 @@ const updateNews = async (req, res, next) => {
 
 const addCurrencyRates = async (req, res, next) => {
   const userId = req.user.id;
-  const { base, date, rates } = req.body;
+  const { baseCurrencyId, date, rates } = req.body;
   try {
-    const currencydRates = await addRates({ userId, base, date, rates });
+    const result = await addRates({
+      userId,
+      baseCurrencyId,
+      date,
+      rates,
+    });
 
-    return res.status(200).json(currencydRates);
+    return res.status(200).json(result);
   } catch (err) {
     next(err);
   }

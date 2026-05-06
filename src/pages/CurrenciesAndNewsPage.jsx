@@ -45,8 +45,8 @@ export default function CurrenciesAndNewsPage() {
           value,
         }));
 
-        console.log("normalizedRates: ", normalizedRates); // [{"currency": "EUR","value": 0.85516},{"currency": "RUB","value": 74.896461}s]
-        console.log("response data: ", response.data); // {"success": true,"timeseries": true,"start_date": "2026-04-30","end_date": "2026-04-30","base": "USD","rates": {"2026-04-30": {"EUR": 0.85516,"RUB": 74.896461}}}
+        // console.log("normalizedRates: ", normalizedRates); // [{"currency": "EUR","value": 0.85516},{"currency": "RUB","value": 74.896461}s]
+        // console.log("response data: ", response.data); // {"success": true,"timeseries": true,"start_date": "2026-04-30","end_date": "2026-04-30","base": "USD","rates": {"2026-04-30": {"EUR": 0.85516,"RUB": 74.896461}}}
         setExchangeRates(normalizedRates);
         setCurrentDate(dayjs(response?.data?.end_date).format("DD-MM-YYYY"));
       } catch (err) {

@@ -61,6 +61,35 @@ export const transactionsValidate = (values) => {
   return errors;
 };
 
+export const exchangeRatesValidate = (values, targetCurrencies = []) => {
+  const errors = {};
+  const { selectedBaseCurrency, date, rates } = values;
+
+  if ("selectedBaseCurrency" in values && !selectedBaseCurrency) {
+    errors.selectedBaseCurrency = "Base currency is required";
+  }
+
+  if ("date" in values && !date) {
+    errors.date = "Date is required";
+  }
+
+  targetCurrencies.forEach((currency) => {
+    const currencyCode = currency.value;
+    const rate = rates[currencyCode];
+
+    if (
+      rate === undefined ||
+      rate === "" ||
+      isNaN(rate) ||
+      parseFloat(rate) <= 0
+    ) {
+      errors[currencyCode] = "Rate must be a number greater than 0";
+    }
+  });
+
+  return errors;
+};
+
 export const clearFieldError = (field, setValidateErrors) => {
   setValidateErrors((prev) => ({ ...prev, [field]: "" }));
 };

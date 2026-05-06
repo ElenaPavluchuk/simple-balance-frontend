@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import Select from "react-select";
+import toast, { Toaster } from "react-hot-toast";
+import { exchangeRatesValidate, clearFieldError } from "../../utils/validate";
 
 export default function CreateExchangeRateForm() {
   const [selectedBaseCurrency, setSelectedBaseCurrency] = useState(null);
@@ -9,6 +11,7 @@ export default function CreateExchangeRateForm() {
   const [date, setDate] = useState("");
   const [rates, setRates] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [validateErrors, setValidateErrors] = useState({});
 
   useEffect(() => {
     const getCurrencyOptions = async () => {
@@ -17,20 +20,19 @@ export default function CreateExchangeRateForm() {
           API_PATHS.CURRENCIES.GET_CURRENCIES,
         );
 
-        const normolizedOptions = response?.data?.map((o) => ({
+        const normalizedOptions = response?.data?.map((o) => ({
           label: o.code,
           value: o.id,
         }));
 
-        setCurrencyOptions(normolizedOptions || []);
+        setCurrencyOptions(normalizedOptions || []);
 
-        const defaultCurrency = normolizedOptions?.find(
+        const defaultCurrency = normalizedOptions?.find(
           (c) => c.label === "USD",
         );
 
         if (defaultCurrency) {
           setSelectedBaseCurrency(defaultCurrency);
-          console.log("base currency: ", defaultCurrency);
         }
       } catch (err) {
         console.error(err);
@@ -43,7 +45,7 @@ export default function CreateExchangeRateForm() {
   const handleChangeCurrency = (option) => {
     setSelectedBaseCurrency(option || null);
     setRates({});
-    // setValidateErrors((prev) => ({ ...prev, selectedCurrency: "" }));
+    clearFieldError("selectedBaseCurrency", setValidateErrors);
   };
 
   const targetCurrencies = currencyOptions.filter(
@@ -53,14 +55,25 @@ export default function CreateExchangeRateForm() {
   const handleRateChange = (targetId, value) => {
     setRates((prev) => ({
       ...prev,
-      [targetId]: value === "" ? "" : parseFloat(value),
+      [targetId]: value,
     }));
+    clearFieldError(targetId, setValidateErrors);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!selectedBaseCurrency || !date) return;
+    const errors = exchangeRatesValidate(
+      {
+        selectedBaseCurrency,
+        date,
+        rates,
+      },
+      targetCurrencies,
+    );
+
+    setValidateErrors(errors);
+    if (Object.keys(errors).length) return;
 
     const data = {
       baseCurrencyId: selectedBaseCurrency.value,
@@ -73,13 +86,19 @@ export default function CreateExchangeRateForm() {
 
     try {
       setIsLoading(true);
-      // await axiosInstance.post(API_PATHS.ADMINS.ADD_EXCHANGE_RATES, data);
-      console.log("data to server: ", data);
+      const response = await axiosInstance.post(
+        API_PATHS.ADMINS.ADD_EXCHANGE_RATES,
+        data,
+      );
+      toast.success(response?.data?.message);
 
       setRates({});
       setDate("");
     } catch (err) {
       console.error(err);
+      toast.error(
+        err?.response?.data?.message || "Something went wrong, pleae try again",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -94,11 +113,11 @@ export default function CreateExchangeRateForm() {
           onChange={handleChangeCurrency}
           options={currencyOptions}
         />
-        {/* {validateErrors.selectedCurrency && (
-            <p className="text-red-500 italic">
-              {validateErrors.selectedCurrency}
-            </p>
-          )} */}
+        {validateErrors.selectedBaseCurrency && (
+          <p className="text-red-500 italic">
+            {validateErrors.selectedBaseCurrency}
+          </p>
+        )}
       </div>
 
       <div className="mt-4">
@@ -106,10 +125,15 @@ export default function CreateExchangeRateForm() {
         <input
           type="date"
           value={date}
-          onChange={(e) => setDate(e.target.value)}
-          required
+          onChange={(e) => {
+            setDate(e.target.value);
+            clearFieldError("date", setValidateErrors);
+          }}
           className="w-full border border-gray-300 rounded px-3 py-2"
         />
+        {validateErrors.date && (
+          <p className="text-red-500 italic">{validateErrors.date}</p>
+        )}
       </div>
 
       <div className="mt-4">
@@ -127,9 +151,13 @@ export default function CreateExchangeRateForm() {
               step="0.00000001"
               value={rates[currency.value] ?? ""}
               onChange={(e) => handleRateChange(currency.value, e.target.value)}
-              required
               className="w-full border border-gray-300 rounded px-3 py-2"
             />
+            {validateErrors[currency.value] && (
+              <p className="text-red-500 italic">
+                {validateErrors[currency.value]}
+              </p>
+            )}
           </div>
         ))}
       </div>
@@ -141,6 +169,10 @@ export default function CreateExchangeRateForm() {
       >
         {isLoading ? "Loading..." : "Add rates"}
       </button>
+
+      <div>
+        <Toaster position="top-center" />
+      </div>
     </form>
   );
 }
