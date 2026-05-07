@@ -87,10 +87,36 @@ const addRates = async ({ baseCurrencyId, date, rates, userId }) => {
   };
 };
 
+const getRatesByBase = async (baseCurrencyId) => {
+  const result = await knex("exchange_rates")
+    .select(
+      "exchange_rates.date",
+      knex.raw(`
+        json_agg(
+          json_build_object(
+            'id', exchange_rates.id,
+            'rate', exchange_rates.rate,
+            'target_currency_id', exchange_rates.target_currency_id
+          )
+          ORDER BY exchange_rates.target_currency_id
+        ) as rates
+      `),
+    )
+    .where("exchange_rates.base_currency_id", baseCurrencyId)
+    .groupBy("exchange_rates.date")
+    .orderBy("exchange_rates.date", "desc");
+
+  return {
+    base_currency_id: baseCurrencyId,
+    rates: result,
+  };
+};
+
 module.exports = {
   getAllUsers,
   createNews,
   deleteNewsById,
   updateNewsById,
   addRates,
+  getRatesByBase,
 };

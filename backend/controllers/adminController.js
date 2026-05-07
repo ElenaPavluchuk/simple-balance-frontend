@@ -4,6 +4,7 @@ const {
   deleteNewsById,
   updateNewsById,
   addRates,
+  getRatesByBase,
 } = require("../services/adminServices.js");
 const { deleteUserById } = require("../services/userServices.js");
 const ApiError = require("../errors/apiError.js");
@@ -89,6 +90,22 @@ const addCurrencyRates = async (req, res, next) => {
   }
 };
 
+const getAllRatesByBaseCurrency = async (req, res, next) => {
+  const baseCurrencyId = req.params.id;
+
+  if (!baseCurrencyId || isNaN(baseCurrencyId)) {
+    return next(ApiError.badRequest("Incorrect base currencie ID"));
+  }
+
+  try {
+    const result = await getRatesByBase(baseCurrencyId);
+
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getUsers,
   deleteUser,
@@ -96,4 +113,5 @@ module.exports = {
   deleteNews,
   updateNews,
   addCurrencyRates,
+  getAllRatesByBaseCurrency,
 };
