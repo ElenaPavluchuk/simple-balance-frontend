@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const authValidate = (values) => {
   const errors = {};
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -69,8 +71,12 @@ export const exchangeRatesValidate = (values, targetCurrencies = []) => {
     errors.selectedBaseCurrency = "Base currency is required";
   }
 
-  if ("date" in values && !date) {
-    errors.date = "Date is required";
+  if ("date" in values) {
+    if (!date) {
+      errors.date = "Date is required";
+    } else if (dayjs(date).isAfter(dayjs(), "day")) {
+      errors.date = "Future dates are not allowed";
+    }
   }
 
   targetCurrencies.forEach((currency) => {

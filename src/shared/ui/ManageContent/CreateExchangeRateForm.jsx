@@ -4,6 +4,7 @@ import { API_PATHS } from "../../utils/apiPaths";
 import Select from "react-select";
 import toast, { Toaster } from "react-hot-toast";
 import { exchangeRatesValidate, clearFieldError } from "../../utils/validate";
+import dayjs from "dayjs";
 
 export default function CreateExchangeRateForm() {
   const [selectedBaseCurrency, setSelectedBaseCurrency] = useState(null);
@@ -107,7 +108,7 @@ export default function CreateExchangeRateForm() {
     <form onSubmit={handleSubmit}>
       <h2 className="font-semibold mb-4">Add exchange rates</h2>
       <div>
-        <label className="text-gary-500 text-sm">Select base currency:</label>
+        <label className="text-gray-500 text-sm">Select base currency:</label>
         <Select
           value={selectedBaseCurrency}
           onChange={handleChangeCurrency}
@@ -121,7 +122,7 @@ export default function CreateExchangeRateForm() {
       </div>
 
       <div className="mt-4">
-        <label className="text-gary-500 text-sm">Date:</label>
+        <label className="text-gray-500 text-sm">Date:</label>
         <input
           type="date"
           value={date}
@@ -130,6 +131,7 @@ export default function CreateExchangeRateForm() {
             clearFieldError("date", setValidateErrors);
           }}
           className="w-full border border-gray-300 rounded px-3 py-2"
+          max={dayjs().format("YYYY-MM-DD")}
         />
         {validateErrors.date && (
           <p className="text-red-500 italic">{validateErrors.date}</p>
@@ -140,7 +142,7 @@ export default function CreateExchangeRateForm() {
         <h4 className="mt-6 mb-2 font-medium">Rates:</h4>
         {targetCurrencies.map((currency) => (
           <div key={currency.value}>
-            <label className="text-gary-500 text-sm">
+            <label className="text-gray-500 text-sm">
               From {currency.label}{" "}
               <span className="text-gray-500">
                 to {selectedBaseCurrency?.label}
