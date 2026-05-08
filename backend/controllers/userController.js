@@ -69,24 +69,10 @@ const getNews = async (_req, res, next) => {
 };
 
 const getExchangeRates = async (req, res, next) => {
-  const { baseCurrency, targetCurrencies } = req.query;
-
-  if (
-    !baseCurrency ||
-    baseCurrency === "undefined" ||
-    !targetCurrencies ||
-    targetCurrencies === "undefined" ||
-    targetCurrencies.trim() === ""
-  ) {
-    return next(ApiError.badRequest("Base and target are required"));
-  }
+  const userId = req.user.id;
 
   try {
-    const formattedTargetCurrencies = targetCurrencies.split(",");
-    const exchangeRates = await getCurrentRates(
-      baseCurrency,
-      formattedTargetCurrencies,
-    );
+    const exchangeRates = await getCurrentRates(userId);
 
     return res.status(200).json(exchangeRates);
   } catch (err) {

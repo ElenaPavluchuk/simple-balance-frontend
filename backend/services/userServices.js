@@ -119,33 +119,33 @@ const getAllNews = async () => {
   return allNews;
 };
 
-const getCurrentRates = async (baseCurrencyCode, targetCurrencyCodes) => {
-  const rows = await knex
-    .select("c2.code as currency", "er.rate as value", "er.date")
-    .from(
-      knex.raw(
-        `
-        (
-          SELECT DISTINCT ON (er.target_currency_id)
-            er.*
-          FROM exchange_rates er
-          JOIN currencies c1 ON c1.id = er.base_currency_id
-          JOIN currencies c2 ON c2.id = er.target_currency_id
-          WHERE c1.code = ?
-            AND c2.code = ANY(?)
-          ORDER BY er.target_currency_id, er.date DESC
-        ) as er
-      `,
-        [baseCurrencyCode, targetCurrencyCodes],
-      ),
+const getCurrentRates = async (userId) => {
+  const user = await knex("users")
+    .where({ id: userId })
+    .select("base_currency_id")
+    .first();
+
+  const rates = await knex("exchange_rates")
+    .select(
+      "exchange_rates.id",
+      "exchange_rates.rate",
+      "exchange_rates.target_currency_id",
+      "exchange_rates.date",
+      "target.code as target_code",
     )
-    .join("currencies as c2", "c2.id", "er.target_currency_id");
+    .join(
+      "currencies as target",
+      "target.id",
+      "exchange_rates.target_currency_id",
+    )
+    .where("exchange_rates.base_currency_id", user.base_currency_id)
+    .orderBy("exchange_rates.date", "desc");
 
-  if (!rows) {
-    throw ApiError.notFound("Exchange rates not found");
-  }
-
-  return rows;
+  return {
+    base_currency_id: user.base_currency_id,
+    date: rates[0]?.date || null,
+    rates,
+  };
 };
 
 module.exports = {

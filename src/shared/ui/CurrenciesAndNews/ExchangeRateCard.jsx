@@ -9,10 +9,10 @@ export default function ExchangeRateCard({ rate, date }) {
     <div className="flex flex-col p-5 bg-white rounded-xl shadow-md border-l-4 border-[#ff8fab] transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
       <div className="flex justify-between w-full">
         <span className="flex items-center gap-2">
-          {currencySymbols[rate.currency] || rate.currency}
-          <p className="text-lg font-semibold">{rate.currency}</p>
+          {currencySymbols[rate.target_code] || rate.target_code}
+          <p className="text-lg font-semibold">{rate.target_code}</p>
         </span>
-        <p>{rate.value}</p>
+        <p className="font-bold text-green-700">{rate.rate}</p>
       </div>
 
       <div className="flex gap-2 justify-center items-center mt-3">

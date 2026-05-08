@@ -40,9 +40,9 @@ export default function CurrenciesAndNewsPage() {
 
         const normalizedRates = Object.entries(
           response?.data?.rates[today],
-        ).map(([currency, value]) => ({
-          currency,
-          value,
+        ).map(([target_code, rate]) => ({
+          target_code,
+          rate,
         }));
 
         setExchangeRates(normalizedRates);
@@ -52,15 +52,12 @@ export default function CurrenciesAndNewsPage() {
 
         try {
           const fallback = await axiosInstance.get(
-            API_PATHS.USERS.GET_EXCHANGE_RATES(
-              user.currency_code,
-              targetCurrencies,
-            ),
+            API_PATHS.USERS.GET_EXCHANGE_RATES,
           );
 
-          setExchangeRates(fallback?.data);
+          setExchangeRates(fallback?.data?.rates);
           setCurrentDate(
-            dayjs(fallback?.data?.[0]?.date ?? "").format("DD-MM-YYYY"),
+            dayjs(fallback?.data?.date ?? "").format("DD-MM-YYYY"),
           );
         } catch (fallbackError) {
           console.error("Fallback also failed", fallbackError);
@@ -85,7 +82,7 @@ export default function CurrenciesAndNewsPage() {
         ) : (
           <ul className="grid gap-4">
             {exchangeRates?.map((rate) => (
-              <li key={rate.currency}>
+              <li key={rate.target_code}>
                 <ExchangeRateCard rate={rate} date={currentDate} />
               </li>
             ))}
