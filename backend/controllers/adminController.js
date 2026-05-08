@@ -4,7 +4,7 @@ const {
   deleteNewsById,
   updateNewsById,
   addRates,
-  getRatesByBase,
+  getRatesByBaseCurrency,
 } = require("../services/adminServices.js");
 const { deleteUserById } = require("../services/userServices.js");
 const ApiError = require("../errors/apiError.js");
@@ -98,9 +98,12 @@ const getAllRatesByBaseCurrency = async (req, res, next) => {
   }
 
   try {
-    const result = await getRatesByBase(baseCurrencyId);
+    const rates = await getRatesByBaseCurrency(baseCurrencyId);
 
-    res.status(200).json(result);
+    res.status(200).json({
+      base_currency_id: baseCurrencyId,
+      rates,
+    });
   } catch (err) {
     next(err);
   }

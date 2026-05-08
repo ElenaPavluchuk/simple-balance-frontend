@@ -91,11 +91,8 @@ export default function GetRatesByBaseCurrencyCard() {
             {rate.rates.map((r) => (
               <div key={r.id} className="flex justify-around border p-3">
                 <p>
-                  {
-                    currencyOptions.find(
-                      (c) => c.value === r.target_currency_id,
-                    )?.label
-                  }
+                  <span>{r.target_symbol}</span>
+                  {r.target_code}
                 </p>
                 <p>{r.rate}</p>
               </div>
