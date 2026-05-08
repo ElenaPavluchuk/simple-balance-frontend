@@ -116,6 +116,16 @@ const getRatesByBaseCurrency = async (baseCurrencyId) => {
   return result;
 };
 
+const deleteExchangeRatesByDate = async (date) => {
+  const deletedCount = await knex("exchange_rates").where({ date }).del();
+
+  if (!deletedCount || deletedCount === 0) {
+    throw ApiError.notFound("Exchange rates deletion error");
+  }
+
+  return deletedCount;
+};
+
 module.exports = {
   getAllUsers,
   createNews,
@@ -123,4 +133,5 @@ module.exports = {
   updateNewsById,
   addRates,
   getRatesByBaseCurrency,
+  deleteExchangeRatesByDate,
 };

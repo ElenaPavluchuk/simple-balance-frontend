@@ -4,6 +4,7 @@ const {
   deleteUser,
   addCurrencyRates,
   getAllRatesByBaseCurrency,
+  deleteRatesByDate,
   addNews,
   deleteNews,
   updateNews,
@@ -15,6 +16,7 @@ router.get("/users", getUsers);
 router.delete("/users/:id", deleteUser);
 router.post("/rates", addCurrencyRates);
 router.get("/rates/:id", getAllRatesByBaseCurrency);
+router.delete("/rates/:date", deleteRatesByDate);
 router.post("/news", addNews);
 router.delete("/news/:id", deleteNews);
 router.put("/news/:id", updateNews);

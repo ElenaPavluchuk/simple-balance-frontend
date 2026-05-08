@@ -3,11 +3,13 @@ import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import Select from "react-select";
 import dayjs from "dayjs";
+import { exchangeRatesValidate, clearFieldError } from "../../utils/validate";
 
 export default function GetRatesByBaseCurrencyCard() {
   const [selectedBaseCurrency, setSelectedBaseCurrency] = useState(null);
   const [currencyOptions, setCurrencyOptions] = useState([]);
   const [rates, setRates] = useState([]);
+  const [validateErrors, setValidateErrors] = useState({});
 
   useEffect(() => {
     const getCurrencyOptions = async () => {
@@ -40,10 +42,17 @@ export default function GetRatesByBaseCurrencyCard() {
 
   const handleChangeCurrency = (option) => {
     setSelectedBaseCurrency(option || null);
-    //   clearFieldError("selectedBaseCurrency", setValidateErrors);
+    clearFieldError("selectedBaseCurrency", setValidateErrors);
   };
 
   const getRatesByBaseCurrency = async () => {
+    const errors = exchangeRatesValidate({
+      selectedBaseCurrency,
+    });
+
+    setValidateErrors(errors);
+    if (Object.keys(errors).length) return;
+
     try {
       const response = await axiosInstance.get(
         API_PATHS.ADMINS.GET_EXCHANGE_RATES_BY_BASE_ID(
@@ -51,7 +60,6 @@ export default function GetRatesByBaseCurrencyCard() {
         ),
       );
 
-      console.log("response: ", response?.data);
       setRates(response?.data?.rates);
     } catch (err) {
       console.error(err);
@@ -70,11 +78,11 @@ export default function GetRatesByBaseCurrencyCard() {
           onChange={handleChangeCurrency}
           options={currencyOptions}
         />
-        {/* {validateErrors.selectedBaseCurrency && (
+        {validateErrors.selectedBaseCurrency && (
           <p className="text-red-500 italic">
             {validateErrors.selectedBaseCurrency}
           </p>
-        )} */}
+        )}
       </div>
 
       <button

@@ -5,6 +5,7 @@ const {
   updateNewsById,
   addRates,
   getRatesByBaseCurrency,
+  deleteExchangeRatesByDate,
 } = require("../services/adminServices.js");
 const { deleteUserById } = require("../services/userServices.js");
 const ApiError = require("../errors/apiError.js");
@@ -109,6 +110,26 @@ const getAllRatesByBaseCurrency = async (req, res, next) => {
   }
 };
 
+const deleteRatesByDate = async (req, res, next) => {
+  const date = req.params.date;
+
+  if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return res.status(400).json({
+      error: "Date in 'YYYY-MM-DD' format is required",
+    });
+  }
+  try {
+    const deletedCount = await deleteExchangeRatesByDate(date);
+
+    res.json({
+      message: `Exchange rates for ${date} deleted successfully`,
+      deletedCount,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getUsers,
   deleteUser,
@@ -117,4 +138,5 @@ module.exports = {
   updateNews,
   addCurrencyRates,
   getAllRatesByBaseCurrency,
+  deleteRatesByDate,
 };
