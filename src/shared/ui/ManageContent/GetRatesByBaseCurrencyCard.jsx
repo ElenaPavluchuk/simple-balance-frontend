@@ -4,6 +4,7 @@ import { API_PATHS } from "../../utils/apiPaths";
 import Select from "react-select";
 import dayjs from "dayjs";
 import { exchangeRatesValidate, clearFieldError } from "../../utils/validate";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function GetRatesByBaseCurrencyCard() {
   const [selectedBaseCurrency, setSelectedBaseCurrency] = useState(null);
@@ -66,6 +67,28 @@ export default function GetRatesByBaseCurrencyCard() {
     }
   };
 
+  const deleteRatesByDate = async (date) => {
+    if (!date) return;
+
+    const formattedDate = dayjs(date).format("YYYY-MM-DD");
+
+    try {
+      const response = await axiosInstance.delete(
+        API_PATHS.ADMINS.DELETE_EXCHANGE_RATES_BY_DATE(formattedDate),
+      );
+
+      setRates(
+        rates.filter(
+          (rate) =>
+            dayjs(rate.date).format("YYYY-MM-DD") !== response?.data?.date,
+        ),
+      );
+      toast.success(response?.data?.message);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div>
       <h2 className="font-semibold mb-4">
@@ -95,7 +118,15 @@ export default function GetRatesByBaseCurrencyCard() {
       <ul>
         {rates.map((rate) => (
           <li key={rate.date} className="my-8">
-            <p>{dayjs(rate.date).format("DD-MM-YYYY")}</p>
+            <div className="flex justify-between">
+              <p>{dayjs(rate.date).format("DD-MM-YYYY")}</p>
+              <button
+                onClick={() => deleteRatesByDate(rate.date)}
+                className="italic underline"
+              >
+                Delete
+              </button>
+            </div>
             {rate.rates.map((r) => (
               <div key={r.id} className="flex justify-around border p-3">
                 <p>
@@ -108,6 +139,10 @@ export default function GetRatesByBaseCurrencyCard() {
           </li>
         ))}
       </ul>
+
+      <div>
+        <Toaster position="top-center" />
+      </div>
     </div>
   );
 }

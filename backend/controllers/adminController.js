@@ -123,6 +123,7 @@ const deleteRatesByDate = async (req, res, next) => {
 
     res.json({
       message: `Exchange rates for ${date} deleted successfully`,
+      date,
       deletedCount,
     });
   } catch (err) {

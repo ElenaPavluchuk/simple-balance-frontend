@@ -16,6 +16,7 @@ export const API_PATHS = {
     NEWS_BY_ID: (id) => `/api/admins/news/${id}`,
     ADD_EXCHANGE_RATES: "/api/admins/rates",
     GET_EXCHANGE_RATES_BY_BASE_ID: (id) => `/api/admins/rates/${id}`,
+    DELETE_EXCHANGE_RATES_BY_DATE: (date) => `/api/admins/rates/${date}`,
   },
   TRANSACTIONS: {
     ADD_TRANSACTION: "/api/transactions",
