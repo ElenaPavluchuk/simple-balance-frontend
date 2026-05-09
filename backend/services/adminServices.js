@@ -63,10 +63,6 @@ const updateNewsById = async ({ newsId, title, content }) => {
 };
 
 const addRates = async ({ baseCurrencyId, date, rates, userId }) => {
-  if (!baseCurrencyId || !date || !rates?.length) {
-    throw new Error("Invalid payload");
-  }
-
   const dataToInsert = rates.map(({ targetCurrencyId, value }) => ({
     base_currency_id: baseCurrencyId,
     target_currency_id: targetCurrencyId,
@@ -116,8 +112,10 @@ const getRatesByBaseCurrency = async (baseCurrencyId) => {
   return result;
 };
 
-const deleteExchangeRatesByDate = async (date) => {
-  const deletedCount = await knex("exchange_rates").where({ date }).del();
+const deleteExchangeRatesByDate = async (baseCurrencyId, date) => {
+  const deletedCount = await knex("exchange_rates")
+    .where({ base_currency_id: baseCurrencyId, date })
+    .del();
 
   if (!deletedCount || deletedCount === 0) {
     throw ApiError.notFound("Exchange rates deletion error");

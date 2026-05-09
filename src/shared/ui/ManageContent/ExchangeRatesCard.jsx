@@ -14,8 +14,8 @@ export default function ExchangeRatesCard() {
       <p className="text-center font-semibold my-3">Exchange Rates</p>
       <div className="flex justify-center gap-4 mb-6">
         {[
-          { label: "Get rates", value: cardTypes.get },
           { label: "Add rates", value: cardTypes.add },
+          { label: "Get rates", value: cardTypes.get },
         ].map((item) => (
           <label key={item.value} className="flex items-center cursor-pointer">
             <input

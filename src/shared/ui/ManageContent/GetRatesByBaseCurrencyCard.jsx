@@ -74,7 +74,10 @@ export default function GetRatesByBaseCurrencyCard() {
 
     try {
       const response = await axiosInstance.delete(
-        API_PATHS.ADMINS.DELETE_EXCHANGE_RATES_BY_DATE(formattedDate),
+        API_PATHS.ADMINS.DELETE_EXCHANGE_RATES_BY_DATE(
+          selectedBaseCurrency.value,
+          formattedDate,
+        ),
       );
 
       setRates(

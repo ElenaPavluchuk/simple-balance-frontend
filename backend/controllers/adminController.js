@@ -77,6 +77,11 @@ const updateNews = async (req, res, next) => {
 const addCurrencyRates = async (req, res, next) => {
   const userId = req.user.id;
   const { baseCurrencyId, date, rates } = req.body;
+
+  if (!baseCurrencyId || !date || !rates?.length) {
+    return next(ApiError.badRequest("Invalid payload"));
+  }
+
   try {
     const result = await addRates({
       userId,
@@ -111,7 +116,12 @@ const getAllRatesByBaseCurrency = async (req, res, next) => {
 };
 
 const deleteRatesByDate = async (req, res, next) => {
+  const baseCurrencyId = req.params.id;
   const date = req.params.date;
+
+  if (!baseCurrencyId || isNaN(baseCurrencyId)) {
+    return res.status(400).json({ error: "Incorrect base currency ID" });
+  }
 
   if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     return res.status(400).json({
@@ -119,10 +129,11 @@ const deleteRatesByDate = async (req, res, next) => {
     });
   }
   try {
-    const deletedCount = await deleteExchangeRatesByDate(date);
+    const deletedCount = await deleteExchangeRatesByDate(baseCurrencyId, date);
 
     res.json({
       message: `Exchange rates for ${date} deleted successfully`,
+      base_currency_id: baseCurrencyId,
       date,
       deletedCount,
     });
