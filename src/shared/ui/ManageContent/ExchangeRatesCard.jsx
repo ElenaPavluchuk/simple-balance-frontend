@@ -8,7 +8,7 @@ const cardTypes = {
 };
 
 export default function ExchangeRatesCard() {
-  const [type, setType] = useState(cardTypes.get);
+  const [type, setType] = useState(cardTypes.add);
   return (
     <div className="max-w-md w-full bg-white p-6 rounded shadow">
       <p className="text-center font-semibold my-3">Exchange Rates</p>
