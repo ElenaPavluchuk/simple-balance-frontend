@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router";
 import CreateNewsForm from "../shared/ui/ManageContent/CreateNewsForm";
 import ExchangeRatesCard from "../shared/ui/ManageContent/ExchangeRatesCard";
 import axiosInstance from "../shared/utils/axiosInstance";
@@ -14,10 +15,10 @@ export default function ManageContenPage() {
     const getNews = async () => {
       try {
         setIsLoading(true);
+
         const response = await axiosInstance.get(API_PATHS.USERS.GET_NEWS);
 
         setNews(response?.data);
-        setIsLoading(false);
       } catch (err) {
         console.error(err);
         toast.error(err?.response?.data?.message || "Something went wrong");
@@ -39,7 +40,6 @@ export default function ManageContenPage() {
       );
 
       setNews([...news, response?.data]);
-      setIsLoading(false);
     } catch (err) {
       console.error(err);
       toast.error(err?.response?.data?.message || "Something went wrong");
@@ -59,7 +59,12 @@ export default function ManageContenPage() {
             {(news ?? []).map((item) => (
               <li key={item?.id}>
                 <div className="bg-white p-3 shadow rounded mt-1 flex flex-col gap-3">
-                  <p className="font-semibold">{item?.title}</p>
+                  <div className="flex justify-between">
+                    <p className="font-semibold">{item?.title}</p>
+                    <Link to={`/news/${item?.id}`} className="italic underline">
+                      View more
+                    </Link>
+                  </div>
                   <p className="line-clamp-2">{item?.content}</p>
                   <p className="italic text-sm">
                     {dayjs(item?.published_at).format("DD-MM-YYYY")}

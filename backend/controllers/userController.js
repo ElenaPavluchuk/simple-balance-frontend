@@ -5,6 +5,7 @@ const {
   updateUserById,
   getAllNews,
   getCurrentRates,
+  getCurrentNews,
 } = require("../services/userServices.js");
 
 const getUser = async (req, res, next) => {
@@ -68,6 +69,22 @@ const getNews = async (_req, res, next) => {
   }
 };
 
+const getNewsById = async (req, res, next) => {
+  const newsId = req.params.id;
+
+  if (!newsId) {
+    return res.status(400).json({ error: "News ID is required" });
+  }
+
+  try {
+    const news = await getCurrentNews(newsId);
+
+    return res.status(200).json(news);
+  } catch (err) {
+    next(err);
+  }
+};
+
 const getExchangeRates = async (req, res, next) => {
   const userId = req.user.id;
 
@@ -80,4 +97,11 @@ const getExchangeRates = async (req, res, next) => {
   }
 };
 
-module.exports = { getUser, deleteUser, updateUser, getNews, getExchangeRates };
+module.exports = {
+  getUser,
+  deleteUser,
+  updateUser,
+  getNews,
+  getNewsById,
+  getExchangeRates,
+};

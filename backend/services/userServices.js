@@ -119,6 +119,15 @@ const getAllNews = async () => {
   return allNews;
 };
 
+const getCurrentNews = async (newsId) => {
+  const news = await knex("news")
+    .where({ id: newsId })
+    .select("id", "title", "content", "published_at", "author_id")
+    .first();
+
+  return news;
+};
+
 const getCurrentRates = async (userId) => {
   const user = await knex("users")
     .where({ id: userId })
@@ -154,4 +163,5 @@ module.exports = {
   updateUserById,
   getAllNews,
   getCurrentRates,
+  getCurrentNews,
 };
