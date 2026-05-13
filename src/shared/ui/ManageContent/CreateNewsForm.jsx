@@ -20,6 +20,10 @@ export default function CreateNewsForm({ onSave, isLoading }) {
     };
 
     onSave(data);
+
+    setTitle("");
+    setContent("");
+    setValidateErrors({});
   };
 
   return (
