@@ -96,6 +96,27 @@ export const exchangeRatesValidate = (values, targetCurrencies = []) => {
   return errors;
 };
 
+export const newsValidate = (values) => {
+  const errors = {};
+  const { title, content } = values;
+
+  if ("title" in values) {
+    if (!title.trim()) {
+      errors.title = "Title is required";
+    } else if (title.length > 255) {
+      errors.title = "Title must be no more than 255 characters long";
+    }
+  }
+
+  if ("content" in values) {
+    if (!content.trim()) {
+      errors.content = "Content is required";
+    }
+  }
+
+  return errors;
+};
+
 export const clearFieldError = (field, setValidateErrors) => {
   setValidateErrors((prev) => ({ ...prev, [field]: "" }));
 };
