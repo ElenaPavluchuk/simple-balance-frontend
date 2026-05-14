@@ -6,11 +6,15 @@ import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
 import ExchangeRateCard from "../shared/ui/CurrenciesAndNewsContent/ExchangeRateCard";
 import { Link } from "react-router";
+import toast, { Toaster } from "react-hot-toast";
+import NewsList from "../shared/ui/CurrenciesAndNewsContent/NewsList";
 
 export default function CurrenciesAndNewsPage() {
+  const [news, setNews] = useState([]);
   const [exchangeRates, setExchangeRates] = useState([]);
   const [currentDate, setCurrentDate] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isRatesLoading, setIsRatesLoading] = useState(false);
+  const [isNewsLoading, setIsNewsLoading] = useState(false);
   const [apiError, setApiError] = useState("");
   const { user } = useAuth();
 
@@ -21,7 +25,7 @@ export default function CurrenciesAndNewsPage() {
 
   useEffect(() => {
     const getExchangeRates = async () => {
-      setIsLoading(true);
+      setIsRatesLoading(true);
 
       const options = {
         method: "GET",
@@ -54,7 +58,7 @@ export default function CurrenciesAndNewsPage() {
         setCurrentDate(
           dayjs(response?.data?.end_date || "").format("DD-MM-YYYY"),
         );
-        setIsLoading(false);
+        setIsRatesLoading(false);
       } catch (err) {
         console.warn("API failed, fallback to DB", err);
 
@@ -71,7 +75,7 @@ export default function CurrenciesAndNewsPage() {
           console.error("Fallback also failed", fallbackError);
           setApiError("Sorry, rates are not available. Please try again later");
         } finally {
-          setIsLoading(false);
+          setIsRatesLoading(false);
         }
       }
     };
@@ -79,30 +83,47 @@ export default function CurrenciesAndNewsPage() {
     getExchangeRates();
   }, []);
 
-  return (
-    <div className="m-5">
-      <h2 className="mb-5 text-center font-bold">Currencies And News Page</h2>
+  useEffect(() => {
+    const getNews = async () => {
+      try {
+        setIsNewsLoading(true);
 
+        const response = await axiosInstance.get(API_PATHS.USERS.GET_NEWS);
+
+        setNews(response?.data);
+      } catch (err) {
+        console.error(err);
+        toast.error(err?.response?.data?.message || "Something went wrong");
+      } finally {
+        setIsNewsLoading(false);
+      }
+    };
+
+    getNews();
+  }, []);
+
+  return (
+    <div className="m-5 flex gap-10 justify-around">
       <div className="bg-cyan-50 p-5 rounded w-md">
         <h3 className="font-semibold p-2 text-center">Exchange rates</h3>
-        {isLoading && (
+        {(isRatesLoading || isNewsLoading) && (
           <div className="w-md h-28 flex items-center justify-center">
             <p className="italic text-gray-400">Loading...</p>
           </div>
         )}
 
-        {apiError && !isLoading && (
+        {apiError && !isRatesLoading && (
           <div className="w-md h-28 flex items-center justify-center">
             <p className="italic">{apiError}</p>
           </div>
         )}
 
-        {exchangeRates.length === 0 && !isLoading && (
+        {exchangeRates.length === 0 && !isRatesLoading && (
           <div className="w-md h-28 flex flex-col gap-5 items-center justify-center">
-            <p className="italic">Rates are currently unavailable</p>
+            <p className="italic">Rates not added or something went wrong</p>
             {user.user_role === "ADMIN" && (
               <span>
-                You can add the exchange rates{" "}
+                You can try adding exchange rates{" "}
                 <Link
                   className="font-semibold underline italic"
                   to="/manage-content"
@@ -115,12 +136,25 @@ export default function CurrenciesAndNewsPage() {
         )}
 
         <ul className="grid gap-4">
-          {exchangeRates.map((rate) => (
+          {(exchangeRates ?? []).map((rate) => (
             <li key={rate.target_code}>
               <ExchangeRateCard rate={rate} date={currentDate} />
             </li>
           ))}
         </ul>
+      </div>
+
+      <div className="bg-cyan-50 p-5 rounded w-md">
+        <p className="text-center font-semibold">Our news:</p>
+        <ul>
+          {(news ?? []).map((item) => (
+            <NewsList key={item?.id} item={item} />
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <Toaster position="top-center" />
       </div>
     </div>
   );
