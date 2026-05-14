@@ -4,7 +4,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
-import ExchangeRateCard from "../shared/ui/CurrenciesAndNews/ExchangeRateCard";
+import ExchangeRateCard from "../shared/ui/CurrenciesAndNewsContent/ExchangeRateCard";
 import { Link } from "react-router";
 
 export default function CurrenciesAndNewsPage() {

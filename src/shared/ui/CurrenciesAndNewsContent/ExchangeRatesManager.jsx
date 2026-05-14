@@ -7,7 +7,7 @@ const cardTypes = {
   get: "get",
 };
 
-export default function ExchangeRatesCard() {
+export default function ExchangeRatesManager() {
   const [type, setType] = useState(cardTypes.add);
   return (
     <div className="max-w-md w-full bg-white p-6 rounded shadow">

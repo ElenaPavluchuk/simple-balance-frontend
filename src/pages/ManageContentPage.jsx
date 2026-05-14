@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router";
-import CreateNewsForm from "../shared/ui/ManageContent/CreateNewsForm";
-import ExchangeRatesCard from "../shared/ui/ManageContent/ExchangeRatesCard";
+import CreateNewsForm from "../shared/ui/CurrenciesAndNewsContent/CreateNewsForm";
+import ExchangeRatesManager from "../shared/ui/CurrenciesAndNewsContent/ExchangeRatesManager";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
 import toast, { Toaster } from "react-hot-toast";
-import dayjs from "dayjs";
+import NewsList from "../shared/ui/CurrenciesAndNewsContent/NewsList";
 
 export default function ManageContenPage() {
   const [news, setNews] = useState([]);
@@ -57,26 +56,13 @@ export default function ManageContenPage() {
           <p>Our news: </p>
           <ul>
             {(news ?? []).map((item) => (
-              <li key={item?.id}>
-                <div className="bg-white p-3 shadow rounded mt-1 flex flex-col gap-3">
-                  <div className="flex justify-between">
-                    <p className="font-semibold">{item?.title}</p>
-                    <Link to={`/news/${item?.id}`} className="italic underline">
-                      View more
-                    </Link>
-                  </div>
-                  <p className="line-clamp-2">{item?.content}</p>
-                  <p className="italic text-sm">
-                    {dayjs(item?.published_at).format("DD-MM-YYYY")}
-                  </p>
-                </div>
-              </li>
+              <NewsList key={item?.id} item={item} />
             ))}
           </ul>
         </div>
       </div>
 
-      <ExchangeRatesCard />
+      <ExchangeRatesManager />
 
       <div>
         <Toaster position="top-center" />
