@@ -13,7 +13,7 @@ export const API_PATHS = {
     GET_ALL_USERS: "/api/admins/users",
     DELETE_USER: (userId) => `/api/admins/users/${userId}`,
     ADD_NEWS: "/api/admins/news",
-    // NEWS_BY_ID: (id) => `/api/admins/news/${id}`,
+    NEWS_BY_ID: (id) => `/api/admins/news/${id}`,
     ADD_EXCHANGE_RATES: "/api/admins/rates",
     GET_EXCHANGE_RATES_BY_BASE_ID: (id) => `/api/admins/rates/${id}`,
     DELETE_EXCHANGE_RATES_BY_DATE: (id, date) =>

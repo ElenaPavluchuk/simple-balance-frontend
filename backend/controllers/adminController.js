@@ -55,7 +55,9 @@ const deleteNews = async (req, res, next) => {
   try {
     await deleteNewsById(newsId);
 
-    return res.status(200).json({ message: "News deleted successfully" });
+    return res
+      .status(200)
+      .json({ message: "News deleted successfully", id: newsId });
   } catch (err) {
     next(err);
   }
@@ -131,7 +133,7 @@ const deleteRatesByDate = async (req, res, next) => {
   try {
     const deletedCount = await deleteExchangeRatesByDate(baseCurrencyId, date);
 
-    res.json({
+    res.status(200).json({
       message: `Exchange rates for ${date} deleted successfully`,
       base_currency_id: baseCurrencyId,
       date,

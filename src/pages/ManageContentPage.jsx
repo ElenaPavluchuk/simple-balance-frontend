@@ -29,7 +29,7 @@ export default function ManageContenPage() {
     getNews();
   }, []);
 
-  const handleCreateNews = async (data) => {
+  const handleAddNews = async (data) => {
     setIsLoading(true);
 
     try {
@@ -38,7 +38,9 @@ export default function ManageContenPage() {
         data,
       );
 
-      setNews([...news, response?.data]);
+      setNews(
+        [...news, response?.data].sort((a, b) => (b.id || 0) - (a.id || 0)),
+      );
     } catch (err) {
       console.error(err);
       toast.error(err?.response?.data?.message || "Something went wrong");
@@ -47,16 +49,37 @@ export default function ManageContenPage() {
     }
   };
 
+  const handleDeleteNews = async (id) => {
+    try {
+      const response = await axiosInstance.delete(
+        API_PATHS.ADMINS.NEWS_BY_ID(id),
+      );
+
+      toast.success(response?.data?.message);
+
+      setNews(
+        news.filter((news) => news.id !== parseFloat(response?.data?.id)),
+      );
+    } catch (err) {
+      console.error(err);
+      toast.error(err?.response?.data?.message || "Something went wrong");
+    }
+  };
+
   return (
     <div className="w-full h-full flex flex-row items-start justify-around gap-4 p-4 mt-10">
       <div>
-        <CreateNewsForm isLoading={isLoading} onSave={handleCreateNews} />
+        <CreateNewsForm isLoading={isLoading} onSave={handleAddNews} />
 
         <div className="mt-20 max-w-md">
           <p>Our news: </p>
           <ul>
             {(news ?? []).map((item) => (
-              <NewsList key={item?.id} item={item} />
+              <NewsList
+                key={item?.id}
+                item={item}
+                onDelete={handleDeleteNews}
+              />
             ))}
           </ul>
         </div>

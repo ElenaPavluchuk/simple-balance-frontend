@@ -33,7 +33,7 @@ const deleteNewsById = async (id) => {
     throw ApiError.notFound("News not found");
   }
 
-  return;
+  return deletedCount;
 };
 
 const updateNewsById = async ({ newsId, title, content }) => {
