@@ -9,6 +9,7 @@ import NewsList from "../shared/ui/CurrenciesAndNewsContent/NewsList";
 export default function ManageContenPage() {
   const [news, setNews] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
     const getNews = async () => {
@@ -66,6 +67,25 @@ export default function ManageContenPage() {
     }
   };
 
+  const handleSaveEdit = async (data) => {
+    try {
+      const response = await axiosInstance.put(
+        API_PATHS.ADMINS.NEWS_BY_ID(editingId),
+        data,
+      );
+
+      setEditingId(null);
+      setNews(
+        news.map((item) => (item.id === editingId ? response?.data : item)),
+      );
+    } catch (err) {
+      console.error(err);
+      toast.error(err?.response?.data?.message || "Something went wrong");
+    }
+  };
+
+  const handleCancelEdit = () => setEditingId(null);
+
   return (
     <div className="w-full h-full flex flex-row items-start justify-around gap-4 p-4 mt-10">
       <div>
@@ -79,6 +99,10 @@ export default function ManageContenPage() {
                 key={item?.id}
                 item={item}
                 onDelete={handleDeleteNews}
+                isEdit={editingId === item.id}
+                onEdit={setEditingId}
+                onSave={handleSaveEdit}
+                onCancel={handleCancelEdit}
               />
             ))}
           </ul>

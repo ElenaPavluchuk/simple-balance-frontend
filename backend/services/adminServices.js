@@ -57,7 +57,7 @@ const updateNewsById = async ({ newsId, title, content }) => {
   const [updatedNews] = await knex("news")
     .where({ id: newsId })
     .update(updateData)
-    .returning(["id", "title", "content"]);
+    .returning(["id", "title", "content", "published_at", "author_id"]);
 
   return updatedNews;
 };

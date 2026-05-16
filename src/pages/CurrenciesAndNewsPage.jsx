@@ -148,7 +148,7 @@ export default function CurrenciesAndNewsPage() {
         <p className="text-center font-semibold">Our news:</p>
         <ul>
           {(news ?? []).map((item) => (
-            <NewsList key={item?.id} item={item} />
+            <NewsList key={item?.id} item={item} hideBtn={true} />
           ))}
         </ul>
       </div>
