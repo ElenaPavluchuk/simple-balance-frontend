@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import DialogModal from "../shared/ui/DialogModal";
-import CreateTransactionForm from "../shared/ui/Transactions/Forms/CreateTransactionForm";
+import CreateTransactionForm from "../shared/ui/Transactions/CreateTransactionForm";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
 import {

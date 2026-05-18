@@ -1,4 +1,4 @@
-import CustomBarChart from "../Charts/CustomBarChart";
+import CustomBarChart from "./Charts/CustomBarChart";
 
 export default function Last30DaysTransactionsCard({ transactions, title }) {
   const data = transactions.map((t, index) => ({
