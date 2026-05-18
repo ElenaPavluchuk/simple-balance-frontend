@@ -17,7 +17,7 @@ exports.up = async function (knex) {
     table.increments("id").primary();
     table.string("email").notNullable().unique();
     table.string("password_hash").notNullable();
-    table.string("full_name").notNullable();
+    table.string("user_name").notNullable();
     table.string("profile_image_url").nullable().defaultTo(null);
     table
       .enu("user_role", ["ADMIN", "MEMBER"], {
@@ -54,9 +54,20 @@ exports.up = async function (knex) {
       .onDelete("CASCADE");
     table.boolean("is_active").notNullable().defaultTo(true);
     table.timestamps(true, true);
-    table.unique(["name", "type", "user_id"]);
     table.index(["user_id", "type"]);
   });
+
+  await knex.raw(`
+    CREATE UNIQUE INDEX categories_unique_system
+    ON categories (name, type)
+    WHERE user_id IS NULL;
+  `);
+
+  await knex.raw(`
+    CREATE UNIQUE INDEX categories_unique_user
+    ON categories (name, type, user_id)
+    WHERE user_id IS NOT NULL;
+  `);
 
   await knex.schema.createTable("transactions", (table) => {
     table.increments("id").primary();
@@ -90,10 +101,30 @@ exports.up = async function (knex) {
       .onDelete("RESTRICT");
     table.date("date").notNullable();
     table.string("title", 200);
-    table.text("notes");
+    table.text("note");
     table.timestamps(true, true);
     table.index(["user_id", "date", "type"]);
     table.index(["user_id", "category_id"]);
+  });
+
+  await knex.schema.createTable("news", (table) => {
+    table.increments("id").primary();
+    table.string("title", 255).notNullable();
+    table.text("content").notNullable();
+    table
+      .integer("author_id")
+      .unsigned()
+      .notNullable()
+      .references("id")
+      .inTable("users")
+      .onDelete("RESTRICT");
+    table
+      .timestamp("published_at", { useTz: true })
+      .notNullable()
+      .defaultTo(knex.fn.now());
+    table.timestamps(true, true);
+    table.index(["author_id"]);
+    table.index(["published_at"]);
   });
 };
 
@@ -102,6 +133,14 @@ exports.up = async function (knex) {
  * @returns { Promise<void> }
  */
 exports.down = async function (knex) {
+  await knex.raw(`
+        DROP INDEX IF EXISTS categories_unique_system;
+      `);
+
+  await knex.raw(`
+        DROP INDEX IF EXISTS categories_unique_user;
+      `);
+  await knex.schema.dropTableIfExists("news");
   await knex.schema.dropTableIfExists("transactions");
   await knex.schema.dropTableIfExists("categories");
   await knex.schema.dropTableIfExists("users");

@@ -1,18 +1,20 @@
+import dayjs from "dayjs";
+
 export const authValidate = (values) => {
   const errors = {};
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  const { selectedCurrency, fullName, email, password } = values;
+  const { selectedCurrency, userName, email, password } = values;
 
   if ("selectedCurrency" in values && !selectedCurrency) {
     errors.selectedCurrency = "Currency is required";
   }
 
-  if ("fullName" in values) {
-    if (!fullName.trim()) {
-      errors.fullName = "Full name is required";
-    } else if (fullName.length > 100) {
-      errors.fullName = "Full name must be no more than 100 characters long";
+  if ("userName" in values) {
+    if (!userName.trim()) {
+      errors.userName = "User name is required";
+    } else if (userName.length > 100) {
+      errors.userName = "User name must be no more than 100 characters long";
     }
   }
 
@@ -56,6 +58,60 @@ export const transactionsValidate = (values) => {
 
   if ("date" in values && !date) {
     errors.date = "Date is required";
+  }
+
+  return errors;
+};
+
+export const exchangeRatesValidate = (values, targetCurrencies = []) => {
+  const errors = {};
+  const { selectedBaseCurrency, date, rates } = values;
+
+  if ("selectedBaseCurrency" in values && !selectedBaseCurrency) {
+    errors.selectedBaseCurrency = "Base currency is required";
+  }
+
+  if ("date" in values) {
+    if (!date) {
+      errors.date = "Date is required";
+    } else if (dayjs(date).isAfter(dayjs(), "day")) {
+      errors.date = "Future dates are not allowed";
+    }
+  }
+
+  targetCurrencies.forEach((currency) => {
+    const currencyCode = currency.value;
+    const rate = rates[currencyCode];
+
+    if (
+      rate === undefined ||
+      rate === "" ||
+      isNaN(rate) ||
+      parseFloat(rate) <= 0
+    ) {
+      errors[currencyCode] = "Rate must be a number greater than 0";
+    }
+  });
+
+  return errors;
+};
+
+export const newsValidate = (values) => {
+  const errors = {};
+  const { title, content } = values;
+
+  if ("title" in values) {
+    if (!title.trim()) {
+      errors.title = "Title is required";
+    } else if (title.length > 255) {
+      errors.title = "Title must be no more than 255 characters long";
+    }
+  }
+
+  if ("content" in values) {
+    if (!content.trim()) {
+      errors.content = "Content is required";
+    }
   }
 
   return errors;

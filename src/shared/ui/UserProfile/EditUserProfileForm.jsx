@@ -16,7 +16,7 @@ export default function EditUserProfileForm({
   );
   const isImageChanged = newProfileImage !== user.profile_image_url;
   const [isRemoveImage, setIsRemoveImage] = useState(false);
-  const [newFullName, setNewFullName] = useState(user.full_name);
+  const [newUserName, setNewUserName] = useState(user.user_name);
   const [isEditPassword, setIsEditPassword] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -36,7 +36,7 @@ export default function EditUserProfileForm({
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const validatePayload = { fullName: newFullName };
+    const validatePayload = { userName: newUserName };
     if (isEditPassword) {
       validatePayload.password = newPassword;
     }
@@ -47,7 +47,7 @@ export default function EditUserProfileForm({
     if (Object.keys(errors).length) return;
 
     const data = {
-      fullName: newFullName.trim(),
+      userName: newUserName.trim(),
       ...(isRemoveImage && { removeProfileImage: true }),
       ...(isImageChanged &&
         newProfileImage instanceof File && {
@@ -74,19 +74,19 @@ export default function EditUserProfileForm({
         onRemoveImage={setIsRemoveImage}
       />
       <label>
-        Full name:{" "}
+        Name:{" "}
         <input
-          value={newFullName}
+          value={newUserName}
           onChange={(e) => {
-            setNewFullName(e.target.value);
-            clearFieldError("fullName", setValidateErrors);
+            setNewUserName(e.target.value);
+            clearFieldError("userName", setValidateErrors);
           }}
-          placeholder="Change full name"
+          placeholder="Change name"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
         />
       </label>
-      {validateErrors.fullName && (
-        <p className="text-red-500 italic">{validateErrors.fullName}</p>
+      {validateErrors.userName && (
+        <p className="text-red-500 italic">{validateErrors.userName}</p>
       )}
 
       <button

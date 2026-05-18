@@ -8,6 +8,9 @@ import ExpensePage from "../../../pages/ExpensePage";
 import IncomePage from "../../../pages/IncomePage";
 import UserProfilePage from "../../../pages/UserProfilePage";
 import ManageUsersPage from "../../../pages/ManageUsersPage";
+import CurrenciesAndNewsPage from "../../../pages/CurrenciesAndNewsPage";
+import ManageContentPage from "../../../pages/ManageContentPage";
+import NewsPage from "../../../pages/NewsPage";
 
 export const routeConfig = [
   {
@@ -22,11 +25,21 @@ export const routeConfig = [
       { path: "expense", element: <ExpensePage /> },
       { path: "income", element: <IncomePage /> },
       { path: "profile", element: <UserProfilePage /> },
+      { path: "content", element: <CurrenciesAndNewsPage /> },
+      { path: "/news/:id", element: <NewsPage /> },
       {
         path: "manage-users",
         element: (
           <AdminGuard>
             <ManageUsersPage />
+          </AdminGuard>
+        ),
+      },
+      {
+        path: "manage-content",
+        element: (
+          <AdminGuard>
+            <ManageContentPage />
           </AdminGuard>
         ),
       },

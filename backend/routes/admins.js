@@ -2,8 +2,9 @@ const express = require("express");
 const {
   getUsers,
   deleteUser,
-  // getCurrencyRates,
-  // updateCurrencyRates,
+  addCurrencyRates,
+  getAllRatesByBaseCurrency,
+  deleteRatesByDate,
   addNews,
   deleteNews,
   updateNews,
@@ -13,9 +14,9 @@ const router = express.Router();
 
 router.get("/users", getUsers);
 router.delete("/users/:id", deleteUser);
-// TODO:
-// router.patch("/exchange-rates", updateCurrencyRates);
-// router.get("/exchange-rates", getCurrencyRates);
+router.post("/rates", addCurrencyRates);
+router.get("/rates/:id", getAllRatesByBaseCurrency);
+router.delete("/rates/:id/:date", deleteRatesByDate);
 router.post("/news", addNews);
 router.delete("/news/:id", deleteNews);
 router.put("/news/:id", updateNews);

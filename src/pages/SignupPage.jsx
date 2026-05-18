@@ -7,7 +7,7 @@ import { useAuth } from "../shared/context/auth/useAuth";
 import { authValidate } from "../shared/utils/validate";
 
 export default function SignupPage() {
-  const [fullName, setFullName] = useState("");
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [selectedCurrency, setSelectedCurrency] = useState(null);
@@ -57,7 +57,7 @@ export default function SignupPage() {
 
     const errors = authValidate({
       selectedCurrency,
-      fullName,
+      userName,
       email,
       password,
     });
@@ -67,7 +67,7 @@ export default function SignupPage() {
 
     const data = {
       currencyId: selectedCurrency.value,
-      fullName: fullName.trim(),
+      userName: userName.trim(),
       email,
       password,
     };
@@ -114,16 +114,16 @@ export default function SignupPage() {
         </div>
 
         <input
-          value={fullName}
+          value={userName}
           onChange={(e) => {
-            setFullName(e.target.value);
-            setValidateErrors((prev) => ({ ...prev, fullName: "" }));
+            setUserName(e.target.value);
+            setValidateErrors((prev) => ({ ...prev, userName: "" }));
           }}
-          placeholder="Full name"
+          placeholder="Name"
           className="border rounded p-2 w-md"
         />
-        {validateErrors.fullName && (
-          <p className="text-red-500 italic">{validateErrors.fullName}</p>
+        {validateErrors.userName && (
+          <p className="text-red-500 italic">{validateErrors.userName}</p>
         )}
 
         <input

@@ -3,6 +3,9 @@ const {
   createNews,
   deleteNewsById,
   updateNewsById,
+  addRates,
+  getRatesByBaseCurrency,
+  deleteExchangeRatesByDate,
 } = require("../services/adminServices.js");
 const { deleteUserById } = require("../services/userServices.js");
 const ApiError = require("../errors/apiError.js");
@@ -52,7 +55,9 @@ const deleteNews = async (req, res, next) => {
   try {
     await deleteNewsById(newsId);
 
-    return res.status(200).json({ message: "News deleted successfully" });
+    return res
+      .status(200)
+      .json({ message: "News deleted successfully", id: newsId });
   } catch (err) {
     next(err);
   }
@@ -71,10 +76,81 @@ const updateNews = async (req, res, next) => {
   }
 };
 
+const addCurrencyRates = async (req, res, next) => {
+  const userId = req.user.id;
+  const { baseCurrencyId, date, rates } = req.body;
+
+  if (!baseCurrencyId || !date || !rates?.length) {
+    return next(ApiError.badRequest("Invalid payload"));
+  }
+
+  try {
+    const result = await addRates({
+      userId,
+      baseCurrencyId,
+      date,
+      rates,
+    });
+
+    return res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getAllRatesByBaseCurrency = async (req, res, next) => {
+  const baseCurrencyId = req.params.id;
+
+  if (!baseCurrencyId || isNaN(baseCurrencyId)) {
+    return next(ApiError.badRequest("Incorrect base currencie ID"));
+  }
+
+  try {
+    const rates = await getRatesByBaseCurrency(baseCurrencyId);
+
+    res.status(200).json({
+      base_currency_id: baseCurrencyId,
+      rates,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const deleteRatesByDate = async (req, res, next) => {
+  const baseCurrencyId = req.params.id;
+  const date = req.params.date;
+
+  if (!baseCurrencyId || isNaN(baseCurrencyId)) {
+    return res.status(400).json({ error: "Incorrect base currency ID" });
+  }
+
+  if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return res.status(400).json({
+      error: "Date in 'YYYY-MM-DD' format is required",
+    });
+  }
+  try {
+    const deletedCount = await deleteExchangeRatesByDate(baseCurrencyId, date);
+
+    res.status(200).json({
+      message: `Exchange rates for ${date} deleted successfully`,
+      base_currency_id: baseCurrencyId,
+      date,
+      deletedCount,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getUsers,
   deleteUser,
   addNews,
   deleteNews,
   updateNews,
+  addCurrencyRates,
+  getAllRatesByBaseCurrency,
+  deleteRatesByDate,
 };

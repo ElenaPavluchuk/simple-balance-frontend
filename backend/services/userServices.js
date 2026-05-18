@@ -5,14 +5,17 @@ const deleteImageFile = require("../utils/deleteImageFile.js");
 
 const getUserById = async (id) => {
   const user = await knex("users")
-    .where({ id })
+    .join("currencies", "users.base_currency_id", "currencies.id")
+    .where("users.id", id)
     .select([
-      "id",
-      "email",
-      "full_name",
-      "profile_image_url",
-      "user_role",
-      "base_currency_id",
+      "users.id",
+      "users.email",
+      "users.user_name",
+      "users.profile_image_url",
+      "users.user_role",
+      "users.base_currency_id",
+      "currencies.code as currency_code",
+      "currencies.symbol as currency_symbol",
     ])
     .first();
 
@@ -37,7 +40,7 @@ const deleteUserById = async (id) => {
 
 const updateUserById = async ({
   userId,
-  fullName,
+  userName,
   currentPassword,
   newPassword,
   imageUrl,
@@ -47,8 +50,8 @@ const updateUserById = async ({
 
   const updateData = {};
 
-  if (fullName) {
-    updateData.full_name = fullName.trim();
+  if (userName) {
+    updateData.user_name = userName.trim();
   }
 
   if (removeProfileImage && user.profile_image_url) {
@@ -88,17 +91,22 @@ const updateUserById = async ({
     throw ApiError.badRequest("No fields to update");
   }
 
-  const [updatedUser] = await knex("users")
-    .where({ id: userId })
-    .update(updateData)
-    .returning([
-      "id",
-      "email",
-      "full_name",
-      "profile_image_url",
-      "user_role",
-      "base_currency_id",
-    ]);
+  await knex("users").where({ id: userId }).update(updateData);
+
+  const updatedUser = await knex("users")
+    .join("currencies", "users.base_currency_id", "currencies.id")
+    .where("users.id", user.id)
+    .select(
+      "users.id",
+      "users.email",
+      "users.user_name",
+      "users.profile_image_url",
+      "users.user_role",
+      "users.base_currency_id",
+      "currencies.code as currency_code",
+      "currencies.symbol as currency_symbol",
+    )
+    .first();
 
   return updatedUser;
 };
@@ -111,4 +119,49 @@ const getAllNews = async () => {
   return allNews;
 };
 
-module.exports = { getUserById, deleteUserById, updateUserById, getAllNews };
+const getCurrentNews = async (newsId) => {
+  const news = await knex("news")
+    .where({ id: newsId })
+    .select("id", "title", "content", "published_at", "author_id")
+    .first();
+
+  return news;
+};
+
+const getCurrentRates = async (userId) => {
+  const user = await knex("users")
+    .where({ id: userId })
+    .select("base_currency_id")
+    .first();
+
+  const rates = await knex("exchange_rates")
+    .select(
+      "exchange_rates.id",
+      "exchange_rates.rate",
+      "exchange_rates.target_currency_id",
+      "exchange_rates.date",
+      "target.code as target_code",
+    )
+    .join(
+      "currencies as target",
+      "target.id",
+      "exchange_rates.target_currency_id",
+    )
+    .where("exchange_rates.base_currency_id", user.base_currency_id)
+    .orderBy("exchange_rates.date", "desc");
+
+  return {
+    base_currency_id: user.base_currency_id,
+    date: rates[0]?.date || null,
+    rates,
+  };
+};
+
+module.exports = {
+  getUserById,
+  deleteUserById,
+  updateUserById,
+  getAllNews,
+  getCurrentRates,
+  getCurrentNews,
+};

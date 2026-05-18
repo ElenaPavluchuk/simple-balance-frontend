@@ -24,7 +24,7 @@ export default function UserProfilePage() {
       if (isFile) {
         const formData = new FormData();
 
-        formData.append("fullName", data.fullName);
+        formData.append("userName", data.userName);
         formData.append("profileImage", data.profileImage);
 
         if (data.currentPassword) {

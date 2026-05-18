@@ -95,7 +95,7 @@ export default function CreateTransactionForm({ type, onClose }) {
       title: title.trim(),
       amount: parseFloat(amount),
       currencyId: user.base_currency_id,
-      notes: note.trim(),
+      note: note.trim(),
       date,
       categoryId: selectedCategory?.isCustom ? null : selectedCategory?.value,
       categoryName: selectedCategory?.isCustom ? selectedCategory?.label : null,
@@ -194,7 +194,7 @@ export default function CreateTransactionForm({ type, onClose }) {
       </div>
 
       <div>
-        <label>Notes</label>
+        <label>Note</label>
         <textarea
           value={note}
           onChange={(e) => handleNoteChange(e.target.value)}

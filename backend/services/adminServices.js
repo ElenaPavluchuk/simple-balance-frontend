@@ -5,7 +5,7 @@ const getAllUsers = async () => {
   const allUsers = await knex("users").select(
     "id",
     "email",
-    "full_name",
+    "user_name",
     "profile_image_url",
     "user_role",
     "base_currency_id",
@@ -33,7 +33,7 @@ const deleteNewsById = async (id) => {
     throw ApiError.notFound("News not found");
   }
 
-  return;
+  return deletedCount;
 };
 
 const updateNewsById = async ({ newsId, title, content }) => {
@@ -57,9 +57,71 @@ const updateNewsById = async ({ newsId, title, content }) => {
   const [updatedNews] = await knex("news")
     .where({ id: newsId })
     .update(updateData)
-    .returning(["id", "title", "content"]);
+    .returning(["id", "title", "content", "published_at", "author_id"]);
 
   return updatedNews;
+};
+
+const addRates = async ({ baseCurrencyId, date, rates, userId }) => {
+  const dataToInsert = rates.map(({ targetCurrencyId, value }) => ({
+    base_currency_id: baseCurrencyId,
+    target_currency_id: targetCurrencyId,
+    rate: value,
+    date,
+    updated_by: userId,
+  }));
+
+  const insertedOrUpdated = await knex("exchange_rates")
+    .insert(dataToInsert)
+    .onConflict(["base_currency_id", "target_currency_id", "date"])
+    .merge()
+    .returning("*");
+
+  return {
+    message: "Currency rates have been successfully added",
+    rates: insertedOrUpdated,
+  };
+};
+
+const getRatesByBaseCurrency = async (baseCurrencyId) => {
+  const result = await knex("exchange_rates")
+    .select(
+      "exchange_rates.date",
+      knex.raw(`
+        json_agg(
+          json_build_object(
+            'id', exchange_rates.id,
+            'rate', exchange_rates.rate,
+            'target_currency_id', exchange_rates.target_currency_id,
+            'target_code', target.code,
+            'target_symbol', target.symbol
+          )
+          ORDER BY target.code
+        ) as rates
+      `),
+    )
+    .join(
+      "currencies as target",
+      "target.id",
+      "exchange_rates.target_currency_id",
+    )
+    .where("exchange_rates.base_currency_id", baseCurrencyId)
+    .groupBy("exchange_rates.date")
+    .orderBy("exchange_rates.date", "desc");
+
+  return result;
+};
+
+const deleteExchangeRatesByDate = async (baseCurrencyId, date) => {
+  const deletedCount = await knex("exchange_rates")
+    .where({ base_currency_id: baseCurrencyId, date })
+    .del();
+
+  if (!deletedCount || deletedCount === 0) {
+    throw ApiError.notFound("Exchange rates deletion error");
+  }
+
+  return deletedCount;
 };
 
 module.exports = {
@@ -67,4 +129,7 @@ module.exports = {
   createNews,
   deleteNewsById,
   updateNewsById,
+  addRates,
+  getRatesByBaseCurrency,
+  deleteExchangeRatesByDate,
 };

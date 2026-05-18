@@ -67,7 +67,7 @@ export default function ManageUsersPage() {
         <thead className="bg-[#ffe5ec] rounded-t-2xl">
           <tr>
             <th className="px-6 py-4 text-left text-xs font-bold text-[#e11d48] uppercase tracking-wider">
-              Full name
+              Name
             </th>
             <th className="px-6 py-4 text-left text-xs font-bold text-[#e11d48] uppercase tracking-wider">
               Email
@@ -88,7 +88,7 @@ export default function ManageUsersPage() {
               className="hover:bg-[#fff7f8] transition duration-150"
             >
               <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                {user.full_name}
+                {user.user_name}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                 {user.email}

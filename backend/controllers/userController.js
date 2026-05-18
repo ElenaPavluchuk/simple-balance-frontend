@@ -1,8 +1,11 @@
+const ApiError = require("../errors/apiError.js");
 const {
   getUserById,
   deleteUserById,
   updateUserById,
   getAllNews,
+  getCurrentRates,
+  getCurrentNews,
 } = require("../services/userServices.js");
 
 const getUser = async (req, res, next) => {
@@ -31,7 +34,7 @@ const deleteUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   const userId = req.user.id;
-  const { fullName, currentPassword, newPassword, removeProfileImage } =
+  const { userName, currentPassword, newPassword, removeProfileImage } =
     req.body;
 
   const imageUrl = req.file
@@ -41,7 +44,7 @@ const updateUser = async (req, res, next) => {
   try {
     const updatedUser = await updateUserById({
       userId,
-      fullName,
+      userName,
       currentPassword,
       newPassword,
       imageUrl,
@@ -66,4 +69,39 @@ const getNews = async (_req, res, next) => {
   }
 };
 
-module.exports = { getUser, deleteUser, updateUser, getNews };
+const getNewsById = async (req, res, next) => {
+  const newsId = req.params.id;
+
+  if (!newsId) {
+    return res.status(400).json({ error: "News ID is required" });
+  }
+
+  try {
+    const news = await getCurrentNews(newsId);
+
+    return res.status(200).json(news);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getExchangeRates = async (req, res, next) => {
+  const userId = req.user.id;
+
+  try {
+    const exchangeRates = await getCurrentRates(userId);
+
+    return res.status(200).json(exchangeRates);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = {
+  getUser,
+  deleteUser,
+  updateUser,
+  getNews,
+  getNewsById,
+  getExchangeRates,
+};

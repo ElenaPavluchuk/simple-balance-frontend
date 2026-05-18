@@ -10,7 +10,7 @@ const addUserTransaction = async ({
   categoryName,
   date,
   title,
-  notes,
+  note,
 }) => {
   if (!categoryId && categoryName) {
     let category = await knex("categories")
@@ -43,7 +43,7 @@ const addUserTransaction = async ({
       category_id: categoryId,
       date,
       title,
-      notes,
+      note,
     })
     .returning("*");
 
@@ -58,7 +58,7 @@ const addUserTransaction = async ({
       "t.amount",
       "t.date",
       "t.title",
-      "t.notes",
+      "t.note",
       "t.currency_id",
       "t.category_id",
       "c.symbol as currency_symbol",
@@ -83,7 +83,7 @@ const getUserTransactions = async ({ userId, type }) => {
       "t.category_id",
       "t.date",
       "t.title",
-      "t.notes",
+      "t.note",
       "c.symbol as currency_symbol",
       "cat.name as category_name",
     ])
@@ -113,7 +113,7 @@ const updateUserTransaction = async ({
   categoryName,
   date,
   title,
-  notes,
+  note,
 }) => {
   const transaction = await knex("transactions")
     .where({
@@ -154,7 +154,7 @@ const updateUserTransaction = async ({
       category_id: categoryId,
       date,
       title,
-      notes,
+      note,
     }).filter(([, value]) => value !== undefined),
   );
 
@@ -177,7 +177,7 @@ const updateUserTransaction = async ({
       "t.amount",
       "t.date",
       "t.title",
-      "t.notes",
+      "t.note",
       "t.currency_id",
       "t.category_id",
       "c.symbol as currency_symbol",
