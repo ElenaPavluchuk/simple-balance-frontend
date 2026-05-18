@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import CreateNewsForm from "../shared/ui/CurrenciesAndNewsContent/CreateNewsForm";
-import ExchangeRatesManager from "../shared/ui/CurrenciesAndNewsContent/ExchangeRatesManager";
+import ExchangeRatesToggle from "../shared/ui/CurrenciesAndNewsContent/ExchangeRatesToggle";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
 import toast, { Toaster } from "react-hot-toast";
@@ -109,7 +109,7 @@ export default function ManageContenPage() {
         </div>
       </div>
 
-      <ExchangeRatesManager />
+      <ExchangeRatesToggle />
 
       <div>
         <Toaster position="top-center" />
