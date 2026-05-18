@@ -4,10 +4,10 @@ import axios from "axios";
 import dayjs from "dayjs";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
-import ExchangeRateCard from "../shared/ui/CurrenciesAndNewsContent/ExchangeRateCard";
+import ExchangeRateCard from "../shared/ui/CurrenciesAndNews/ExchangeRateCard";
 import { Link } from "react-router";
 import toast, { Toaster } from "react-hot-toast";
-import NewsList from "../shared/ui/CurrenciesAndNewsContent/NewsList";
+import NewsList from "../shared/ui/CurrenciesAndNews/NewsList";
 
 export default function CurrenciesAndNewsPage() {
   const [news, setNews] = useState([]);

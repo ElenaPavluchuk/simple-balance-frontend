@@ -1,4 +1,4 @@
-import TransactionCard from "../../Transactions/Cards/TransactionCard";
+import TransactionCard from "../Transactions/TransactionCard";
 
 export default function RecentTransactionsCard({
   transactions,

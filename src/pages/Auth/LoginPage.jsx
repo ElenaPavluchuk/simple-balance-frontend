@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { authValidate } from "../shared/utils/validate";
-import axiosInstance from "../shared/utils/axiosInstance";
-import { API_PATHS } from "../shared/utils/apiPaths";
+import { authValidate } from "../../shared/utils/validate";
+import axiosInstance from "../../shared/utils/axiosInstance";
+import { API_PATHS } from "../../shared/utils/apiPaths";
 import { Link, useNavigate } from "react-router";
-import { useAuth } from "../shared/context/auth/useAuth";
+import { useAuth } from "../../shared/context/auth/useAuth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");

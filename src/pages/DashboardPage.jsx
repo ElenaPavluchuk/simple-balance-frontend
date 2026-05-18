@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
-import TotalCard from "../shared/ui/Dashboard/Cards/TotalCard";
-import RecentTransactionsCard from "../shared/ui/Dashboard/Cards/RecentTransactionsCard";
-import FinanceOverviewCard from "../shared/ui/Dashboard/Cards/FinanceOverviewCard";
-import Last30DaysTransactionsCard from "../shared/ui/Dashboard/Cards/Last30DaysTransactionsCard";
+import TotalCard from "../shared/ui/Dashboard/TotalCard";
+import RecentTransactionsCard from "../shared/ui/Dashboard/RecentTransactionsCard";
+import FinanceOverviewCard from "../shared/ui/Dashboard/FinanceOverviewCard";
+import Last30DaysTransactionsCard from "../shared/ui/Dashboard/Last30DaysTransactionsCard";
 import {
   totalCardsData,
   otherCardsData,

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import axiosInstance from "../shared/utils/axiosInstance";
-import { API_PATHS } from "../shared/utils/apiPaths";
-import DialogModal from "../shared/ui/DialogModal";
-import DeleteAlert from "../shared/ui/DeleteAlert";
+import axiosInstance from "../../shared/utils/axiosInstance";
+import { API_PATHS } from "../../shared/utils/apiPaths";
+import DialogModal from "../../shared/ui/DialogModal";
+import DeleteAlert from "../../shared/ui/DeleteAlert";
 import { Trash } from "lucide-react";
 
 export default function ManageUsersPage() {

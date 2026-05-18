@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import CreateNewsForm from "../shared/ui/CurrenciesAndNewsContent/CreateNewsForm";
-import ExchangeRatesToggle from "../shared/ui/CurrenciesAndNewsContent/ExchangeRatesToggle";
-import axiosInstance from "../shared/utils/axiosInstance";
-import { API_PATHS } from "../shared/utils/apiPaths";
+import CreateNewsForm from "../../shared/ui/ManageContent/CreateNewsForm";
+import ExchangeRatesToggle from "../../shared/ui/ManageContent/ExchangeRatesToggle";
+import axiosInstance from "../../shared/utils/axiosInstance";
+import { API_PATHS } from "../../shared/utils/apiPaths";
 import toast, { Toaster } from "react-hot-toast";
-import NewsList from "../shared/ui/CurrenciesAndNewsContent/NewsList";
+import NewsList from "../../shared/ui/CurrenciesAndNews/NewsList";
 
 export default function ManageContenPage() {
   const [news, setNews] = useState([]);

@@ -1,5 +1,5 @@
 import NewsCard from "./NewsCard";
-import EditNewsForm from "./EditNewsForm";
+import EditNewsForm from "../ManageContent/EditNewsForm";
 
 export default function NewsList({
   item,

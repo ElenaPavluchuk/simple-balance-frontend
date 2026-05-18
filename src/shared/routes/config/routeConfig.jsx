@@ -1,16 +1,16 @@
 import { AuthGuard } from "../guards/AuthGuard";
 import { AdminGuard } from "../guards/AdminGuard";
-import SignupPage from "../../../pages/SignupPage";
-import LoginPage from "../../../pages/LoginPage";
+import SignupPage from "../../../pages/Auth/SignupPage";
+import LoginPage from "../../../pages/Auth/LoginPage";
 import Layout from "../../ui/Layout/Layout";
 import DashboardPage from "../../../pages/DashboardPage";
 import ExpensePage from "../../../pages/ExpensePage";
 import IncomePage from "../../../pages/IncomePage";
 import UserProfilePage from "../../../pages/UserProfilePage";
-import ManageUsersPage from "../../../pages/ManageUsersPage";
 import CurrenciesAndNewsPage from "../../../pages/CurrenciesAndNewsPage";
-import ManageContentPage from "../../../pages/ManageContentPage";
 import NewsPage from "../../../pages/NewsPage";
+import ManageUsersPage from "../../../pages/Admin/ManageUsersPage";
+import ManageContentPage from "../../../pages/Admin/ManageContentPage";
 
 export const routeConfig = [
   {
