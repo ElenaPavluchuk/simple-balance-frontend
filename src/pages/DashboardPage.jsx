@@ -70,7 +70,13 @@ export default function DashboardPage() {
           }
 
           if (card.type === "category") {
-            return <Last30DaysTransactionsCard key={card.id} {...props} />;
+            return (
+              <Last30DaysTransactionsCard
+                key={card.id}
+                symbol={dashboardData?.symbol?.baseCurrencySymbol}
+                {...props}
+              />
+            );
           }
 
           return null;
