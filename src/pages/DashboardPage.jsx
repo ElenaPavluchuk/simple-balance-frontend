@@ -8,7 +8,7 @@ import FinanceOverviewCard from "../shared/ui/Dashboard/FinanceOverviewCard";
 import Last30DaysTransactionsCard from "../shared/ui/Dashboard/Last30DaysTransactionsCard";
 import {
   totalCardsData,
-  otherCardsData,
+  cardsByTypeData,
 } from "../shared/ui/Dashboard/config/data";
 
 export default function DashboardPage() {
@@ -59,7 +59,7 @@ export default function DashboardPage() {
           symbol={dashboardData?.symbol?.baseCurrencySymbol}
         />
 
-        {otherCardsData.map((card) => {
+        {cardsByTypeData.map((card) => {
           const { source, dataKey, navigateTo, ...restProps } = card.props;
           const transactions = dashboardData?.[source]?.[dataKey] ?? [];
           const onViewAll = navigateTo ? () => navigate(navigateTo) : undefined;

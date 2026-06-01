@@ -24,7 +24,7 @@ export const totalCardsData = [
   },
 ];
 
-export const otherCardsData = [
+export const cardsByTypeData = [
   {
     id: "recentTotal",
     type: "recent",
