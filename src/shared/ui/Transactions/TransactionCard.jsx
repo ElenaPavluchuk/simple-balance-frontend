@@ -24,7 +24,7 @@ export default function TransactionCard({
 }) {
   return (
     <>
-      <div className="w-full">
+      <div className="w-full bg-amber-200">
         <div className="flex justify-between items-center ">
           <p>{transaction.title}</p>
           <div className="flex flex-row">

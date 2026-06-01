@@ -298,7 +298,7 @@ const getData = async (userId) => {
   const last5TransactionsAllTime = last5Transactions.map((t) => ({
     ...t,
     amount: Number(t.amount),
-    baseCurrencySymbol,
+    currency_symbol: baseCurrencySymbol,
   }));
 
   return {
