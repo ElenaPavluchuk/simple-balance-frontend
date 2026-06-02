@@ -21,30 +21,28 @@ export default function CustomPieChart({ data, label, totalAmount, symbol }) {
         ></Pie>
         <Tooltip content={CustomTooltip} />
         <Legend content={CustomLegend} />
-        <>
-          <text
-            x="50%"
-            y="50%"
-            dy={-20}
-            textAnchor="middle"
-            fill="#888"
-            fontSize="14px"
-          >
-            {label}
-          </text>
-          <text
-            x="50%"
-            y="50%"
-            dy={10}
-            textAnchor="middle"
-            fill={`${totalAmount < 0 ? "#ff4d6d" : "#222"}`}
-            fontSize="22px"
-            fontWeight="600"
-          >
-            {symbol}
-            {totalAmount}
-          </text>
-        </>
+        <text
+          x="50%"
+          y="50%"
+          dy={-20}
+          textAnchor="middle"
+          fill="#888"
+          fontSize="14px"
+        >
+          {label}
+        </text>
+        <text
+          x="50%"
+          y="50%"
+          dy={10}
+          textAnchor="middle"
+          fill={`${totalAmount < 0 ? "#ff4d6d" : "#222"}`}
+          fontSize="22px"
+          fontWeight="600"
+        >
+          {symbol}
+          {totalAmount}
+        </text>
       </PieChart>
     </ResponsiveContainer>
   );

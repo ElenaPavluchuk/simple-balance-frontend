@@ -10,35 +10,45 @@ import {
   totalCardsData,
   cardsByTypeData,
 } from "../shared/ui/Dashboard/config/data";
+import toast from "react-hot-toast";
+import Loader from "../shared/ui/Loader";
 
 export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState(null);
-  const [apiError, setApiError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
+    let isCancelled = false;
+
     const getDashboardData = async () => {
       try {
+        setIsLoading(true);
+
         const response = await axiosInstance.get(
           API_PATHS.TRANSACTIONS.DASHBOARD,
         );
 
-        setDashboardData(response?.data);
+        if (!isCancelled) setDashboardData(response?.data);
       } catch (err) {
-        console.error(err);
-        const message =
-          err?.response?.data?.message ||
-          "Something went wrong. Please try again";
-        setApiError(message);
+        if (!isCancelled) console.error(err);
+        if (!isCancelled)
+          toast.error(err?.response?.data?.message || "Something went wrong");
+      } finally {
+        if (!isCancelled) setIsLoading(false);
       }
     };
 
     getDashboardData();
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   return (
     <div className="m-5">
-      <h1 className="mb-5 text-center font-bold">Dashboard Page</h1>
+      {isLoading && <Loader />}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {totalCardsData.map((card) => (
@@ -81,12 +91,6 @@ export default function DashboardPage() {
 
           return null;
         })}
-      </div>
-
-      <div>
-        {apiError && (
-          <p className="text-red-500 italic text-center">{apiError}</p>
-        )}
       </div>
     </div>
   );
