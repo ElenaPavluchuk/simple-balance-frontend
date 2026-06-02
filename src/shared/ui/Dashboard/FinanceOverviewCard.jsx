@@ -7,12 +7,12 @@ export default function FinanceOverviewCard({
   symbol,
 }) {
   const balanceData = [
-    {
-      name: "Total Balance",
-      value: totalBalance,
-      symbol: symbol,
-      fill: "#ff8fab",
-    },
+    // {
+    //   name: "Total Balance",
+    //   value: totalBalance,
+    //   symbol: symbol,
+    //   fill: "#ff8fab",
+    // },
     {
       name: "Total Expense",
       value: totalExpense,
@@ -37,7 +37,6 @@ export default function FinanceOverviewCard({
         label="Total Balance"
         totalAmount={totalBalance}
         symbol={symbol}
-        showTextAnchor
       />
     </div>
   );
