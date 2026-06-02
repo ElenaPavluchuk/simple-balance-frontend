@@ -18,9 +18,10 @@ export default function RecentTransactionsCard({
       </div>
 
       {transactions.length === 0 && (
-        <div className="flex h-full items-center justify-center">
-          <p className="text-cyan-700 italic">
-            Your transactions will be here...
+        <div className="h-full flex flex-col items-center justify-center">
+          <p className="text-sm">No transactions yet</p>
+          <p className="text-xs text-gray-300 mt-1">
+            Add your first transaction to see the list
           </p>
         </div>
       )}

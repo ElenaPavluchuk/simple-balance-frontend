@@ -20,15 +20,13 @@ export default function CustomBarChart({ data }) {
             tick={{ fontSize: 12, fill: "#555" }}
             stroke="none"
           />
-          <YAxis tick={{ fontSize: 12, fill: "#555" }} stroke="none" />
+          <YAxis
+            domain={[0, "dataMax"]}
+            tick={{ fontSize: 12, fill: "#555" }}
+            stroke="none"
+          />
           <Tooltip content={CustomTooltip} />
-          <Bar
-            dataKey="value"
-            fill="#FF8042"
-            radius={[10, 10, 0, 0]}
-            activeDot={{ r: 8, fill: "yellow" }}
-            activeStyle={{ fill: "green" }}
-          ></Bar>
+          <Bar dataKey="value" fill="#FF8042" radius={[10, 10, 10, 10]}></Bar>
         </BarChart>
       </ResponsiveContainer>
     </div>

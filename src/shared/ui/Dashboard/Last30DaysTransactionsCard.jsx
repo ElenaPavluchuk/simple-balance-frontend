@@ -18,6 +18,15 @@ export default function Last30DaysTransactionsCard({
         <h5 className="text-lg">{`Last 30 Days ${title}`}</h5>
       </div>
 
+      {data.length === 0 && (
+        <div className="h-full flex flex-col items-center justify-center">
+          <p className="text-sm">No transactions yet</p>
+          <p className="text-xs text-gray-300 mt-1">
+            Add your first transaction to see the chart
+          </p>
+        </div>
+      )}
+
       <CustomBarChart data={data} />
     </div>
   );
