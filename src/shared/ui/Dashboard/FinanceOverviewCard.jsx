@@ -7,12 +7,6 @@ export default function FinanceOverviewCard({
   symbol,
 }) {
   const balanceData = [
-    // {
-    //   name: "Total Balance",
-    //   value: totalBalance,
-    //   symbol: symbol,
-    //   fill: "#ff8fab",
-    // },
     {
       name: "Total Expense",
       value: totalExpense,
