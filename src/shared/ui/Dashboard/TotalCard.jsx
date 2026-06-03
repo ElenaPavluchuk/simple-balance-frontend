@@ -1,6 +1,15 @@
-export default function TotalCard({ icon, label, total, symbol, color }) {
+export default function TotalCard({
+  icon,
+  label,
+  total,
+  symbol,
+  color,
+  order,
+}) {
   return (
-    <div className="flex gap-6 bg-white p-6 rounded-2xl shadow-md shadow-gray-100 border border-gray-200/50">
+    <div
+      className={`flex gap-6 bg-white p-6 rounded-2xl shadow-md shadow-gray-100 border border-gray-200/50 card ${order}`}
+    >
       <div
         className={`w-14 h-14 flex items-center justify-center text-2xl text-white ${color} rounded-full drop-shadow-xl`}
       >

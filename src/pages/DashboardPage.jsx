@@ -8,7 +8,8 @@ import FinanceOverviewCard from "../shared/ui/Dashboard/FinanceOverviewCard";
 import Last30DaysTransactionsCard from "../shared/ui/Dashboard/Last30DaysTransactionsCard";
 import {
   totalCardsData,
-  cardsByTypeData,
+  recentCardsData,
+  lastChartCardsData,
 } from "../shared/ui/Dashboard/config/data";
 import toast from "react-hot-toast";
 import Loader from "../shared/ui/Loader";
@@ -51,46 +52,50 @@ export default function DashboardPage() {
       {isLoading && <Loader />}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {totalCardsData.map((card) => (
+        {totalCardsData.map((item) => (
           <TotalCard
-            key={card.id}
-            icon={<card.Icon />}
-            label={card.label}
-            total={dashboardData?.total?.[card.dataKey] || 0}
-            color={card.color}
+            key={item.id}
+            icon={<item.Icon />}
+            label={item.label}
+            total={dashboardData?.total?.[item.dataKey] || 0}
+            color={item.color}
             symbol={dashboardData?.symbol?.baseCurrencySymbol}
+            order={item.order}
           />
         ))}
+      </div>
 
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <FinanceOverviewCard
           totalBalance={dashboardData?.total?.totalBalance || 0}
           totalIncome={dashboardData?.total?.totalIncome || 0}
           totalExpense={dashboardData?.total?.totalExpense || 0}
           symbol={dashboardData?.symbol?.baseCurrencySymbol}
+          order={"order-4"}
         />
 
-        {cardsByTypeData.map((card) => {
-          const { source, dataKey, navigateTo, ...restProps } = card.props;
-          const transactions = dashboardData?.[source]?.[dataKey] ?? [];
-          const onViewAll = navigateTo ? () => navigate(navigateTo) : undefined;
-          const props = { ...restProps, transactions, onViewAll };
+        {recentCardsData.map((item) => (
+          <RecentTransactionsCard
+            key={item.id}
+            transactions={dashboardData?.[item.source]?.[item.dataKey] ?? []}
+            onViewAll={
+              item.navigateTo ? () => navigate(item.navigateTo) : undefined
+            }
+            title={item.title}
+            hideBtn={item.hideBtn ? item.hideBtn : false}
+            order={item.order}
+          />
+        ))}
 
-          if (card.type === "recent") {
-            return <RecentTransactionsCard key={card.id} {...props} />;
-          }
-
-          if (card.type === "category") {
-            return (
-              <Last30DaysTransactionsCard
-                key={card.id}
-                symbol={dashboardData?.symbol?.baseCurrencySymbol}
-                {...props}
-              />
-            );
-          }
-
-          return null;
-        })}
+        {lastChartCardsData.map((item) => (
+          <Last30DaysTransactionsCard
+            key={item.id}
+            transactions={dashboardData?.[item.source]?.[item.dataKey] ?? []}
+            title={item.title}
+            symbol={dashboardData?.symbol?.baseCurrencySymbol}
+            order={item.order}
+          />
+        ))}
       </div>
     </div>
   );

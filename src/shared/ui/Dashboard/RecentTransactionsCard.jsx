@@ -5,9 +5,10 @@ export default function RecentTransactionsCard({
   onViewAll,
   title,
   hideBtn,
+  order,
 }) {
   return (
-    <div className="bg-white p-3 rounded">
+    <div className={`bg-white p-3 rounded card ${order}`}>
       <div className="flex items-center justify-between">
         <h5 className="text-lg font-semibold">{title}</h5>
         {!hideBtn && (
