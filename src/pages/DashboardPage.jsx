@@ -49,56 +49,60 @@ export default function DashboardPage() {
 
   return (
     <div className="m-5">
-      {isLoading && <Loader />}
+      {isLoading || !dashboardData ? (
+        <div className="min-h-screen flex justify-center items-center">
+          <Loader />
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+          {totalCardsData.map((item) => (
+            <TotalCard
+              key={item.id}
+              icon={<item.Icon />}
+              label={item.label}
+              total={dashboardData?.total?.[item.dataKey] || 0}
+              color={item.color}
+              symbol={dashboardData?.symbol?.baseCurrencySymbol}
+              order={item.order}
+              spanningColumns={item.spanningColumns}
+            />
+          ))}
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-        {totalCardsData.map((item) => (
-          <TotalCard
-            key={item.id}
-            icon={<item.Icon />}
-            label={item.label}
-            total={dashboardData?.total?.[item.dataKey] || 0}
-            color={item.color}
+          <FinanceOverviewCard
+            totalBalance={dashboardData?.total?.totalBalance || 0}
+            totalIncome={dashboardData?.total?.totalIncome || 0}
+            totalExpense={dashboardData?.total?.totalExpense || 0}
             symbol={dashboardData?.symbol?.baseCurrencySymbol}
-            order={item.order}
-            spanningColumns={item.spanningColumns}
+            order={"order-4"}
+            spanningColumns={"col-start-1 col-end-3"}
           />
-        ))}
 
-        <FinanceOverviewCard
-          totalBalance={dashboardData?.total?.totalBalance || 0}
-          totalIncome={dashboardData?.total?.totalIncome || 0}
-          totalExpense={dashboardData?.total?.totalExpense || 0}
-          symbol={dashboardData?.symbol?.baseCurrencySymbol}
-          order={"order-4"}
-          spanningColumns={"col-start-1 col-end-3"}
-        />
+          {recentCardsData.map((item) => (
+            <RecentTransactionsCard
+              key={item.id}
+              transactions={dashboardData?.[item.source]?.[item.dataKey] ?? []}
+              onViewAll={
+                item.navigateTo ? () => navigate(item.navigateTo) : undefined
+              }
+              title={item.title}
+              hideBtn={item.hideBtn ? item.hideBtn : false}
+              order={item.order}
+              spanningColumns={item.spanningColumns}
+            />
+          ))}
 
-        {recentCardsData.map((item) => (
-          <RecentTransactionsCard
-            key={item.id}
-            transactions={dashboardData?.[item.source]?.[item.dataKey] ?? []}
-            onViewAll={
-              item.navigateTo ? () => navigate(item.navigateTo) : undefined
-            }
-            title={item.title}
-            hideBtn={item.hideBtn ? item.hideBtn : false}
-            order={item.order}
-            spanningColumns={item.spanningColumns}
-          />
-        ))}
-
-        {lastChartCardsData.map((item) => (
-          <Last30DaysTransactionsCard
-            key={item.id}
-            transactions={dashboardData?.[item.source]?.[item.dataKey] ?? []}
-            title={item.title}
-            symbol={dashboardData?.symbol?.baseCurrencySymbol}
-            order={item.order}
-            spanningColumns={item.spanningColumns}
-          />
-        ))}
-      </div>
+          {lastChartCardsData.map((item) => (
+            <Last30DaysTransactionsCard
+              key={item.id}
+              transactions={dashboardData?.[item.source]?.[item.dataKey] ?? []}
+              title={item.title}
+              symbol={dashboardData?.symbol?.baseCurrencySymbol}
+              order={item.order}
+              spanningColumns={item.spanningColumns}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
