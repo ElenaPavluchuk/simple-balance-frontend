@@ -6,9 +6,10 @@ export default function RecentTransactionsCard({
   title,
   hideBtn,
   order,
+  spanningColumns,
 }) {
   return (
-    <div className={`bg-white p-3 rounded card ${order}`}>
+    <div className={`bg-white p-3 rounded card ${order} ${spanningColumns}`}>
       <div className="flex items-center justify-between">
         <h5 className="text-lg font-semibold">{title}</h5>
         {!hideBtn && (

@@ -51,7 +51,7 @@ export default function DashboardPage() {
     <div className="m-5">
       {isLoading && <Loader />}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
         {totalCardsData.map((item) => (
           <TotalCard
             key={item.id}
@@ -61,17 +61,17 @@ export default function DashboardPage() {
             color={item.color}
             symbol={dashboardData?.symbol?.baseCurrencySymbol}
             order={item.order}
+            spanningColumns={item.spanningColumns}
           />
         ))}
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <FinanceOverviewCard
           totalBalance={dashboardData?.total?.totalBalance || 0}
           totalIncome={dashboardData?.total?.totalIncome || 0}
           totalExpense={dashboardData?.total?.totalExpense || 0}
           symbol={dashboardData?.symbol?.baseCurrencySymbol}
           order={"order-4"}
+          spanningColumns={"col-start-1 col-end-3"}
         />
 
         {recentCardsData.map((item) => (
@@ -84,6 +84,7 @@ export default function DashboardPage() {
             title={item.title}
             hideBtn={item.hideBtn ? item.hideBtn : false}
             order={item.order}
+            spanningColumns={item.spanningColumns}
           />
         ))}
 
@@ -94,6 +95,7 @@ export default function DashboardPage() {
             title={item.title}
             symbol={dashboardData?.symbol?.baseCurrencySymbol}
             order={item.order}
+            spanningColumns={item.spanningColumns}
           />
         ))}
       </div>

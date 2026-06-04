@@ -8,6 +8,7 @@ export const totalCardsData = [
     label: "Total balance",
     color: "bg-teal-500",
     order: "order-1",
+    spanningColumns: "col-span-2",
   },
   {
     id: "totalIncome",
@@ -16,6 +17,7 @@ export const totalCardsData = [
     label: "Total income",
     color: "bg-pink-500",
     order: "order-2",
+    spanningColumns: "col-span-1",
   },
   {
     id: "totalExpense",
@@ -24,6 +26,7 @@ export const totalCardsData = [
     label: "Total expense",
     color: "bg-cyan-500",
     order: "order-3",
+    spanningColumns: "col-span-1",
   },
 ];
 
@@ -35,6 +38,7 @@ export const recentCardsData = [
     title: "Recent Transactions",
     hideBtn: true,
     order: "order-5",
+    spanningColumns: "col-span-2",
   },
   {
     id: "recentExpense",
@@ -43,6 +47,7 @@ export const recentCardsData = [
     title: "Expense",
     navigateTo: "/expense",
     order: "order-6",
+    spanningColumns: "col-span-2",
   },
   {
     id: "recentIncome",
@@ -51,6 +56,7 @@ export const recentCardsData = [
     title: "Income",
     navigateTo: "/income",
     order: "order-8",
+    spanningColumns: "col-span-2",
   },
 ];
 
@@ -61,6 +67,7 @@ export const lastChartCardsData = [
     dataKey: "expenseByCategory",
     title: "expense",
     order: "order-7",
+    spanningColumns: "col-span-2",
   },
   {
     id: "incomeByCategoryChart",
@@ -68,5 +75,6 @@ export const lastChartCardsData = [
     dataKey: "incomeByCategory",
     title: "income",
     order: "order-9",
+    spanningColumns: "col-span-2",
   },
 ];

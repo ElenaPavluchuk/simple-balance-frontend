@@ -6,6 +6,7 @@ export default function FinanceOverviewCard({
   totalExpense,
   symbol,
   order,
+  spanningColumns,
 }) {
   const balanceData = [
     {
@@ -22,7 +23,7 @@ export default function FinanceOverviewCard({
     },
   ];
   return (
-    <div className={`card ${order} bg-white rounded h-125`}>
+    <div className={`card ${order} ${spanningColumns} bg-white rounded h-125`}>
       <div className="flex items-center justify-between">
         <h5 className="text-lg">Financial Overview</h5>
       </div>

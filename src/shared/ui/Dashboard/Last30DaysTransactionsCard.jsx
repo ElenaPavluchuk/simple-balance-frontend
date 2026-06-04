@@ -5,6 +5,7 @@ export default function Last30DaysTransactionsCard({
   title,
   symbol,
   order,
+  spanningColumns,
 }) {
   const data = transactions.map((t, index) => ({
     name: t?.category_name,
@@ -14,7 +15,7 @@ export default function Last30DaysTransactionsCard({
   }));
 
   return (
-    <div className={`card ${order} col-span-1 bg-white`}>
+    <div className={`card ${order} ${spanningColumns} col-span-1 bg-white`}>
       <div className="flex items-center justify-between">
         <h5 className="text-lg">{`Last 30 Days ${title}`}</h5>
       </div>
