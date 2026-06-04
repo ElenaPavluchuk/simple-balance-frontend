@@ -8,6 +8,18 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import CustomTooltip from "./CustomTooltip";
+import PropTypes from "prop-types";
+
+CustomBarChart.propTypes = {
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      value: PropTypes.number.isRequired,
+      symbol: PropTypes.string.isRequired,
+      fill: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+};
 
 export default function CustomBarChart({ data }) {
   return (

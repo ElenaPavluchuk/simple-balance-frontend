@@ -1,6 +1,21 @@
 import { PieChart, Pie, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import CustomTooltip from "./CustomTooltip";
 import CustomLegend from "./CustomLegend";
+import PropTypes from "prop-types";
+
+CustomPieChart.propTypes = {
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      value: PropTypes.number.isRequired,
+      symbol: PropTypes.string.isRequired,
+      fill: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+  label: PropTypes.string.isRequired,
+  totalAmount: PropTypes.number.isRequired,
+  symbol: PropTypes.string.isRequired,
+};
 
 export default function CustomPieChart({ data, label, totalAmount, symbol }) {
   return (

@@ -1,3 +1,15 @@
+import PropTypes from "prop-types";
+
+TotalCard.propTypes = {
+  icon: PropTypes.element.isRequired,
+  label: PropTypes.string.isRequired,
+  total: PropTypes.number.isRequired,
+  symbol: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired,
+  order: PropTypes.string.isRequired,
+  spanningColumns: PropTypes.string.isRequired,
+};
+
 export default function TotalCard({
   icon,
   label,

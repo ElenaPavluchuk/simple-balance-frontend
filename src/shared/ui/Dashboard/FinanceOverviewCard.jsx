@@ -1,4 +1,14 @@
 import CustomPieChart from "./Charts/CustomPieChart";
+import PropTypes from "prop-types";
+
+FinanceOverviewCard.propTypes = {
+  totalBalance: PropTypes.number.isRequired,
+  totalIncome: PropTypes.number.isRequired,
+  totalExpense: PropTypes.number.isRequired,
+  symbol: PropTypes.string.isRequired,
+  order: PropTypes.string.isRequired,
+  spanningColumns: PropTypes.string.isRequired,
+};
 
 export default function FinanceOverviewCard({
   totalBalance,

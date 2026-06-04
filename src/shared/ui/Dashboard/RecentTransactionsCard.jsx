@@ -1,4 +1,24 @@
 import TransactionCard from "../Transactions/TransactionCard";
+import PropTypes from "prop-types";
+
+RecentTransactionsCard.propTypes = {
+  transactions: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+      amount: PropTypes.number.isRequired,
+      category_name: PropTypes.string.isRequired,
+      date: PropTypes.string.isRequired,
+      note: PropTypes.string.isRequired,
+      currency_symbol: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+  onViewAll: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  hideBtn: PropTypes.bool,
+  order: PropTypes.string.isRequired,
+  spanningColumns: PropTypes.string.isRequired,
+};
 
 export default function RecentTransactionsCard({
   transactions,

@@ -1,3 +1,10 @@
+import PropTypes from "prop-types";
+
+Loader.propTypes = {
+  size: PropTypes.string,
+  color: PropTypes.string,
+};
+
 export default function Loader({ size = "w-8 h-8", color = "text-cyan-500" }) {
   return (
     <div className="w-full p-10 flex justify-center items-center">
@@ -8,11 +15,10 @@ export default function Loader({ size = "w-8 h-8", color = "text-cyan-500" }) {
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="lucide lucide-loader-icon lucide-loader"
-        className={`animate-spin ${size} ${color}`}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={`animate-spin ${size} ${color} lucide lucide-loader-icon lucide-loader`}
       >
         <path d="M12 2v4" />
         <path d="m16.2 7.8 2.9-2.9" />

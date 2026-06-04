@@ -1,4 +1,18 @@
 import CustomBarChart from "./Charts/CustomBarChart";
+import PropTypes from "prop-types";
+
+Last30DaysTransactionsCard.propTypes = {
+  transactions: PropTypes.arrayOf(
+    PropTypes.shape({
+      category_name: PropTypes.string.isRequired,
+      amount: PropTypes.number.isRequired,
+    }),
+  ).isRequired,
+  title: PropTypes.string.isRequired,
+  symbol: PropTypes.string.isRequired,
+  order: PropTypes.string.isRequired,
+  spanningColumns: PropTypes.string.isRequired,
+};
 
 export default function Last30DaysTransactionsCard({
   transactions,
