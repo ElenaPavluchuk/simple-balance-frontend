@@ -35,7 +35,7 @@ export default function Last30DaysTransactionsCard({
       </div>
 
       {data.length === 0 && (
-        <div className="h-full flex flex-col items-center justify-center">
+        <div className="h-20 flex flex-col items-center justify-center">
           <p className="text-sm">No transactions yet</p>
           <p className="text-xs text-gray-300 mt-1">
             Add your first transaction to see the chart
