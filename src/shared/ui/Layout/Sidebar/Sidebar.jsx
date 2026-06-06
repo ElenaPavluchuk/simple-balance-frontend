@@ -24,8 +24,8 @@ export default function Sidebar({ isSidebarClose, toggleSidebar }) {
   return (
     <div
       className={`${
-        isSidebarClose ? "w-20" : "w-64"
-      } bg-teal-100 transition-all duration-300 ease-in-out flex flex-col h-screen fixed`}
+        isSidebarClose ? "w-20" : "w-2xs"
+      } bg-teal-100 p-5 transition-all duration-300 ease-in-out flex flex-col h-screen md:sticky top-0 fixed z-50`}
     >
       <div className="h-16 flex items-center justify-center border-b">
         <p>simple BALANCE</p>

@@ -4,17 +4,14 @@ import Sidebar from "./Sidebar/Sidebar";
 
 export default function Layout() {
   const [isSidebarClose, setIsSidebarClose] = useState(false);
+
   return (
-    <div className="flex min-h-screen w-full">
+    <div className="flex min-h-screen w-full bg-black">
       <Sidebar
         isSidebarClose={isSidebarClose}
         toggleSidebar={() => setIsSidebarClose(!isSidebarClose)}
       />
-      <main
-        className={`bg-pink-100 w-full ${
-          isSidebarClose ? "ml-20" : "ml-64"
-        } transition-all duration-300`}
-      >
+      <main className={`bg-pink-500 w-full flex-1 min-w-0`}>
         <Outlet />
       </main>
     </div>
