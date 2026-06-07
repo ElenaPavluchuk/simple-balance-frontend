@@ -1,4 +1,6 @@
 import TransactionCard from "../Transactions/TransactionCard";
+import Button from "../Button";
+import { CirclePlus } from "lucide-react";
 import PropTypes from "prop-types";
 
 RecentTransactionsCard.propTypes = {
@@ -33,9 +35,13 @@ export default function RecentTransactionsCard({
       <div className="flex items-center justify-between">
         <h5 className="text-lg font-semibold">{title}</h5>
         {!hideBtn && (
-          <button className="underline italic" onClick={onViewAll}>
-            {transactions.length === 0 ? "Add transaction" : "View all"}
-          </button>
+          <Button
+            onClick={onViewAll}
+            variant={transactions.length === 0 ? "icon" : "link"}
+            fontSize="text-sm"
+          >
+            {transactions.length === 0 ? <CirclePlus size={20} /> : "View all"}
+          </Button>
         )}
       </div>
 
