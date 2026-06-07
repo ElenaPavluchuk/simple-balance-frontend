@@ -1,5 +1,13 @@
 export const currencyFormat = (num, currencyCode) => {
-  const currFormat = new Intl.NumberFormat("en-US", {
+  if (typeof num !== "number") return "";
+
+  const locales = {
+    USD: "en-US",
+    EUR: "de-DE",
+    RUB: "ru-RU",
+  };
+
+  const currFormat = new Intl.NumberFormat(locales[currencyCode], {
     style: "currency",
     currency: currencyCode,
     currencyDisplay: "symbol",
