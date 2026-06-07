@@ -62,7 +62,8 @@ export default function DashboardPage() {
               label={item.label}
               total={dashboardData?.total?.[item.dataKey] || 0}
               color={item.color}
-              symbol={dashboardData?.symbol?.baseCurrencySymbol}
+              // symbol={dashboardData?.symbol?.baseCurrencySymbol}
+              code={dashboardData?.code?.baseCurrencyCode}
               order={item.order}
               spanningColumns={item.spanningColumns}
             />

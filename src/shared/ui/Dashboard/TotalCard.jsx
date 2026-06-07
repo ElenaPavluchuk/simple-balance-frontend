@@ -1,10 +1,11 @@
 import PropTypes from "prop-types";
+import { currencyFormat } from "../../utils/formattingFunctions";
 
 TotalCard.propTypes = {
   icon: PropTypes.element.isRequired,
   label: PropTypes.string.isRequired,
   total: PropTypes.number.isRequired,
-  symbol: PropTypes.string.isRequired,
+  code: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
   order: PropTypes.string.isRequired,
   spanningColumns: PropTypes.string.isRequired,
@@ -14,7 +15,7 @@ export default function TotalCard({
   icon,
   label,
   total,
-  symbol,
+  code,
   color,
   order,
   spanningColumns,
@@ -31,8 +32,7 @@ export default function TotalCard({
       <div>
         <h6 className="text-sm text-gray-500 mb-1"> {label}</h6>
         <div className="flex flex-row gap-2">
-          <p className="text-xl">{symbol}</p>
-          <p className="text-xl">{total}</p>
+          <p className="text-xl">{currencyFormat(total, code)}</p>
         </div>
       </div>
     </div>
