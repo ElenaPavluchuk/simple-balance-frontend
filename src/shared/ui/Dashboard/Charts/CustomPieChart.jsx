@@ -1,7 +1,7 @@
 import { PieChart, Pie, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import CustomTooltip from "./CustomTooltip";
 import CustomLegend from "./CustomLegend";
-import { currencyFormat } from "../../../utils/formattingFunctions";
+import { currencyFormat } from "../../../utils/format";
 import PropTypes from "prop-types";
 
 CustomPieChart.propTypes = {

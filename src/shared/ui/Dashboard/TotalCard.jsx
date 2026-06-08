@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { currencyFormat } from "../../utils/formattingFunctions";
+import { currencyFormat } from "../../utils/format";
 
 TotalCard.propTypes = {
   icon: PropTypes.element.isRequired,
