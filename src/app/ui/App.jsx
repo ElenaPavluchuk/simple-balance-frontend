@@ -1,13 +1,12 @@
 import "./App.css";
-import AuthProvider from "../../shared/context/auth/AuthProvider";
 import { AppRouter } from "../providers/router/AppRouter";
+import { Toaster } from "react-hot-toast";
 
-function App() {
+export default function App() {
   return (
-    <AuthProvider>
+    <>
       <AppRouter />
-    </AuthProvider>
+      <Toaster position="top-center" />
+    </>
   );
 }
-
-export default App;

@@ -8,80 +8,101 @@ import FinanceOverviewCard from "../shared/ui/Dashboard/FinanceOverviewCard";
 import Last30DaysTransactionsCard from "../shared/ui/Dashboard/Last30DaysTransactionsCard";
 import {
   totalCardsData,
-  otherCardsData,
+  recentCardsData,
+  lastChartCardsData,
 } from "../shared/ui/Dashboard/config/data";
+import toast from "react-hot-toast";
+import Loader from "../shared/ui/Loader";
 
 export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState(null);
-  const [apiError, setApiError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
+    let isCancelled = false;
+
     const getDashboardData = async () => {
       try {
+        setIsLoading(true);
+
         const response = await axiosInstance.get(
           API_PATHS.TRANSACTIONS.DASHBOARD,
         );
 
-        setDashboardData(response?.data);
+        if (!isCancelled) setDashboardData(response?.data);
       } catch (err) {
-        console.error(err);
-        const message =
-          err?.response?.data?.message ||
-          "Something went wrong. Please try again";
-        setApiError(message);
+        if (!isCancelled) console.error(err);
+        if (!isCancelled)
+          toast.error(err?.response?.data?.message || "Something went wrong");
+      } finally {
+        if (!isCancelled) setIsLoading(false);
       }
     };
 
     getDashboardData();
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   return (
     <div className="m-5">
-      <h1 className="mb-5 text-center font-bold">Dashboard Page</h1>
+      {isLoading || !dashboardData ? (
+        <div className="min-h-screen flex justify-center items-center">
+          <Loader />
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+          {totalCardsData.map((item) => (
+            <TotalCard
+              key={item.id}
+              icon={<item.Icon />}
+              label={item.label}
+              total={dashboardData?.total?.[item.dataKey] || 0}
+              color={item.color}
+              code={dashboardData?.code?.baseCurrencyCode}
+              order={item.order}
+              spanningColumns={item.spanningColumns}
+            />
+          ))}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {totalCardsData.map((card) => (
-          <TotalCard
-            key={card.id}
-            icon={<card.Icon />}
-            label={card.label}
-            total={dashboardData?.total?.[card.dataKey] || 0}
-            color={card.color}
-            symbol={dashboardData?.symbol?.baseCurrencySymbol}
+          <FinanceOverviewCard
+            totalBalance={dashboardData?.total?.totalBalance || 0}
+            totalIncome={dashboardData?.total?.totalIncome || 0}
+            totalExpense={dashboardData?.total?.totalExpense || 0}
+            code={dashboardData?.code?.baseCurrencyCode}
+            order={"order-4"}
+            spanningColumns={"col-start-1 col-end-3"}
           />
-        ))}
 
-        <FinanceOverviewCard
-          totalBalance={dashboardData?.total?.totalBalance || 0}
-          totalIncome={dashboardData?.total?.totalIncome || 0}
-          totalExpense={dashboardData?.total?.totalExpense || 0}
-          symbol={dashboardData?.symbol?.baseCurrencySymbol}
-        />
+          {recentCardsData.map((item) => (
+            <RecentTransactionsCard
+              key={item.id}
+              transactions={dashboardData?.[item.source]?.[item.dataKey] ?? []}
+              onViewAll={
+                item.navigateTo ? () => navigate(item.navigateTo) : undefined
+              }
+              title={item.title}
+              hideBtn={item.hideBtn ? item.hideBtn : false}
+              order={item.order}
+              spanningColumns={item.spanningColumns}
+            />
+          ))}
 
-        {otherCardsData.map((card) => {
-          const { source, dataKey, navigateTo, ...restProps } = card.props;
-          const transactions = dashboardData?.[source]?.[dataKey] ?? [];
-          const onViewAll = navigateTo ? () => navigate(navigateTo) : undefined;
-          const props = { ...restProps, transactions, onViewAll };
-
-          if (card.type === "recent") {
-            return <RecentTransactionsCard key={card.id} {...props} />;
-          }
-
-          if (card.type === "category") {
-            return <Last30DaysTransactionsCard key={card.id} {...props} />;
-          }
-
-          return null;
-        })}
-      </div>
-
-      <div>
-        {apiError && (
-          <p className="text-red-500 italic text-center">{apiError}</p>
-        )}
-      </div>
+          {lastChartCardsData.map((item) => (
+            <Last30DaysTransactionsCard
+              key={item.id}
+              transactions={dashboardData?.[item.source]?.[item.dataKey] ?? []}
+              title={item.title}
+              code={dashboardData?.code?.baseCurrencyCode}
+              order={item.order}
+              spanningColumns={item.spanningColumns}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

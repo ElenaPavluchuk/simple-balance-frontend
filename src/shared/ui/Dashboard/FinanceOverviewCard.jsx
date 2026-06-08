@@ -1,33 +1,39 @@
 import CustomPieChart from "./Charts/CustomPieChart";
+import PropTypes from "prop-types";
+
+FinanceOverviewCard.propTypes = {
+  totalBalance: PropTypes.number.isRequired,
+  totalIncome: PropTypes.number.isRequired,
+  totalExpense: PropTypes.number.isRequired,
+  code: PropTypes.string.isRequired,
+  order: PropTypes.string,
+  spanningColumns: PropTypes.string,
+};
 
 export default function FinanceOverviewCard({
   totalBalance,
   totalIncome,
   totalExpense,
-  symbol,
+  code,
+  order,
+  spanningColumns,
 }) {
   const balanceData = [
     {
-      name: "Total Balance",
-      value: totalBalance,
-      symbol: symbol,
-      fill: "#ff8fab",
-    },
-    {
       name: "Total Expense",
       value: totalExpense,
-      symbol: symbol,
+      code: code,
       fill: "#ffcfd2",
     },
     {
       name: "Total Income",
       value: totalIncome,
-      symbol: symbol,
+      code: code,
       fill: "#ffc6ff",
     },
   ];
   return (
-    <div className="card bg-white rounded h-125">
+    <div className={`card ${order} ${spanningColumns} bg-white rounded h-125`}>
       <div className="flex items-center justify-between">
         <h5 className="text-lg">Financial Overview</h5>
       </div>
@@ -36,8 +42,7 @@ export default function FinanceOverviewCard({
         data={balanceData}
         label="Total Balance"
         totalAmount={totalBalance}
-        symbol={symbol}
-        showTextAnchor
+        code={code}
       />
     </div>
   );

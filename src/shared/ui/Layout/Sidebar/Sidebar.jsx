@@ -3,13 +3,14 @@ import { Link, useLocation } from "react-router";
 import { data } from "./config/data";
 import { Menu, X } from "lucide-react";
 import { useAuth } from "../../../context/auth/useAuth";
+import Button from "../../Button";
 
 Sidebar.propTypes = {
-  isSidebarClose: PropTypes.bool.isRequired,
+  isOpen: PropTypes.bool.isRequired,
   toggleSidebar: PropTypes.func.isRequired,
 };
 
-export default function Sidebar({ isSidebarClose, toggleSidebar }) {
+export default function Sidebar({ isOpen, toggleSidebar }) {
   const location = useLocation();
   const { user, logout } = useAuth();
 
@@ -24,8 +25,8 @@ export default function Sidebar({ isSidebarClose, toggleSidebar }) {
   return (
     <div
       className={`${
-        isSidebarClose ? "w-20" : "w-64"
-      } bg-teal-100 transition-all duration-300 ease-in-out flex flex-col h-screen fixed`}
+        isOpen ? "w-full sm:w-2xs" : "w-20"
+      } bg-teal-100 transition-all duration-300 ease-in-out flex flex-col h-screen sticky top-0`}
     >
       <div className="h-16 flex items-center justify-center border-b">
         <p>simple BALANCE</p>
@@ -46,11 +47,11 @@ export default function Sidebar({ isSidebarClose, toggleSidebar }) {
                     }
                   `}
               >
-                <span className={`${isSidebarClose ? "mx-auto" : ""}`}>
+                <span className={`${isOpen ? "" : "mx-auto"}`}>
                   <item.icon size={20} />
                 </span>
 
-                {!isSidebarClose && <span>{item.label}</span>}
+                {isOpen && <span>{item.label}</span>}
               </Link>
             </li>
           ))}
@@ -58,25 +59,15 @@ export default function Sidebar({ isSidebarClose, toggleSidebar }) {
       </nav>
 
       <div className="flex items-center justify-center">
-        <button
-          onClick={logout}
-          className="w-full h-16 flex items-center justify-center hover:bg-teal-200 bg-teal-50 rounded text-gray-700"
-        >
+        <Button onClick={logout} variant="link">
           Logout
-        </button>
+        </Button>
       </div>
 
       <div className="flex items-center justify-center">
-        <button
-          onClick={toggleSidebar}
-          className="w-16 h-16 flex items-center justify-center hover:bg-teal-200 transition-colors text-gray-700"
-        >
-          {isSidebarClose ? (
-            <Menu className="w-6 h-6" />
-          ) : (
-            <X className="w-6 h-6" />
-          )}
-        </button>
+        <Button onClick={toggleSidebar} variant="icon">
+          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </Button>
       </div>
     </div>
   );

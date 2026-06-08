@@ -191,10 +191,15 @@ const getData = async (userId) => {
   const user = await knex("users")
     .join("currencies", "users.base_currency_id", "currencies.id")
     .where("users.id", userId)
-    .select("currencies.id as currency_id", "currencies.symbol as symbol")
+    .select(
+      "currencies.id as currency_id",
+      "currencies.symbol as symbol",
+      "currencies.code as code",
+    )
     .first();
 
   const baseCurrencySymbol = user.symbol;
+  const baseCurrencyCode = user.code;
 
   const totals = await knex("transactions")
     .where({ user_id: userId })
@@ -298,7 +303,7 @@ const getData = async (userId) => {
   const last5TransactionsAllTime = last5Transactions.map((t) => ({
     ...t,
     amount: Number(t.amount),
-    baseCurrencySymbol,
+    currency_symbol: baseCurrencySymbol,
   }));
 
   return {
@@ -315,6 +320,7 @@ const getData = async (userId) => {
       expenseTransactions: last30DaysExpenseTransactions,
     },
     symbol: { baseCurrencySymbol },
+    code: { baseCurrencyCode },
   };
 };
 

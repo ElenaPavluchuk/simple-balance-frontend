@@ -1,3 +1,5 @@
+import { currencyFormat } from "../../../utils/formattingFunctions";
+
 export default function CustomTooltip({ active, payload }) {
   if (active && payload && payload.length) {
     return (
@@ -8,8 +10,7 @@ export default function CustomTooltip({ active, payload }) {
         <p className="text-sm text-gray-600">
           Amount:{" "}
           <span className="text-sm font-medium text-gray-900">
-            {payload[0].payload.symbol}
-            {payload[0].value}
+            {currencyFormat(payload[0].value, payload[0].payload.code)}
           </span>
         </p>
       </div>
