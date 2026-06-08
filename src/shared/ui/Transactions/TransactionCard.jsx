@@ -1,5 +1,6 @@
 import { Trash2, Pencil } from "lucide-react";
 import dayjs from "dayjs";
+import Button from "../Button";
 import PropTypes from "prop-types";
 
 TransactionCard.propTypes = {
@@ -9,7 +10,7 @@ TransactionCard.propTypes = {
     amount: PropTypes.number.isRequired,
     category_name: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
-    note: PropTypes.string.isRequired,
+    note: PropTypes.string,
     currency_symbol: PropTypes.string.isRequired,
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
@@ -23,44 +24,41 @@ export default function TransactionCard({
   hideDetails,
 }) {
   return (
-    <>
-      <div className="w-full">
-        <div className="flex justify-between items-center ">
+    <div className="flex gap-2">
+      <div className="w-full flex flex-col gap-4">
+        <div className="flex justify-between items-center">
           <p>{transaction.title}</p>
-          <div className="flex flex-row">
-            <p>
-              <span>{transaction.type === "INCOME" ? "+" : "-"}</span>
-              {transaction.currency_symbol}
-            </p>
-            <p>{transaction.amount}</p>
-          </div>
+          <p>
+            <span>{transaction.type === "INCOME" ? "+" : "-"}</span>
+            {transaction.currency_symbol}
+            {transaction.amount}
+          </p>
         </div>
-        <div className="flex justify-between items-center mt-2 text-sm text-gray-500 ">
+
+        <div className="flex justify-between items-center text-sm text-gray-700">
           <span className="bg-gray-100 px-2 py-1 rounded-lg">
             <p>{transaction.category_name}</p>
           </span>
-          <span>{dayjs(transaction.date).format("DD-MM-YYYY")}</span>
+          <p>{dayjs(transaction.date).format("DD-MM-YYYY")}</p>
         </div>
+
         {!hideDetails && (
-          <p className="mt-4 italic">
+          <p className="italic mt-4">
             Note: <span>{transaction.note}</span>
           </p>
         )}
       </div>
+
       {!hideDetails && (
-        <div className="flex flex-col gap-4 items-start">
-          <button onClick={() => onEdit(transaction)} size={10}>
-            <Pencil className="text-gray-700" />
-          </button>
-          <button>
-            <Trash2
-              onClick={() => onDelete(transaction.id)}
-              className="text-gray-700"
-              size={20}
-            />
-          </button>
+        <div className="flex flex-col items-center justify-between w-fit">
+          <Button onClick={() => onEdit(transaction)} variant="icon">
+            <Pencil className="text-gray-700" size={20} />
+          </Button>
+          <Button onClick={() => onDelete(transaction.id)} variant="icon">
+            <Trash2 className="text-gray-700" size={20} />
+          </Button>
         </div>
       )}
-    </>
+    </div>
   );
 }

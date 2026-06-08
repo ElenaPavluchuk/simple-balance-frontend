@@ -48,7 +48,7 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="m-5">
+    <>
       {isLoading || !dashboardData ? (
         <div className="min-h-screen flex justify-center items-center">
           <Loader />
@@ -103,6 +103,6 @@ export default function DashboardPage() {
           ))}
         </div>
       )}
-    </div>
+    </>
   );
 }

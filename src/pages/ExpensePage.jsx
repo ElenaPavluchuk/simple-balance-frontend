@@ -75,12 +75,14 @@ export default function ExpensePage() {
   };
 
   return (
-    <div className="flex flex-col gap-20 p-10 items-center">
-      <div>
+    <>
+      <div className="flex flex-row justify-between mb-9">
+        <h2 className="font-semibold text-xl">Expense transactions</h2>
         <Button onClick={() => setOpenDialogModal(true)} variant="primary">
           Add Transaction
         </Button>
       </div>
+
       <DialogModal
         isOpen={openDialogModal}
         onClose={() => setOpenDialogModal(false)}
@@ -91,24 +93,23 @@ export default function ExpensePage() {
           onClose={() => setOpenDialogModal(false)}
         />
       </DialogModal>
-      <div className="min-w-xl mx-auto">
-        <ul className="space-y-4">
-          {transactions.map((t) => (
-            <TransactionsList
-              key={t.id}
-              transaction={t}
-              onDelete={deleteTransaction}
-              onEdit={handleEdit}
-              onCancel={handleCancelEdit}
-              onSave={handleSaveEdit}
-              isEditing={editingId === t.id}
-            />
-          ))}
-        </ul>
+
+      <div className="grid grid-cols-1 ld:grid-cols-2 gap-5">
+        {transactions.map((t) => (
+          <TransactionsList
+            key={t.id}
+            transaction={t}
+            onDelete={deleteTransaction}
+            onEdit={handleEdit}
+            onCancel={handleCancelEdit}
+            onSave={handleSaveEdit}
+            isEditing={editingId === t.id}
+          />
+        ))}
       </div>
       {apiError && (
         <p className="text-red-500 italic text-center">{apiError}</p>
       )}
-    </div>
+    </>
   );
 }
