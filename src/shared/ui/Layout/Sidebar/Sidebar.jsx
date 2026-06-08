@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router";
 import { data } from "./config/data";
 import { Menu, X } from "lucide-react";
 import { useAuth } from "../../../context/auth/useAuth";
+import Button from "../../Button";
 
 Sidebar.propTypes = {
   isOpen: PropTypes.bool.isRequired,
@@ -58,21 +59,15 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       </nav>
 
       <div className="flex items-center justify-center">
-        <button
-          onClick={logout}
-          className="w-full h-16 flex items-center justify-center hover:bg-teal-200 bg-teal-50 rounded text-gray-700"
-        >
+        <Button onClick={logout} variant="link">
           Logout
-        </button>
+        </Button>
       </div>
 
       <div className="flex items-center justify-center">
-        <button
-          onClick={toggleSidebar}
-          className="w-16 h-16 flex items-center justify-center hover:bg-teal-200 transition-colors text-gray-700"
-        >
+        <Button onClick={toggleSidebar} variant="icon">
           {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        </Button>
       </div>
     </div>
   );
