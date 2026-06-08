@@ -9,22 +9,22 @@ Last30DaysTransactionsCard.propTypes = {
     }),
   ).isRequired,
   title: PropTypes.string.isRequired,
-  symbol: PropTypes.string.isRequired,
-  order: PropTypes.string.isRequired,
-  spanningColumns: PropTypes.string.isRequired,
+  code: PropTypes.string.isRequired,
+  order: PropTypes.string,
+  spanningColumns: PropTypes.string,
 };
 
 export default function Last30DaysTransactionsCard({
   transactions,
   title,
-  symbol,
+  code,
   order,
   spanningColumns,
 }) {
   const data = transactions.map((t, index) => ({
     name: t?.category_name,
     value: t?.amount,
-    symbol,
+    code,
     fill: index % 2 === 0 ? "#ffb3c6" : "#ffe5ec",
   }));
 

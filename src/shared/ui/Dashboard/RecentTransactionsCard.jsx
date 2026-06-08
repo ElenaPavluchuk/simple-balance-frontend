@@ -18,8 +18,8 @@ RecentTransactionsCard.propTypes = {
   onViewAll: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   hideBtn: PropTypes.bool,
-  order: PropTypes.string.isRequired,
-  spanningColumns: PropTypes.string.isRequired,
+  order: PropTypes.string,
+  spanningColumns: PropTypes.string,
 };
 
 export default function RecentTransactionsCard({

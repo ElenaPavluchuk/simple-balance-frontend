@@ -15,7 +15,7 @@ CustomBarChart.propTypes = {
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       value: PropTypes.number.isRequired,
-      symbol: PropTypes.string.isRequired,
+      code: PropTypes.string.isRequired,
       fill: PropTypes.string.isRequired,
     }),
   ).isRequired,

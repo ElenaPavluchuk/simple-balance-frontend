@@ -96,7 +96,7 @@ export default function DashboardPage() {
               key={item.id}
               transactions={dashboardData?.[item.source]?.[item.dataKey] ?? []}
               title={item.title}
-              symbol={dashboardData?.symbol?.baseCurrencySymbol}
+              code={dashboardData?.code?.baseCurrencyCode}
               order={item.order}
               spanningColumns={item.spanningColumns}
             />
