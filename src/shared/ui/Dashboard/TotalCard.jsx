@@ -7,8 +7,8 @@ TotalCard.propTypes = {
   total: PropTypes.number.isRequired,
   code: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
-  order: PropTypes.string.isRequired,
-  spanningColumns: PropTypes.string.isRequired,
+  order: PropTypes.string,
+  spanningColumns: PropTypes.string,
 };
 
 export default function TotalCard({

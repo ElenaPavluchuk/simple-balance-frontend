@@ -72,7 +72,7 @@ export default function DashboardPage() {
             totalBalance={dashboardData?.total?.totalBalance || 0}
             totalIncome={dashboardData?.total?.totalIncome || 0}
             totalExpense={dashboardData?.total?.totalExpense || 0}
-            symbol={dashboardData?.symbol?.baseCurrencySymbol}
+            code={dashboardData?.code?.baseCurrencyCode}
             order={"order-4"}
             spanningColumns={"col-start-1 col-end-3"}
           />

@@ -1,5 +1,7 @@
 export const currencyFormat = (num, currencyCode) => {
-  if (typeof num !== "number") return "";
+  if (typeof num !== "number" || !currencyCode) {
+    return "";
+  }
 
   const locales = {
     USD: "en-US",

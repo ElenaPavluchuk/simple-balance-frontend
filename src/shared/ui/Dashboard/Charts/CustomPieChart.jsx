@@ -1,6 +1,7 @@
 import { PieChart, Pie, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import CustomTooltip from "./CustomTooltip";
 import CustomLegend from "./CustomLegend";
+import { currencyFormat } from "../../../utils/formattingFunctions";
 import PropTypes from "prop-types";
 
 CustomPieChart.propTypes = {
@@ -14,10 +15,10 @@ CustomPieChart.propTypes = {
   ).isRequired,
   label: PropTypes.string.isRequired,
   totalAmount: PropTypes.number.isRequired,
-  symbol: PropTypes.string.isRequired,
+  code: PropTypes.string.isRequired,
 };
 
-export default function CustomPieChart({ data, label, totalAmount, symbol }) {
+export default function CustomPieChart({ data, label, totalAmount, code }) {
   return (
     <ResponsiveContainer width="100%" height={380}>
       <PieChart>
@@ -55,8 +56,7 @@ export default function CustomPieChart({ data, label, totalAmount, symbol }) {
           fontSize="22px"
           fontWeight="600"
         >
-          {symbol}
-          {totalAmount}
+          {currencyFormat(totalAmount, code)}
         </text>
       </PieChart>
     </ResponsiveContainer>

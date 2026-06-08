@@ -5,16 +5,16 @@ FinanceOverviewCard.propTypes = {
   totalBalance: PropTypes.number.isRequired,
   totalIncome: PropTypes.number.isRequired,
   totalExpense: PropTypes.number.isRequired,
-  symbol: PropTypes.string.isRequired,
-  order: PropTypes.string.isRequired,
-  spanningColumns: PropTypes.string.isRequired,
+  code: PropTypes.string.isRequired,
+  order: PropTypes.string,
+  spanningColumns: PropTypes.string,
 };
 
 export default function FinanceOverviewCard({
   totalBalance,
   totalIncome,
   totalExpense,
-  symbol,
+  code,
   order,
   spanningColumns,
 }) {
@@ -22,13 +22,13 @@ export default function FinanceOverviewCard({
     {
       name: "Total Expense",
       value: totalExpense,
-      symbol: symbol,
+      code: code,
       fill: "#ffcfd2",
     },
     {
       name: "Total Income",
       value: totalIncome,
-      symbol: symbol,
+      code: code,
       fill: "#ffc6ff",
     },
   ];
@@ -42,7 +42,7 @@ export default function FinanceOverviewCard({
         data={balanceData}
         label="Total Balance"
         totalAmount={totalBalance}
-        symbol={symbol}
+        code={code}
       />
     </div>
   );
