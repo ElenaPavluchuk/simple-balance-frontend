@@ -5,6 +5,7 @@ import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import { transactionsValidate, clearFieldError } from "../../utils/validate";
 import dayjs from "dayjs";
+import Button from "../Button";
 import PropTypes from "prop-types";
 
 EditTransactionForm.propTypes = {
@@ -96,33 +97,34 @@ export default function EditTransactionForm({ transaction, onCancel, onSave }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full">
-      <div className="flex justify-between items-center">
-        <div className="w-full flex flex-col gap-1">
+    <form onSubmit={handleSubmit} className="w-full flex flex-col gap-2">
+      <div className="flex justify-between gap-2">
+        <div className="w-full">
           <input
             value={title}
             onChange={(e) => {
               setTitle(e.target.value);
               clearFieldError("title", setValidateErrors);
             }}
-            placeholder="title"
+            placeholder="Title"
             autoComplete="off"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           {validateErrors.title && (
-            <p className="text-red-500 italic text-xs">
+            <p className="text-red-500 italic text-xs mt-1">
               {validateErrors.title}
             </p>
           )}
         </div>
-        <div className="w-full flex flex-col gap-1">
+
+        <div className="w-full">
           <input
             value={amount}
             onChange={(e) => {
               setAmount(e.target.value);
               clearFieldError("amount", setValidateErrors);
             }}
-            placeholder="amount"
+            placeholder="Amount"
             type="number"
             min="0.01"
             step="0.01"
@@ -130,13 +132,14 @@ export default function EditTransactionForm({ transaction, onCancel, onSave }) {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           {validateErrors.amount && (
-            <p className="text-red-500 italic text-xs">
+            <p className="text-red-500 italic text-xs mt-1">
               {validateErrors.amount}
             </p>
           )}
         </div>
       </div>
-      <div className="flex flex-row justify-between items-center mt-2 text-sm text-gray-500">
+
+      <div className="flex justify-between gap-2 text-sm text-gray-500">
         <div className="w-1/2">
           <CreatableSelect
             isClearable
@@ -154,13 +157,13 @@ export default function EditTransactionForm({ transaction, onCancel, onSave }) {
             isLoading={isLoading}
           />
           {validateErrors.selectedCategory && (
-            <p className="text-red-500 italic text-xs">
+            <p className="text-red-500 italic text-xs mt-1">
               {validateErrors.selectedCategory}
             </p>
           )}
         </div>
 
-        <div className="flex flex-col w-1/2">
+        <div className="w-1/2">
           <input
             value={date}
             onChange={(e) => {
@@ -168,27 +171,29 @@ export default function EditTransactionForm({ transaction, onCancel, onSave }) {
               clearFieldError("date", setValidateErrors);
             }}
             type="date"
-            placeholder="date"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           {validateErrors.date && (
-            <p className="text-red-500 italic text-xs">{validateErrors.date}</p>
+            <p className="text-red-500 italic text-xs mt-1">
+              {validateErrors.date}
+            </p>
           )}
         </div>
       </div>
-      <input
+      <textarea
         value={note}
         onChange={(e) => setNote(e.target.value)}
         placeholder="Note"
-        className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
       />
+
       <div className="flex gap-4 justify-center mt-4">
-        <button type="submit" disabled={isLoading}>
+        <Button type="submit" variant="icon" disabled={isLoading}>
           <Check className={isLoading ? "text-gray-300" : "text-gray-700"} />
-        </button>
-        <button type="button" onClick={onCancel} disabled={isLoading}>
+        </Button>
+        <Button variant="icon" onClick={onCancel} disabled={isLoading}>
           <X className="text-gray-700" />
-        </button>
+        </Button>
 
         {apiError && (
           <p className="text-red-500 italic text-center">{apiError}</p>

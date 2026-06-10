@@ -76,7 +76,7 @@ export default function ExpensePage() {
 
   return (
     <>
-      <div className="flex flex-row justify-between mb-9">
+      <div className="flex flex-col gap-4 mb-9 sm:flex-row sm:justify-between sm:items-center">
         <h2 className="font-semibold text-xl">Expense transactions</h2>
         <Button onClick={() => setOpenDialogModal(true)} variant="primary">
           Add Transaction
