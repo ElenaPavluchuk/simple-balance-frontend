@@ -38,9 +38,23 @@ export default function ExpensePage() {
   }, [dispatch]);
 
   const deleteTransaction = async (id) => {
-    await axiosInstance.delete(API_PATHS.TRANSACTIONS.TRANSACTIONS_BY_ID(id));
+    try {
+      const response = await axiosInstance.delete(
+        API_PATHS.TRANSACTIONS.TRANSACTIONS_BY_ID(id),
+      );
 
-    dispatch(deleteTransactionFromRedux(id));
+      dispatch(
+        deleteTransactionFromRedux(response?.data?.deletedTransaction?.id),
+      );
+
+      toast.success(response?.data?.message);
+    } catch (err) {
+      console.error(err);
+      toast.error(
+        err?.response?.data?.message ||
+          "Something went wrong. Please try again",
+      );
+    }
   };
 
   const handleEdit = (transaction) => {

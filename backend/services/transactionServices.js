@@ -94,15 +94,16 @@ const getUserTransactions = async ({ userId, type }) => {
 };
 
 const deleteUserTransaction = async ({ transactionId, userId }) => {
-  const deletedCount = await knex("transactions")
+  const [deletedTransaction] = await knex("transactions")
     .where({ id: transactionId, user_id: userId })
-    .del();
+    .del()
+    .returning("id");
 
-  if (!deletedCount || deletedCount === 0) {
+  if (!deletedTransaction || deletedTransaction === 0) {
     throw ApiError.notFound("Transaction deletion error");
   }
 
-  return;
+  return deletedTransaction;
 };
 
 const updateUserTransaction = async ({
