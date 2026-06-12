@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-import Button from "../shared/ui/Button";
-import DialogModal from "../shared/ui/DialogModal";
-import CreateTransactionForm from "../shared/ui/Transactions/CreateTransactionForm";
+import TransactionsLayout from "../shared/ui/Layouts/TransactionsLayout";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
 import {
@@ -12,11 +10,10 @@ import {
 } from "../shared/slices/transactionsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import TransactionsList from "../shared/ui/Transactions/TransactionsList";
+import toast from "react-hot-toast";
 
 export default function ExpensePage() {
-  const [openDialogModal, setOpenDialogModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  const [apiError, setApiError] = useState("");
   const transactions = useSelector(selectTransactions);
   const dispatch = useDispatch();
 
@@ -30,10 +27,10 @@ export default function ExpensePage() {
         dispatch(setTransactions(response.data || []));
       } catch (err) {
         console.error(err);
-        const message =
+        toast.error(
           err?.response?.data?.message ||
-          "Something went wrong. Please try again";
-        setApiError(message);
+            "Something went wrong. Please try again",
+        );
       }
     };
 
@@ -67,49 +64,26 @@ export default function ExpensePage() {
     } catch (err) {
       console.error(err);
       setEditingId(null);
-      const message =
+      toast.error(
         err?.response?.data?.message ||
-        "Something went wrong. Please try again";
-      setApiError(message);
+          "Something went wrong. Please try again",
+      );
     }
   };
 
   return (
-    <>
-      <div className="flex flex-col gap-4 mb-9 sm:flex-row sm:justify-between sm:items-center">
-        <h2 className="font-semibold text-xl">Expense transactions</h2>
-        <Button onClick={() => setOpenDialogModal(true)} variant="primary">
-          Add Transaction
-        </Button>
-      </div>
-
-      <DialogModal
-        isOpen={openDialogModal}
-        onClose={() => setOpenDialogModal(false)}
-        title="Add transaction"
-      >
-        <CreateTransactionForm
-          type={"EXPENSE"}
-          onClose={() => setOpenDialogModal(false)}
+    <TransactionsLayout type="EXPENSE" title="Expense transactions">
+      {transactions.map((t) => (
+        <TransactionsList
+          key={t.id}
+          transaction={t}
+          onDelete={deleteTransaction}
+          onEdit={handleEdit}
+          onCancel={handleCancelEdit}
+          onSave={handleSaveEdit}
+          isEditing={editingId === t.id}
         />
-      </DialogModal>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        {transactions.map((t) => (
-          <TransactionsList
-            key={t.id}
-            transaction={t}
-            onDelete={deleteTransaction}
-            onEdit={handleEdit}
-            onCancel={handleCancelEdit}
-            onSave={handleSaveEdit}
-            isEditing={editingId === t.id}
-          />
-        ))}
-      </div>
-      {apiError && (
-        <p className="text-red-500 italic text-center">{apiError}</p>
-      )}
-    </>
+      ))}
+    </TransactionsLayout>
   );
 }

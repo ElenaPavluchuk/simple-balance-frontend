@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import DialogModal from "../shared/ui/DialogModal";
-import CreateTransactionForm from "../shared/ui/Transactions/CreateTransactionForm";
+import TransactionsLayout from "../shared/ui/Layouts/TransactionsLayout";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
 import {
@@ -11,11 +10,10 @@ import {
 } from "../shared/slices/transactionsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import TransactionsList from "../shared/ui/Transactions/TransactionsList";
+import toast from "react-hot-toast";
 
 export default function IncomePage() {
-  const [openDialogModal, setOpenDialogModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  const [apiError, setApiError] = useState("");
   const transactions = useSelector(selectTransactions);
   const dispatch = useDispatch();
 
@@ -29,10 +27,10 @@ export default function IncomePage() {
         dispatch(setTransactions(response.data || []));
       } catch (err) {
         console.error(err);
-        const message =
+        toast.error(
           err?.response?.data?.message ||
-          "Something went wrong. Please try again";
-        setApiError(message);
+            "Something went wrong. Please try again",
+        );
       }
     };
 
@@ -66,50 +64,26 @@ export default function IncomePage() {
     } catch (err) {
       console.error(err);
       setEditingId(null);
-      const message =
+      toast.error(
         err?.response?.data?.message ||
-        "Something went wrong. Please try again";
-      setApiError(message);
+          "Something went wrong. Please try again",
+      );
     }
   };
+
   return (
-    <div className="flex flex-col gap-20 p-10 items-center">
-      <div>
-        <button
-          onClick={() => setOpenDialogModal(true)}
-          className="p-3 border rounded"
-        >
-          Add Transaction
-        </button>
-      </div>
-      <DialogModal
-        isOpen={openDialogModal}
-        onClose={() => setOpenDialogModal(false)}
-        title="Add transaction"
-      >
-        <CreateTransactionForm
-          type={"INCOME"}
-          onClose={() => setOpenDialogModal(false)}
+    <TransactionsLayout type="INCOME" title="Income transactions">
+      {transactions.map((t) => (
+        <TransactionsList
+          key={t.id}
+          transaction={t}
+          onDelete={deleteTransaction}
+          onEdit={handleEdit}
+          onCancel={handleCancelEdit}
+          onSave={handleSaveEdit}
+          isEditing={editingId === t.id}
         />
-      </DialogModal>
-      <div className="min-w-xl mx-auto">
-        <ul className="space-y-4">
-          {transactions.map((t) => (
-            <TransactionsList
-              key={t.id}
-              transaction={t}
-              onDelete={deleteTransaction}
-              onEdit={handleEdit}
-              onCancel={handleCancelEdit}
-              onSave={handleSaveEdit}
-              isEditing={editingId === t.id}
-            />
-          ))}
-        </ul>
-      </div>
-      {apiError && (
-        <p className="text-red-500 italic text-center">{apiError}</p>
-      )}
-    </div>
+      ))}
+    </TransactionsLayout>
   );
 }
