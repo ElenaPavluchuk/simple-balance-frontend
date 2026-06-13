@@ -4,10 +4,8 @@ import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import { useAuth } from "../../context/auth/useAuth";
 import { transactionsValidate, clearFieldError } from "../../utils/validate";
-import { useDispatch } from "react-redux";
-import { addTransactionToRedux } from "../../slices/transactionsSlice";
 
-export default function CreateTransactionForm({ type, onClose }) {
+export default function CreateTransactionForm({ type, onClose, onSave }) {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -18,7 +16,6 @@ export default function CreateTransactionForm({ type, onClose }) {
   const [apiError, setApiError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     const getCategories = async () => {
@@ -101,26 +98,8 @@ export default function CreateTransactionForm({ type, onClose }) {
       categoryName: selectedCategory?.isCustom ? selectedCategory?.label : null,
     };
 
-    setIsLoading(true);
-
-    try {
-      const response = await axiosInstance.post(
-        API_PATHS.TRANSACTIONS.ADD_TRANSACTION,
-        data,
-      );
-
-      dispatch(addTransactionToRedux(response.data));
-
-      onClose();
-    } catch (err) {
-      console.error(err);
-      const message =
-        err?.response?.data?.message ||
-        "Something went wrong. Please try again";
-      setApiError(message);
-    } finally {
-      setIsLoading(false);
-    }
+    onSave(data);
+    onClose();
   };
 
   return (

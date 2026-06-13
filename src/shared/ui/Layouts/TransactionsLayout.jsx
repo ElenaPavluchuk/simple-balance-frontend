@@ -8,9 +8,10 @@ TransactionsLayout.propTypes = {
   title: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
+  onSave: PropTypes.func.isRequired,
 };
 
-export default function TransactionsLayout({ title, type, children }) {
+export default function TransactionsLayout({ title, type, children, onSave }) {
   const [openDialogModal, setOpenDialogModal] = useState(false);
 
   return (
@@ -29,6 +30,7 @@ export default function TransactionsLayout({ title, type, children }) {
       >
         <CreateTransactionForm
           type={type}
+          onSave={onSave}
           onClose={() => setOpenDialogModal(false)}
         />
       </DialogModal>

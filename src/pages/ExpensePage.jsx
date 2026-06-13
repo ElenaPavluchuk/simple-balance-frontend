@@ -3,6 +3,7 @@ import TransactionsLayout from "../shared/ui/Layouts/TransactionsLayout";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
 import {
+  addTransactionToRedux,
   deleteTransactionFromRedux,
   setTransactions,
   updateTransactionInRedux,
@@ -36,6 +37,23 @@ export default function ExpensePage() {
 
     getTransactions();
   }, [dispatch]);
+
+  const handleCreateTransaction = async (data) => {
+    try {
+      const response = await axiosInstance.post(
+        API_PATHS.TRANSACTIONS.ADD_TRANSACTION,
+        data,
+      );
+
+      dispatch(addTransactionToRedux(response?.data));
+    } catch (err) {
+      console.error(err);
+      toast.error(
+        err?.response?.data?.message ||
+          "Something went wrong. Please try again",
+      );
+    }
+  };
 
   const deleteTransaction = async (id) => {
     try {
@@ -86,7 +104,11 @@ export default function ExpensePage() {
   };
 
   return (
-    <TransactionsLayout type="EXPENSE" title="Expense transactions">
+    <TransactionsLayout
+      type="EXPENSE"
+      title="Expense transactions"
+      onSave={handleCreateTransaction}
+    >
       {transactions.map((t) => (
         <TransactionsList
           key={t.id}
