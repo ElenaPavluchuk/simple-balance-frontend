@@ -50,9 +50,7 @@ export default function DashboardPage() {
   return (
     <>
       {isLoading || !dashboardData ? (
-        <div className="min-h-screen flex justify-center items-center">
-          <Loader />
-        </div>
+        <Loader className="min-h-screen flex justify-center items-center" />
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
           {totalCardsData.map((item) => (

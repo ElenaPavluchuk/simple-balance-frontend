@@ -12,30 +12,45 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import TransactionsList from "../shared/ui/Transactions/TransactionsList";
 import toast from "react-hot-toast";
+import Loader from "../shared/ui/Loader";
 
 export default function ExpensePage() {
   const [editingId, setEditingId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  // const [isSaveEditLoading, setIsSaveEditLoading] = useState(false);
   const transactions = useSelector(selectTransactions);
   const dispatch = useDispatch();
 
   useEffect(() => {
+    let isCancelled = false;
+
     const getTransactions = async () => {
       try {
+        setIsLoading(true);
+
         const response = await axiosInstance.get(
           API_PATHS.TRANSACTIONS.GET_TRANSACTIONS_BY_TYPE("EXPENSE"),
         );
 
-        dispatch(setTransactions(response.data || []));
+        if (!isCancelled) dispatch(setTransactions(response.data || []));
       } catch (err) {
-        console.error(err);
-        toast.error(
-          err?.response?.data?.message ||
-            "Something went wrong. Please try again",
-        );
+        if (!isCancelled) console.error(err);
+        if (!isCancelled)
+          toast.error(
+            err?.response?.data?.message ||
+              "Something went wrong. Please try again",
+          );
+      } finally {
+        if (!isCancelled) setIsLoading(false);
       }
     };
 
     getTransactions();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [dispatch]);
 
   const handleCreateTransaction = async (data) => {
@@ -104,22 +119,37 @@ export default function ExpensePage() {
   };
 
   return (
-    <TransactionsLayout
-      type="EXPENSE"
-      title="Expense transactions"
-      onSave={handleCreateTransaction}
-    >
-      {transactions.map((t) => (
-        <TransactionsList
-          key={t.id}
-          transaction={t}
-          onDelete={deleteTransaction}
-          onEdit={handleEdit}
-          onCancel={handleCancelEdit}
-          onSave={handleSaveEdit}
-          isEditing={editingId === t.id}
-        />
-      ))}
-    </TransactionsLayout>
+    <>
+      {isLoading || !transactions ? (
+        <Loader className="min-h-screen flex justify-center items-center" />
+      ) : (
+        <TransactionsLayout
+          type="EXPENSE"
+          title="Expense transactions"
+          onSave={handleCreateTransaction}
+        >
+          {transactions.length === 0 && (
+            <div className="bg-white h-52 rounded py-20 flex flex-col items-center justify-center">
+              <p className="text-sm">No transactions yet</p>
+              <p className="text-xs text-gray-300 mt-1">
+                Add your first transaction to see the list
+              </p>
+            </div>
+          )}
+
+          {transactions.map((t) => (
+            <TransactionsList
+              key={t.id}
+              transaction={t}
+              onDelete={deleteTransaction}
+              onEdit={handleEdit}
+              onCancel={handleCancelEdit}
+              onSave={handleSaveEdit}
+              isEditing={editingId === t.id}
+            />
+          ))}
+        </TransactionsLayout>
+      )}
+    </>
   );
 }
