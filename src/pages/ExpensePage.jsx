@@ -18,8 +18,8 @@ export default function ExpensePage() {
   const [editingId, setEditingId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isCreateLoading, setIsCreateLoading] = useState(false);
-  // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
-  // const [isSaveEditLoading, setIsSaveEditLoading] = useState(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const [isSaveEditLoading, setIsSaveEditLoading] = useState(false);
   const transactions = useSelector(selectTransactions);
   const dispatch = useDispatch();
 
@@ -79,6 +79,8 @@ export default function ExpensePage() {
 
   const deleteTransaction = async (id) => {
     try {
+      setIsDeleteLoading(true);
+
       const response = await axiosInstance.delete(
         API_PATHS.TRANSACTIONS.TRANSACTIONS_BY_ID(id),
       );
@@ -94,6 +96,8 @@ export default function ExpensePage() {
         err?.response?.data?.message ||
           "Something went wrong. Please try again",
       );
+    } finally {
+      setIsDeleteLoading(false);
     }
   };
 
@@ -107,6 +111,8 @@ export default function ExpensePage() {
 
   const handleSaveEdit = async (updatedTransaction) => {
     try {
+      setIsSaveEditLoading(true);
+
       const response = await axiosInstance.put(
         API_PATHS.TRANSACTIONS.TRANSACTIONS_BY_ID(updatedTransaction.id),
         updatedTransaction,
@@ -122,6 +128,8 @@ export default function ExpensePage() {
         err?.response?.data?.message ||
           "Something went wrong. Please try again",
       );
+    } finally {
+      setIsSaveEditLoading(false);
     }
   };
 
@@ -154,6 +162,8 @@ export default function ExpensePage() {
               onCancel={handleCancelEdit}
               onSave={handleSaveEdit}
               isEditing={editingId === t.id}
+              isDelition={isDeleteLoading}
+              isSaveEditLoading={isSaveEditLoading}
             />
           ))}
         </TransactionsLayout>

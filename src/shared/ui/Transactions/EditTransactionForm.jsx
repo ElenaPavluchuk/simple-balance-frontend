@@ -20,9 +20,15 @@ EditTransactionForm.propTypes = {
   }).isRequired,
   onSave: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
+  isSaveEditLoading: PropTypes.bool.isRequired,
 };
 
-export default function EditTransactionForm({ transaction, onCancel, onSave }) {
+export default function EditTransactionForm({
+  transaction,
+  onCancel,
+  onSave,
+  isSaveEditLoading,
+}) {
   const [title, setTitle] = useState(transaction.title);
   const [amount, setAmount] = useState(transaction.amount);
   const [date, setDate] = useState(
@@ -188,10 +194,10 @@ export default function EditTransactionForm({ transaction, onCancel, onSave }) {
       />
 
       <div className="flex gap-4 justify-center mt-4">
-        <Button type="submit" variant="icon" disabled={isLoading}>
-          <Check className={isLoading ? "text-gray-300" : "text-gray-700"} />
+        <Button type="submit" variant="icon" disabled={isSaveEditLoading}>
+          <Check className="text-gray-700" />
         </Button>
-        <Button variant="icon" onClick={onCancel} disabled={isLoading}>
+        <Button variant="icon" onClick={onCancel} disabled={isSaveEditLoading}>
           <X className="text-gray-700" />
         </Button>
 

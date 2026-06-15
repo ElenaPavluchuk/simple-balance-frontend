@@ -15,6 +15,7 @@ TransactionCard.propTypes = {
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
+  isDelition: PropTypes.bool.isRequired,
 };
 
 export default function TransactionCard({
@@ -22,6 +23,7 @@ export default function TransactionCard({
   onDelete,
   onEdit,
   hideDetails,
+  isDelition,
 }) {
   return (
     <div className="flex gap-2">
@@ -54,7 +56,11 @@ export default function TransactionCard({
           <Button onClick={() => onEdit(transaction)} variant="icon">
             <Pencil className="text-gray-700" size={20} />
           </Button>
-          <Button onClick={() => onDelete(transaction.id)} variant="icon">
+          <Button
+            onClick={() => onDelete(transaction.id)}
+            disabled={isDelition}
+            variant="icon"
+          >
             <Trash2 className="text-gray-700" size={20} />
           </Button>
         </div>
