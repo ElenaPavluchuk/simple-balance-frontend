@@ -5,7 +5,12 @@ import { API_PATHS } from "../../utils/apiPaths";
 import { useAuth } from "../../context/auth/useAuth";
 import { transactionsValidate, clearFieldError } from "../../utils/validate";
 
-export default function CreateTransactionForm({ type, onClose, onSave }) {
+export default function CreateTransactionForm({
+  type,
+  onClose,
+  onSave,
+  isCreation,
+}) {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -98,8 +103,10 @@ export default function CreateTransactionForm({ type, onClose, onSave }) {
       categoryName: selectedCategory?.isCustom ? selectedCategory?.label : null,
     };
 
-    onSave(data);
-    onClose();
+    const success = await onSave(data);
+    if (success) {
+      onClose();
+    }
   };
 
   return (
@@ -185,10 +192,10 @@ export default function CreateTransactionForm({ type, onClose, onSave }) {
 
       <button
         type="submit"
-        disabled={isLoading}
+        disabled={isCreation}
         className="border rounded p-2 bg-rose-400 text-white disabled:opacity-60 disabled:cursor-not-allowed transition-opacity"
       >
-        {isLoading ? "Saving..." : "Add transaction"}
+        {isCreation ? "Saving..." : "Add transaction"}
       </button>
 
       {apiError && (

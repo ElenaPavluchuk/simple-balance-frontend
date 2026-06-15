@@ -9,9 +9,16 @@ TransactionsLayout.propTypes = {
   type: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   onSave: PropTypes.func.isRequired,
+  isCreation: PropTypes.bool.isRequired,
 };
 
-export default function TransactionsLayout({ title, type, children, onSave }) {
+export default function TransactionsLayout({
+  title,
+  type,
+  children,
+  onSave,
+  isCreation,
+}) {
   const [openDialogModal, setOpenDialogModal] = useState(false);
 
   return (
@@ -32,6 +39,7 @@ export default function TransactionsLayout({ title, type, children, onSave }) {
           type={type}
           onSave={onSave}
           onClose={() => setOpenDialogModal(false)}
+          isCreation={isCreation}
         />
       </DialogModal>
 

@@ -17,6 +17,7 @@ import Loader from "../shared/ui/Loader";
 export default function ExpensePage() {
   const [editingId, setEditingId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isCreateLoading, setIsCreateLoading] = useState(false);
   // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
   // const [isSaveEditLoading, setIsSaveEditLoading] = useState(false);
   const transactions = useSelector(selectTransactions);
@@ -55,18 +56,24 @@ export default function ExpensePage() {
 
   const handleCreateTransaction = async (data) => {
     try {
+      setIsCreateLoading(true);
+
       const response = await axiosInstance.post(
         API_PATHS.TRANSACTIONS.ADD_TRANSACTION,
         data,
       );
 
       dispatch(addTransactionToRedux(response?.data));
+      return true;
     } catch (err) {
       console.error(err);
       toast.error(
         err?.response?.data?.message ||
           "Something went wrong. Please try again",
       );
+      return false;
+    } finally {
+      setIsCreateLoading(false);
     }
   };
 
@@ -127,6 +134,7 @@ export default function ExpensePage() {
           type="EXPENSE"
           title="Expense transactions"
           onSave={handleCreateTransaction}
+          isCreation={isCreateLoading}
         >
           {transactions.length === 0 && (
             <div className="bg-white h-52 rounded py-20 flex flex-col items-center justify-center">
