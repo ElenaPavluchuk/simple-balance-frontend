@@ -9,7 +9,7 @@ export default function CreateTransactionForm({
   type,
   onClose,
   onSave,
-  isCreation,
+  isCreateLoading,
 }) {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
@@ -192,10 +192,10 @@ export default function CreateTransactionForm({
 
       <button
         type="submit"
-        disabled={isCreation}
+        disabled={isCreateLoading}
         className="border rounded p-2 bg-rose-400 text-white disabled:opacity-60 disabled:cursor-not-allowed transition-opacity"
       >
-        {isCreation ? "Saving..." : "Add transaction"}
+        {isCreateLoading ? "Saving..." : "Add transaction"}
       </button>
 
       {apiError && (

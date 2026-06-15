@@ -17,7 +17,7 @@ TransactionsList.propTypes = {
   onCancel: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   isEditing: PropTypes.bool.isRequired,
-  isDelition: PropTypes.bool.isRequired,
+  isDeleteLoading: PropTypes.bool.isRequired,
   isSaveEditLoading: PropTypes.bool.isRequired,
 };
 
@@ -28,7 +28,7 @@ export default function TransactionsList({
   onCancel,
   onSave,
   isEditing,
-  isDelition,
+  isDeleteLoading,
   isSaveEditLoading,
 }) {
   return (
@@ -45,7 +45,7 @@ export default function TransactionsList({
           transaction={transaction}
           onDelete={onDelete}
           onEdit={onEdit}
-          isDelition={isDelition}
+          isDeleteLoading={isDeleteLoading}
         />
       )}
     </div>

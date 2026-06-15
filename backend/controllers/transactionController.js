@@ -77,17 +77,11 @@ const deleteTransaction = async (req, res, next) => {
   const userId = req.user.id;
 
   try {
-    const deletedTransaction = await deleteUserTransaction({
-      transactionId,
-      userId,
-    });
+    await deleteUserTransaction({ transactionId, userId });
 
-    return res
-      .status(200)
-      .json({
-        deletedTransaction,
-        message: "Transaction deleted successfully",
-      });
+    return res.status(200).json({
+      message: "Transaction deleted successfully",
+    });
   } catch (err) {
     next(err);
   }
