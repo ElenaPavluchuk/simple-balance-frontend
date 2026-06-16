@@ -18,8 +18,8 @@ RecentTransactionsCard.propTypes = {
   onViewAll: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   hideBtn: PropTypes.bool,
-  order: PropTypes.string,
-  spanningColumns: PropTypes.string,
+  order: PropTypes.string.isRequired,
+  spanningColumns: PropTypes.string.isRequired,
 };
 
 export default function RecentTransactionsCard({
@@ -55,7 +55,7 @@ export default function RecentTransactionsCard({
       )}
 
       <div className="mt-6 flex flex-col gap-5">
-        {transactions?.map((t) => (
+        {transactions.map((t) => (
           <TransactionCard key={t.id} transaction={t} hideDetails />
         ))}
       </div>

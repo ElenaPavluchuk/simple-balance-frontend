@@ -7,8 +7,8 @@ TotalCard.propTypes = {
   total: PropTypes.number.isRequired,
   code: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
-  order: PropTypes.string,
-  spanningColumns: PropTypes.string,
+  order: PropTypes.string.isRequired,
+  spanningColumns: PropTypes.string.isRequired,
 };
 
 export default function TotalCard({
@@ -30,7 +30,7 @@ export default function TotalCard({
         {icon}
       </div>
       <div>
-        <h6 className="text-sm text-gray-500 mb-1"> {label}</h6>
+        <h6 className="text-sm text-gray-500 mb-1">{label}</h6>
         <div className="flex flex-row gap-2">
           <p className="text-xl">{currencyFormat(total, code)}</p>
         </div>

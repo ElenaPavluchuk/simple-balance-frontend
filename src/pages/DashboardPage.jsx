@@ -13,6 +13,7 @@ import {
 } from "../shared/ui/Dashboard/config/data";
 import toast from "react-hot-toast";
 import Loader from "../shared/ui/Loader";
+import { getErrorMessage } from "../shared/utils/getErrorMessage";
 
 export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState(null);
@@ -30,11 +31,10 @@ export default function DashboardPage() {
           API_PATHS.TRANSACTIONS.DASHBOARD,
         );
 
-        if (!isCancelled) setDashboardData(response?.data);
+        if (!isCancelled) setDashboardData(response.data);
       } catch (err) {
         if (!isCancelled) console.error(err);
-        if (!isCancelled)
-          toast.error(err?.response?.data?.message || "Something went wrong");
+        if (!isCancelled) toast.error(getErrorMessage(err));
       } finally {
         if (!isCancelled) setIsLoading(false);
       }
@@ -49,7 +49,7 @@ export default function DashboardPage() {
 
   return (
     <>
-      {isLoading || !dashboardData ? (
+      {isLoading ? (
         <Loader className="min-h-screen flex justify-center items-center" />
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
@@ -60,7 +60,7 @@ export default function DashboardPage() {
               label={item.label}
               total={dashboardData?.total?.[item.dataKey] || 0}
               color={item.color}
-              code={dashboardData?.code?.baseCurrencyCode}
+              code={dashboardData?.code?.baseCurrencyCode || "USD"}
               order={item.order}
               spanningColumns={item.spanningColumns}
             />
@@ -70,7 +70,7 @@ export default function DashboardPage() {
             totalBalance={dashboardData?.total?.totalBalance || 0}
             totalIncome={dashboardData?.total?.totalIncome || 0}
             totalExpense={dashboardData?.total?.totalExpense || 0}
-            code={dashboardData?.code?.baseCurrencyCode}
+            code={dashboardData?.code?.baseCurrencyCode || "USD"}
             order={"order-4"}
             spanningColumns={"col-start-1 col-end-3"}
           />
@@ -79,11 +79,9 @@ export default function DashboardPage() {
             <RecentTransactionsCard
               key={item.id}
               transactions={dashboardData?.[item.source]?.[item.dataKey] ?? []}
-              onViewAll={
-                item.navigateTo ? () => navigate(item.navigateTo) : undefined
-              }
+              onViewAll={item.navigateTo && (() => navigate(item.navigateTo))}
               title={item.title}
-              hideBtn={item.hideBtn ? item.hideBtn : false}
+              hideBtn={item.hideBtn}
               order={item.order}
               spanningColumns={item.spanningColumns}
             />
@@ -94,7 +92,7 @@ export default function DashboardPage() {
               key={item.id}
               transactions={dashboardData?.[item.source]?.[item.dataKey] ?? []}
               title={item.title}
-              code={dashboardData?.code?.baseCurrencyCode}
+              code={dashboardData?.code?.baseCurrencyCode || "USD"}
               order={item.order}
               spanningColumns={item.spanningColumns}
             />

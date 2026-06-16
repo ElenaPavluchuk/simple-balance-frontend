@@ -6,8 +6,8 @@ FinanceOverviewCard.propTypes = {
   totalIncome: PropTypes.number.isRequired,
   totalExpense: PropTypes.number.isRequired,
   code: PropTypes.string.isRequired,
-  order: PropTypes.string,
-  spanningColumns: PropTypes.string,
+  order: PropTypes.string.isRequired,
+  spanningColumns: PropTypes.string.isRequired,
 };
 
 export default function FinanceOverviewCard({

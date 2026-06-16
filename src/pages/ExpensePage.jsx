@@ -99,10 +99,10 @@ export default function ExpensePage() {
 
   const handleSaveEdit = async (updatedTransaction) => {
     try {
-      setSavingId(updatedTransaction?.id);
+      setSavingId(updatedTransaction.id);
 
       const response = await axiosInstance.put(
-        API_PATHS.TRANSACTIONS.TRANSACTIONS_BY_ID(updatedTransaction?.id),
+        API_PATHS.TRANSACTIONS.TRANSACTIONS_BY_ID(updatedTransaction.id),
         updatedTransaction,
       );
 

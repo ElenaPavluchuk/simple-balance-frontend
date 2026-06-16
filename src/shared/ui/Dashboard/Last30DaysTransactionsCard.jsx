@@ -10,8 +10,8 @@ Last30DaysTransactionsCard.propTypes = {
   ).isRequired,
   title: PropTypes.string.isRequired,
   code: PropTypes.string.isRequired,
-  order: PropTypes.string,
-  spanningColumns: PropTypes.string,
+  order: PropTypes.string.isRequired,
+  spanningColumns: PropTypes.string.isRequired,
 };
 
 export default function Last30DaysTransactionsCard({
@@ -22,8 +22,8 @@ export default function Last30DaysTransactionsCard({
   spanningColumns,
 }) {
   const data = transactions.map((t, index) => ({
-    name: t?.category_name,
-    value: t?.amount,
+    name: t.category_name,
+    value: t.amount,
     code,
     fill: index % 2 === 0 ? "#ffb3c6" : "#ffe5ec",
   }));
