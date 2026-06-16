@@ -8,11 +8,11 @@ RecentTransactionsCard.propTypes = {
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       title: PropTypes.string.isRequired,
-      amount: PropTypes.number.isRequired,
+      amount: PropTypes.string.isRequired,
       category_name: PropTypes.string.isRequired,
       date: PropTypes.string.isRequired,
       note: PropTypes.string.isRequired,
-      currency_symbol: PropTypes.string.isRequired,
+      currency_code: PropTypes.string.isRequired,
     }),
   ).isRequired,
   onViewAll: PropTypes.func.isRequired,

@@ -191,14 +191,9 @@ const getData = async (userId) => {
   const user = await knex("users")
     .join("currencies", "users.base_currency_id", "currencies.id")
     .where("users.id", userId)
-    .select(
-      "currencies.id as currency_id",
-      // "currencies.symbol as symbol",
-      "currencies.code as code",
-    )
+    .select("currencies.id as currency_id", "currencies.code as code")
     .first();
 
-  // const baseCurrencySymbol = user.symbol;
   const baseCurrencyCode = user.code;
 
   const totals = await knex("transactions")
@@ -229,7 +224,7 @@ const getData = async (userId) => {
 
   last30DaysTransactionsByCategory.forEach((row) => {
     const item = {
-      amount: Number(row.amount),
+      amount: row.amount,
       category_name: row.category_name,
     };
 
@@ -263,11 +258,11 @@ const getData = async (userId) => {
     .map((t) => ({
       id: t.id,
       type: t.type,
-      amount: Number(t.amount),
+      amount: t.amount,
       date: t.date,
       title: t.title,
       category_name: t.category_name,
-      // currency_symbol: baseCurrencySymbol,
+      currency_code: baseCurrencyCode,
     }));
 
   const last30DaysExpenseTransactions = last30DaysTransactions
@@ -276,11 +271,11 @@ const getData = async (userId) => {
     .map((t) => ({
       id: t.id,
       type: t.type,
-      amount: Number(t.amount),
+      amount: t.amount,
       date: t.date,
       title: t.title,
       category_name: t.category_name,
-      // currency_symbol: baseCurrencySymbol,
+      currency_code: baseCurrencyCode,
     }));
 
   const last5Transactions = await knex("transactions as t")
@@ -302,8 +297,8 @@ const getData = async (userId) => {
 
   const last5TransactionsAllTime = last5Transactions.map((t) => ({
     ...t,
-    amount: Number(t.amount),
-    // currency_symbol: baseCurrencySymbol,
+    amount: t.amount,
+    currency_code: baseCurrencyCode,
   }));
 
   return {
@@ -319,7 +314,6 @@ const getData = async (userId) => {
       incomeTransactions: last30DaysIncomeTransactions,
       expenseTransactions: last30DaysExpenseTransactions,
     },
-    // symbol: { baseCurrencySymbol },
     code: { baseCurrencyCode },
   };
 };

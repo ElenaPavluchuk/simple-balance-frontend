@@ -1,4 +1,8 @@
-export const currencyFormat = (num, currencyCode = "USD") => {
+export const currencyFormat = (num, currencyCode) => {
+  if (!currencyCode) {
+    return "";
+  }
+
   if (typeof num !== "number") {
     parseFloat(num);
   }

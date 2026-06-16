@@ -5,7 +5,7 @@ Last30DaysTransactionsCard.propTypes = {
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
       category_name: PropTypes.string.isRequired,
-      amount: PropTypes.number.isRequired,
+      amount: PropTypes.string.isRequired,
     }),
   ).isRequired,
   title: PropTypes.string.isRequired,
@@ -23,7 +23,7 @@ export default function Last30DaysTransactionsCard({
 }) {
   const data = transactions.map((t, index) => ({
     name: t.category_name,
-    value: t.amount,
+    value: Number(t.amount) || 0,
     code,
     fill: index % 2 === 0 ? "#ffb3c6" : "#ffe5ec",
   }));
