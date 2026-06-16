@@ -61,7 +61,7 @@ const addUserTransaction = async ({
       "t.note",
       "t.currency_id",
       "t.category_id",
-      "c.symbol as currency_symbol",
+      "c.code as currency_code",
       "cat.name as category_name",
     ])
     .first();
@@ -84,7 +84,7 @@ const getUserTransactions = async ({ userId, type }) => {
       "t.date",
       "t.title",
       "t.note",
-      "c.symbol as currency_symbol",
+      "c.code as currency_code",
       "cat.name as category_name",
     ])
     .orderBy("t.date", "desc")
@@ -180,7 +180,7 @@ const updateUserTransaction = async ({
       "t.note",
       "t.currency_id",
       "t.category_id",
-      "c.symbol as currency_symbol",
+      "c.code as currency_code",
       "cat.name as category_name",
     ]);
 
@@ -193,12 +193,12 @@ const getData = async (userId) => {
     .where("users.id", userId)
     .select(
       "currencies.id as currency_id",
-      "currencies.symbol as symbol",
+      // "currencies.symbol as symbol",
       "currencies.code as code",
     )
     .first();
 
-  const baseCurrencySymbol = user.symbol;
+  // const baseCurrencySymbol = user.symbol;
   const baseCurrencyCode = user.code;
 
   const totals = await knex("transactions")
@@ -267,7 +267,7 @@ const getData = async (userId) => {
       date: t.date,
       title: t.title,
       category_name: t.category_name,
-      currency_symbol: baseCurrencySymbol,
+      // currency_symbol: baseCurrencySymbol,
     }));
 
   const last30DaysExpenseTransactions = last30DaysTransactions
@@ -280,7 +280,7 @@ const getData = async (userId) => {
       date: t.date,
       title: t.title,
       category_name: t.category_name,
-      currency_symbol: baseCurrencySymbol,
+      // currency_symbol: baseCurrencySymbol,
     }));
 
   const last5Transactions = await knex("transactions as t")
@@ -303,7 +303,7 @@ const getData = async (userId) => {
   const last5TransactionsAllTime = last5Transactions.map((t) => ({
     ...t,
     amount: Number(t.amount),
-    currency_symbol: baseCurrencySymbol,
+    // currency_symbol: baseCurrencySymbol,
   }));
 
   return {
@@ -319,7 +319,7 @@ const getData = async (userId) => {
       incomeTransactions: last30DaysIncomeTransactions,
       expenseTransactions: last30DaysExpenseTransactions,
     },
-    symbol: { baseCurrencySymbol },
+    // symbol: { baseCurrencySymbol },
     code: { baseCurrencyCode },
   };
 };

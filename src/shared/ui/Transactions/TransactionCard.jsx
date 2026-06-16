@@ -1,17 +1,18 @@
 import { Trash2, Pencil } from "lucide-react";
 import dayjs from "dayjs";
 import Button from "../Button";
+import { currencyFormat } from "../../utils/format";
 import PropTypes from "prop-types";
 
 TransactionCard.propTypes = {
   transaction: PropTypes.shape({
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
-    amount: PropTypes.number.isRequired,
+    amount: PropTypes.string.isRequired,
     category_name: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
     note: PropTypes.string,
-    currency_symbol: PropTypes.string.isRequired,
+    currency_code: PropTypes.string.isRequired,
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
@@ -32,8 +33,7 @@ export default function TransactionCard({
           <p>{transaction.title}</p>
           <p>
             <span>{transaction.type === "INCOME" ? "+" : "-"}</span>
-            {transaction.currency_symbol}
-            {transaction.amount}
+            {currencyFormat(transaction.amount, transaction.currency_code)}
           </p>
         </div>
 

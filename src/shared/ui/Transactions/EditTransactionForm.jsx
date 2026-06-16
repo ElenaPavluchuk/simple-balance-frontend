@@ -12,7 +12,7 @@ EditTransactionForm.propTypes = {
   transaction: PropTypes.shape({
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
-    amount: PropTypes.number.isRequired,
+    amount: PropTypes.string.isRequired,
     category_id: PropTypes.number.isRequired,
     category_name: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
@@ -92,7 +92,7 @@ export default function EditTransactionForm({
     const data = {
       ...transaction,
       title: title.trim(),
-      amount: parseFloat(amount),
+      amount,
       date,
       categoryId: selectedCategory?.isCustom ? null : selectedCategory?.value,
       categoryName: selectedCategory?.isCustom ? selectedCategory?.label : null,

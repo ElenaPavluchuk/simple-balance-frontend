@@ -95,7 +95,7 @@ export default function CreateTransactionForm({
     const data = {
       type,
       title: title.trim(),
-      amount: parseFloat(amount),
+      amount,
       currencyId: user.base_currency_id,
       note: note.trim(),
       date,

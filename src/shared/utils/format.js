@@ -1,6 +1,6 @@
-export const currencyFormat = (num, currencyCode) => {
-  if (typeof num !== "number" || !currencyCode) {
-    return "";
+export const currencyFormat = (num, currencyCode = "USD") => {
+  if (typeof num !== "number") {
+    parseFloat(num);
   }
 
   const locales = {

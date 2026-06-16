@@ -60,7 +60,7 @@ export default function DashboardPage() {
               label={item.label}
               total={dashboardData?.total?.[item.dataKey] || 0}
               color={item.color}
-              code={dashboardData?.code?.baseCurrencyCode || "USD"}
+              code={dashboardData?.code?.baseCurrencyCode}
               order={item.order}
               spanningColumns={item.spanningColumns}
             />
@@ -70,7 +70,7 @@ export default function DashboardPage() {
             totalBalance={dashboardData?.total?.totalBalance || 0}
             totalIncome={dashboardData?.total?.totalIncome || 0}
             totalExpense={dashboardData?.total?.totalExpense || 0}
-            code={dashboardData?.code?.baseCurrencyCode || "USD"}
+            code={dashboardData?.code?.baseCurrencyCode}
             order={"order-4"}
             spanningColumns={"col-start-1 col-end-3"}
           />
@@ -92,7 +92,7 @@ export default function DashboardPage() {
               key={item.id}
               transactions={dashboardData?.[item.source]?.[item.dataKey] ?? []}
               title={item.title}
-              code={dashboardData?.code?.baseCurrencyCode || "USD"}
+              code={dashboardData?.code?.baseCurrencyCode}
               order={item.order}
               spanningColumns={item.spanningColumns}
             />
