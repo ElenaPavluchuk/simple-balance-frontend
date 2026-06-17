@@ -56,7 +56,7 @@ export default function TransactionsLayout({
           <DialogModal
             isOpen={openDialogModal}
             onClose={() => setOpenDialogModal(false)}
-            title="Add transaction"
+            title={`New ${type === "INCOME" ? "income" : "expense"}`}
           >
             <CreateTransactionForm
               type={type}

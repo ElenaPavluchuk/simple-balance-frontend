@@ -25,8 +25,8 @@ EditTransactionForm.propTypes = {
 
 export default function EditTransactionForm({
   transaction,
-  onCancel,
   onSave,
+  onCancel,
   isSaveEditLoading,
 }) {
   const [title, setTitle] = useState(transaction.title);

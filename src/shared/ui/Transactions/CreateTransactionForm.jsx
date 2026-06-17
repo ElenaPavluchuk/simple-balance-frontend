@@ -4,11 +4,21 @@ import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import { useAuth } from "../../context/auth/useAuth";
 import { transactionsValidate, clearFieldError } from "../../utils/validate";
+import { getErrorMessage } from "../../utils/getErrorMessage";
+import Button from "../Button";
+import PropTypes from "prop-types";
+
+CreateTransactionForm.propTypes = {
+  type: PropTypes.oneOf(["income", "expense"]).isRequired,
+  onCreate: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  isCreateLoading: PropTypes.bool,
+};
 
 export default function CreateTransactionForm({
   type,
-  onClose,
   onCreate,
+  onClose,
   isCreateLoading,
 }) {
   const [title, setTitle] = useState("");
@@ -19,23 +29,24 @@ export default function CreateTransactionForm({
   const [note, setNote] = useState("");
   const [validateErrors, setValidateErrors] = useState({});
   const [apiError, setApiError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
     const getCategories = async () => {
-      setIsLoading(true);
       try {
+        setIsCategoriesLoading(true);
+
         const response = await axiosInstance.get(
           API_PATHS.TRANSACTIONS.GET_CATEGORIES_BY_TYPE(type),
         );
 
-        const normalizedOptions = response?.data?.map((o) => ({
+        const normalizedOptions = response.data?.map((o) => ({
           label: o.name,
           value: o.id,
         }));
 
-        setCategoryOptions(normalizedOptions || []);
+        setCategoryOptions(normalizedOptions ?? []);
 
         const defaultCategory = normalizedOptions?.find(
           (o) => o.label === "Other",
@@ -44,12 +55,9 @@ export default function CreateTransactionForm({
         setSelectedCategory(defaultCategory || null);
       } catch (err) {
         console.error(err);
-        const message =
-          err?.response?.data?.message ||
-          "Something went wrong. Please try again";
-        setApiError(message);
+        setApiError(getErrorMessage(err, "Categories not loaded"));
       } finally {
-        setIsLoading(false);
+        setIsCategoriesLoading(false);
       }
     };
 
@@ -110,10 +118,7 @@ export default function CreateTransactionForm({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-pink-100 w-96 max-w-full flex flex-col gap-6 p-6 rounded-lg shadow-lg"
-    >
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div>
         <label>Title</label>
         <input
@@ -157,13 +162,14 @@ export default function CreateTransactionForm({
             value: inputValue,
             isCustom: true,
           })}
-          isLoading={isLoading}
+          isLoading={isCategoriesLoading}
         />
         {validateErrors.selectedCategory && (
           <p className="text-red-500 italic">
             {validateErrors.selectedCategory}
           </p>
         )}
+        {apiError && <p className="text-red-500 italic">{apiError}</p>}
       </div>
 
       <div>
@@ -190,17 +196,9 @@ export default function CreateTransactionForm({
         />
       </div>
 
-      <button
-        type="submit"
-        disabled={isCreateLoading}
-        className="border rounded p-2 bg-rose-400 text-white disabled:opacity-60 disabled:cursor-not-allowed transition-opacity"
-      >
+      <Button type="submit" disabled={isCreateLoading} variant="primary">
         {isCreateLoading ? "Saving..." : "Add transaction"}
-      </button>
-
-      {apiError && (
-        <p className="text-red-500 italic text-center">{apiError}</p>
-      )}
+      </Button>
     </form>
   );
 }
