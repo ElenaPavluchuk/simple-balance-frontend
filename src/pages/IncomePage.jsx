@@ -20,7 +20,7 @@ export default function IncomePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isCreateLoading, setIsCreateLoading] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
-  const [savingId, setSavingId] = useState(null);
+  const [updatingId, setUpdatingId] = useState(null);
   const transactions = useSelector(selectTransactions);
   const dispatch = useDispatch();
   const transactionTypes = "INCOME";
@@ -99,7 +99,7 @@ export default function IncomePage() {
 
   const handleSaveEdit = async (updatedTransaction) => {
     try {
-      setSavingId(updatedTransaction.id);
+      setUpdatingId(updatedTransaction.id);
 
       const response = await axiosInstance.put(
         API_PATHS.TRANSACTIONS.TRANSACTIONS_BY_ID(updatedTransaction.id),
@@ -113,45 +113,25 @@ export default function IncomePage() {
       console.error(err);
       toast.error(getErrorMessage(err));
     } finally {
-      setSavingId(null);
+      setUpdatingId(null);
     }
   };
 
   return (
-    <>
-      {isLoading ? (
-        <Loader className="min-h-screen flex justify-center items-center" />
-      ) : (
-        <TransactionsLayout
-          type={transactionTypes}
-          title="Income transactions"
-          onSave={handleCreateTransaction}
-          isCreateLoading={isCreateLoading}
-        >
-          {transactions.length === 0 && (
-            <div className="bg-white h-52 rounded py-20 flex flex-col items-center justify-center">
-              <p className="text-sm">No transactions yet</p>
-              <p className="text-xs text-gray-300 mt-1">
-                Add your first transaction to see the list
-              </p>
-            </div>
-          )}
-
-          {transactions.map((t) => (
-            <TransactionsList
-              key={t.id}
-              transaction={t}
-              onDelete={deleteTransaction}
-              onEdit={handleEdit}
-              onCancel={handleCancelEdit}
-              onSave={handleSaveEdit}
-              isEditing={editingId === t.id}
-              isDeleteLoading={deletingId === t.id}
-              isSaveEditLoading={savingId === t.id}
-            />
-          ))}
-        </TransactionsLayout>
-      )}
-    </>
+    <TransactionsLayout
+      title="Income transactions"
+      type={transactionTypes}
+      transactions={transactions}
+      onCreate={handleCreateTransaction}
+      onDelete={deleteTransaction}
+      onEdit={handleEdit}
+      onSaveEdit={handleSaveEdit}
+      onCancelEdit={handleCancelEdit}
+      isLoading={isLoading}
+      isCreateLoading={isCreateLoading}
+      deletingId={deletingId}
+      editingId={editingId}
+      updatingId={updatingId}
+    />
   );
 }

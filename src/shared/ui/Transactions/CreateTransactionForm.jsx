@@ -8,7 +8,7 @@ import { transactionsValidate, clearFieldError } from "../../utils/validate";
 export default function CreateTransactionForm({
   type,
   onClose,
-  onSave,
+  onCreate,
   isCreateLoading,
 }) {
   const [title, setTitle] = useState("");
@@ -103,7 +103,7 @@ export default function CreateTransactionForm({
       categoryName: selectedCategory?.isCustom ? selectedCategory?.label : null,
     };
 
-    const success = await onSave(data);
+    const success = await onCreate(data);
     if (success) {
       onClose();
     }

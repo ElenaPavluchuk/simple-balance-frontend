@@ -12,22 +12,22 @@ TransactionsList.propTypes = {
     date: PropTypes.string.isRequired,
     note: PropTypes.string.isRequired,
   }).isRequired,
+  isEditing: PropTypes.bool.isRequired,
   onDelete: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
-  onSave: PropTypes.func.isRequired,
-  isEditing: PropTypes.bool.isRequired,
+  onSaveEdit: PropTypes.func.isRequired,
+  onCancelEdit: PropTypes.func.isRequired,
   isDeleteLoading: PropTypes.bool.isRequired,
   isSaveEditLoading: PropTypes.bool.isRequired,
 };
 
 export default function TransactionsList({
   transaction,
+  isEditing,
   onDelete,
   onEdit,
-  onCancel,
-  onSave,
-  isEditing,
+  onSaveEdit,
+  onCancelEdit,
   isDeleteLoading,
   isSaveEditLoading,
 }) {
@@ -36,8 +36,8 @@ export default function TransactionsList({
       {isEditing ? (
         <EditTransactionForm
           transaction={transaction}
-          onCancel={onCancel}
-          onSave={onSave}
+          onSave={onSaveEdit}
+          onCancel={onCancelEdit}
           isSaveEditLoading={isSaveEditLoading}
         />
       ) : (
