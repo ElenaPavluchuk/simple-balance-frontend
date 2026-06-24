@@ -1,6 +1,4 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { selectTransactions } from "../../slices/transactionsSlice";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Button from "../Button";
 import DialogModal from "../DialogModal";
 import CreateTransactionForm from "../Transactions/CreateTransactionForm";
@@ -11,6 +9,15 @@ import PropTypes from "prop-types";
 TransactionsLayout.propTypes = {
   title: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
+  transactions: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      type: PropTypes.string.isRequired,
+      amount: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      date: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
   onCreate: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
@@ -21,11 +28,14 @@ TransactionsLayout.propTypes = {
   deletingId: PropTypes.number,
   editingId: PropTypes.number,
   updatingId: PropTypes.number,
+  onChangeCurrentPage: PropTypes.func.isRequired,
+  hasNextPage: PropTypes.bool.isRequired,
 };
 
 export default function TransactionsLayout({
   title,
   type,
+  transactions,
   onCreate,
   onDelete,
   onEdit,
@@ -36,62 +46,94 @@ export default function TransactionsLayout({
   deletingId,
   editingId,
   updatingId,
+  onChangeCurrentPage,
+  hasNextPage,
 }) {
   const [openDialogModal, setOpenDialogModal] = useState(false);
-  const transactions = useSelector(selectTransactions);
+  const observer = useRef(null);
+
+  useEffect(() => {
+    return () => observer.current?.disconnect();
+  }, []);
+
+  const observerTarget = useCallback(
+    (node) => {
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isLoading) {
+          onChangeCurrentPage();
+        }
+      });
+
+      if (node) {
+        observer.current.observe(node);
+      }
+    },
+    [isLoading, hasNextPage, onChangeCurrentPage],
+  );
 
   return (
     <>
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <>
-          <div className="flex flex-col gap-4 mb-9 sm:flex-row sm:justify-between sm:items-center">
-            <h2 className="font-semibold text-xl">{title}</h2>
-            <Button onClick={() => setOpenDialogModal(true)} variant="primary">
-              Add Transaction
-            </Button>
+      <div className="flex flex-col gap-4 mb-9 sm:flex-row sm:justify-between sm:items-center">
+        <h2 className="font-semibold text-xl">{title}</h2>
+        <Button onClick={() => setOpenDialogModal(true)} variant="primary">
+          Add Transaction
+        </Button>
+      </div>
+
+      <DialogModal
+        isOpen={openDialogModal}
+        onClose={() => setOpenDialogModal(false)}
+        title={`New ${type === "INCOME" ? "income" : "expense"}`}
+      >
+        <CreateTransactionForm
+          type={type}
+          onCreate={onCreate}
+          onClose={() => setOpenDialogModal(false)}
+          isCreateLoading={isCreateLoading}
+        />
+      </DialogModal>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        {transactions.length === 0 && !isLoading && (
+          <div className="bg-white h-52 rounded py-20 flex flex-col items-center justify-center">
+            <p className="text-sm">No transactions yet</p>
+            <p className="text-xs text-gray-300 mt-1">
+              Add your first transaction to see the list
+            </p>
           </div>
+        )}
 
-          <DialogModal
-            isOpen={openDialogModal}
-            onClose={() => setOpenDialogModal(false)}
-            title={`New ${type === "INCOME" ? "income" : "expense"}`}
-          >
-            <CreateTransactionForm
-              type={type}
-              onCreate={onCreate}
-              onClose={() => setOpenDialogModal(false)}
-              isCreateLoading={isCreateLoading}
-            />
-          </DialogModal>
+        {transactions.map((t) => (
+          <TransactionsList
+            key={t.id}
+            transaction={t}
+            isEditing={editingId === t.id}
+            onDelete={onDelete}
+            onEdit={onEdit}
+            onSaveEdit={onSaveEdit}
+            onCancelEdit={onCancelEdit}
+            isDeleteLoading={deletingId === t.id}
+            isSaveEditLoading={updatingId === t.id}
+          />
+        ))}
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            {transactions.length === 0 && (
-              <div className="bg-white h-52 rounded py-20 flex flex-col items-center justify-center">
-                <p className="text-sm">No transactions yet</p>
-                <p className="text-xs text-gray-300 mt-1">
-                  Add your first transaction to see the list
-                </p>
-              </div>
-            )}
-
-            {transactions.map((t) => (
-              <TransactionsList
-                key={t.id}
-                transaction={t}
-                isEditing={editingId === t.id}
-                onDelete={onDelete}
-                onEdit={onEdit}
-                onSaveEdit={onSaveEdit}
-                onCancelEdit={onCancelEdit}
-                isDeleteLoading={deletingId === t.id}
-                isSaveEditLoading={updatingId === t.id}
-              />
-            ))}
-          </div>
-        </>
-      )}
+        <div
+          ref={observerTarget}
+          className="col-span-full flex justify-center items-center"
+        >
+          {isLoading && (
+            <div>
+              <p>Loading more transactions...</p>
+              <Loader className="w-2 h-2" />
+            </div>
+          )}
+          {!hasNextPage && !isLoading && <p>No more transactions</p>}
+        </div>
+      </div>
     </>
   );
 }

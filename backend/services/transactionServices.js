@@ -69,7 +69,16 @@ const addUserTransaction = async ({
   return transaction;
 };
 
-const getUserTransactions = async ({ userId, type }) => {
+const getUserTransactions = async ({ userId, type, page, limit }) => {
+  const offset = (page - 1) * limit;
+
+  const [{ count }] = await knex("transactions as t")
+    .where({
+      "t.user_id": userId,
+      "t.type": type,
+    })
+    .count("t.id as count");
+
   const transactions = await knex("transactions as t")
     .join("currencies as c", "t.currency_id", "c.id")
     .join("categories as cat", "t.category_id", "cat.id")
@@ -88,9 +97,21 @@ const getUserTransactions = async ({ userId, type }) => {
       "cat.name as category_name",
     ])
     .orderBy("t.date", "desc")
-    .orderBy("t.id", "desc");
+    .orderBy("t.id", "desc")
+    .limit(limit)
+    .offset(offset);
 
-  return transactions;
+  return {
+    transactions,
+    pagination: {
+      page,
+      limit,
+      total: Number(count),
+      totalPages: Math.ceil(Number(count) / limit),
+      hasNext: page * limit < Number(count),
+      hasPrev: page > 1,
+    },
+  };
 };
 
 const deleteUserTransaction = async ({ transactionId, userId }) => {

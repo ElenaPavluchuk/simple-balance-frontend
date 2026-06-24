@@ -21,7 +21,8 @@ export const API_PATHS = {
   },
   TRANSACTIONS: {
     ADD_TRANSACTION: "/api/transactions",
-    GET_TRANSACTIONS_BY_TYPE: (type) => `/api/transactions?type=${type}`,
+    GET_TRANSACTIONS_BY_TYPE: (type, page, limit) =>
+      `/api/transactions?type=${type}&page=${page}&limit=${limit}`,
     TRANSACTIONS_BY_ID: (id) => `/api/transactions/${id}`,
     DASHBOARD: "/api/transactions/dashboard",
     GET_CATEGORIES_BY_TYPE: (type) =>

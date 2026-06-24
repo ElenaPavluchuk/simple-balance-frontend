@@ -3,12 +3,13 @@ import TransactionsLayout from "../shared/ui/Layouts/TransactionsLayout";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
 import {
+  selectTransactions,
   setTransactions,
   addTransactionToRedux,
   deleteTransactionFromRedux,
   updateTransactionInRedux,
 } from "../shared/slices/transactionsSlice";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import TransactionsList from "../shared/ui/Transactions/TransactionsList";
 import toast from "react-hot-toast";
 import Loader from "../shared/ui/Loader";
@@ -20,8 +21,12 @@ export default function ExpensePage() {
   const [isCreateLoading, setIsCreateLoading] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
   const [updatingId, setUpdatingId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(false);
+  const transactions = useSelector(selectTransactions);
   const dispatch = useDispatch();
-  const transactionTypes = "EXPENSE";
+  const TRANSACTION_TYPE = "EXPENSE";
+  const LIMIT = 20;
 
   useEffect(() => {
     let isCancelled = false;
@@ -31,10 +36,27 @@ export default function ExpensePage() {
         setIsLoading(true);
 
         const response = await axiosInstance.get(
-          API_PATHS.TRANSACTIONS.GET_TRANSACTIONS_BY_TYPE(transactionTypes),
+          API_PATHS.TRANSACTIONS.GET_TRANSACTIONS_BY_TYPE(
+            TRANSACTION_TYPE,
+            currentPage,
+            LIMIT,
+          ),
         );
 
-        if (!isCancelled) dispatch(setTransactions(response.data ?? []));
+        const transactionsByType = transactions.filter(
+          (t) => t.type === TRANSACTION_TYPE,
+        );
+
+        // deduplication
+        const merged = [
+          ...transactionsByType,
+          ...(response.data.transactions ?? []),
+        ];
+        const unique = [...new Map(merged.map((t) => [t.id, t])).values()];
+
+        if (!isCancelled) dispatch(setTransactions(unique));
+
+        if (!isCancelled) setHasNextPage(response.data?.pagination?.hasNext);
       } catch (err) {
         if (!isCancelled) console.error(err);
         if (!isCancelled) toast.error(getErrorMessage(err));
@@ -48,7 +70,16 @@ export default function ExpensePage() {
     return () => {
       isCancelled = true;
     };
-  }, [dispatch]);
+  }, [dispatch, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+    setHasNextPage(false);
+  }, [TRANSACTION_TYPE]);
+
+  const onChangeCurrentPage = () => {
+    setCurrentPage((prev) => prev + 1);
+  };
 
   const handleCreateTransaction = async (data) => {
     try {
@@ -70,7 +101,7 @@ export default function ExpensePage() {
     }
   };
 
-  const deleteTransaction = async (id) => {
+  const handleDeleteTransaction = async (id) => {
     try {
       setDeletingId(id);
 
@@ -91,7 +122,7 @@ export default function ExpensePage() {
     }
   };
 
-  const handleEdit = (transaction) => setEditingId(transaction.id);
+  const handleEditTransaction = (transaction) => setEditingId(transaction.id);
 
   const handleCancelEdit = () => setEditingId(null);
 
@@ -118,10 +149,11 @@ export default function ExpensePage() {
   return (
     <TransactionsLayout
       title="Expense transactions"
-      type={transactionTypes}
+      type={TRANSACTION_TYPE}
+      transactions={transactions}
       onCreate={handleCreateTransaction}
-      onDelete={deleteTransaction}
-      onEdit={handleEdit}
+      onDelete={handleDeleteTransaction}
+      onEdit={handleEditTransaction}
       onSaveEdit={handleSaveEdit}
       onCancelEdit={handleCancelEdit}
       isLoading={isLoading}
@@ -129,6 +161,8 @@ export default function ExpensePage() {
       deletingId={deletingId}
       editingId={editingId}
       updatingId={updatingId}
+      onChangeCurrentPage={onChangeCurrentPage}
+      hasNextPage={hasNextPage}
     />
   );
 }

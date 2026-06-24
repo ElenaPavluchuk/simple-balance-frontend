@@ -3,11 +3,11 @@ import TransactionsLayout from "../shared/ui/Layouts/TransactionsLayout";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
 import {
+  selectTransactions,
   addTransactionToRedux,
   deleteTransactionFromRedux,
   setTransactions,
   updateTransactionInRedux,
-  selectTransactions,
 } from "../shared/slices/transactionsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import TransactionsList from "../shared/ui/Transactions/TransactionsList";
@@ -21,9 +21,12 @@ export default function IncomePage() {
   const [isCreateLoading, setIsCreateLoading] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
   const [updatingId, setUpdatingId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasNext, setHasNext] = useState(false);
   const transactions = useSelector(selectTransactions);
   const dispatch = useDispatch();
-  const transactionTypes = "INCOME";
+  const TRANSACTION_TYPE = "INCOME";
+  const LIMIT = 20;
 
   useEffect(() => {
     let isCancelled = false;
@@ -33,10 +36,27 @@ export default function IncomePage() {
         setIsLoading(true);
 
         const response = await axiosInstance.get(
-          API_PATHS.TRANSACTIONS.GET_TRANSACTIONS_BY_TYPE("INCOME"),
+          API_PATHS.TRANSACTIONS.GET_TRANSACTIONS_BY_TYPE(
+            TRANSACTION_TYPE,
+            currentPage,
+            LIMIT,
+          ),
         );
 
-        if (!isCancelled) dispatch(setTransactions(response.data || []));
+        const transactionsByType = transactions.filter(
+          (t) => t.type === TRANSACTION_TYPE,
+        );
+
+        // deduplication
+        const merged = [
+          ...transactionsByType,
+          ...(response.data.transactions ?? []),
+        ];
+        const unique = [...new Map(merged.map((t) => [t.id, t])).values()];
+
+        if (!isCancelled) dispatch(setTransactions(unique));
+
+        if (!isCancelled) setHasNext(response.data?.pagination?.hasNext);
       } catch (err) {
         if (!isCancelled) console.error(err);
         if (!isCancelled) toast.error(getErrorMessage(err));
@@ -50,7 +70,17 @@ export default function IncomePage() {
     return () => {
       isCancelled = true;
     };
-  }, [dispatch]);
+  }, [dispatch, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+    setHasNext(false);
+  }, [TRANSACTION_TYPE]);
+  0;
+
+  const onChangeCurrentPage = () => {
+    setCurrentPage((prev) => prev + 1);
+  };
 
   const handleCreateTransaction = async (data) => {
     try {
@@ -72,7 +102,7 @@ export default function IncomePage() {
     }
   };
 
-  const deleteTransaction = async (id) => {
+  const handleDeleteTransaction = async (id) => {
     try {
       setDeletingId(id);
 
@@ -93,7 +123,7 @@ export default function IncomePage() {
     }
   };
 
-  const handleEdit = (transaction) => setEditingId(transaction.id);
+  const handleEditTransaction = (transaction) => setEditingId(transaction.id);
 
   const handleCancelEdit = () => setEditingId(null);
 
@@ -120,11 +150,11 @@ export default function IncomePage() {
   return (
     <TransactionsLayout
       title="Income transactions"
-      type={transactionTypes}
+      type={TRANSACTION_TYPE}
       transactions={transactions}
       onCreate={handleCreateTransaction}
-      onDelete={deleteTransaction}
-      onEdit={handleEdit}
+      onDelete={handleDeleteTransaction}
+      onEdit={handleEditTransaction}
       onSaveEdit={handleSaveEdit}
       onCancelEdit={handleCancelEdit}
       isLoading={isLoading}
@@ -132,6 +162,8 @@ export default function IncomePage() {
       deletingId={deletingId}
       editingId={editingId}
       updatingId={updatingId}
+      onChangeCurrentPage={onChangeCurrentPage}
+      hasNext={hasNext}
     />
   );
 }
