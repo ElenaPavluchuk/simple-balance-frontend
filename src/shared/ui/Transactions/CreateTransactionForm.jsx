@@ -11,14 +11,12 @@ import PropTypes from "prop-types";
 CreateTransactionForm.propTypes = {
   type: PropTypes.oneOf(["income", "expense"]).isRequired,
   onCreate: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired,
   isCreateLoading: PropTypes.bool,
 };
 
 export default function CreateTransactionForm({
   type,
   onCreate,
-  onClose,
   isCreateLoading,
 }) {
   const [title, setTitle] = useState("");
@@ -111,10 +109,7 @@ export default function CreateTransactionForm({
       categoryName: selectedCategory?.isCustom ? selectedCategory?.label : null,
     };
 
-    const success = await onCreate(data);
-    if (success) {
-      onClose();
-    }
+    onCreate(data);
   };
 
   return (

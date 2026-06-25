@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import Button from "../Button";
 import DialogModal from "../DialogModal";
 import CreateTransactionForm from "../Transactions/CreateTransactionForm";
@@ -7,6 +7,8 @@ import Loader from "../Loader";
 import PropTypes from "prop-types";
 
 TransactionsLayout.propTypes = {
+  openDialogModal: PropTypes.bool.isRequired,
+  setOpenDialogModal: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   transactions: PropTypes.arrayOf(
@@ -28,12 +30,13 @@ TransactionsLayout.propTypes = {
   deletingId: PropTypes.number,
   editingId: PropTypes.number,
   updatingId: PropTypes.number,
-  onChangeCurrentPage: PropTypes.func.isRequired,
+  setCurrentPage: PropTypes.func.isRequired,
   hasNextPage: PropTypes.bool.isRequired,
-  setHasNextPage: PropTypes.func.isRequired,
 };
 
 export default function TransactionsLayout({
+  openDialogModal,
+  setOpenDialogModal,
   title,
   type,
   transactions,
@@ -47,17 +50,10 @@ export default function TransactionsLayout({
   deletingId,
   editingId,
   updatingId,
-  onChangeCurrentPage,
+  setCurrentPage,
   hasNextPage,
-  setHasNextPage,
 }) {
-  const [openDialogModal, setOpenDialogModal] = useState(false);
   const observer = useRef(null);
-
-  useEffect(() => {
-    onChangeCurrentPage(1);
-    setHasNextPage(false);
-  }, [type]);
 
   useEffect(() => {
     return () => observer.current?.disconnect();
@@ -73,7 +69,7 @@ export default function TransactionsLayout({
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasNextPage && !isLoading) {
-          onChangeCurrentPage((prev) => prev + 1);
+          setCurrentPage((prev) => prev + 1);
         }
       });
 
@@ -81,7 +77,7 @@ export default function TransactionsLayout({
         observer.current.observe(node);
       }
     },
-    [isLoading, hasNextPage, onChangeCurrentPage],
+    [isLoading, hasNextPage, setCurrentPage],
   );
 
   return (
@@ -140,7 +136,9 @@ export default function TransactionsLayout({
               <Loader className="w-2 h-2" />
             </div>
           )}
-          {!hasNextPage && !isLoading && <p>No more transactions</p>}
+          {!hasNextPage && !isLoading && (
+            <p className="text-gray-600 italic">No more transactions</p>
+          )}
         </div>
       </div>
     </>
