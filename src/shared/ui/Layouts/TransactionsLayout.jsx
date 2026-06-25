@@ -69,11 +69,10 @@ export default function TransactionsLayout({
         observer.current.disconnect();
       }
 
-      if (!node) return; // ← добавить это
+      if (!node) return;
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasNextPage && !isLoading) {
-          // onChangeCurrentPage();
           onChangeCurrentPage((prev) => prev + 1);
         }
       });
@@ -141,9 +140,7 @@ export default function TransactionsLayout({
               <Loader className="w-2 h-2" />
             </div>
           )}
-          {transactions.length > 0 && !hasNextPage && !isLoading && (
-            <p>No more transactions</p>
-          )}
+          {!hasNextPage && !isLoading && <p>No more transactions</p>}
         </div>
       </div>
     </>

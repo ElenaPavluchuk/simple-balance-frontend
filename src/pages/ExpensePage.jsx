@@ -26,8 +26,8 @@ export default function ExpensePage() {
   const transactions = useSelector(selectTransactions);
   const dispatch = useDispatch();
   const TRANSACTION_TYPE = "EXPENSE";
-  // const LIMIT = 20;
-  const LIMIT = 2; // test
+  const LIMIT = 20;
+  // const LIMIT = 2; // test
 
   useEffect(() => {
     let isCancelled = false;
@@ -63,10 +63,6 @@ export default function ExpensePage() {
     };
   }, [dispatch, currentPage]);
 
-  // const onChangeCurrentPage = () => {
-  //   setCurrentPage((prev) => prev + 1);
-  // };
-
   const handleCreateTransaction = async (data) => {
     try {
       setIsCreateLoading(true);
@@ -77,6 +73,7 @@ export default function ExpensePage() {
       );
 
       dispatch(addTransactionToRedux(response.data));
+
       return true;
     } catch (err) {
       console.error(err);
@@ -147,7 +144,6 @@ export default function ExpensePage() {
       deletingId={deletingId}
       editingId={editingId}
       updatingId={updatingId}
-      // onChangeCurrentPage={onChangeCurrentPage}
       onChangeCurrentPage={setCurrentPage}
       hasNextPage={hasNextPage}
       setHasNextPage={setHasNextPage}
