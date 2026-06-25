@@ -30,6 +30,7 @@ TransactionsLayout.propTypes = {
   updatingId: PropTypes.number,
   onChangeCurrentPage: PropTypes.func.isRequired,
   hasNextPage: PropTypes.bool.isRequired,
+  setHasNextPage: PropTypes.func.isRequired,
 };
 
 export default function TransactionsLayout({
@@ -48,9 +49,15 @@ export default function TransactionsLayout({
   updatingId,
   onChangeCurrentPage,
   hasNextPage,
+  setHasNextPage,
 }) {
   const [openDialogModal, setOpenDialogModal] = useState(false);
   const observer = useRef(null);
+
+  useEffect(() => {
+    onChangeCurrentPage(1);
+    setHasNextPage(false);
+  }, [type]);
 
   useEffect(() => {
     return () => observer.current?.disconnect();
@@ -62,9 +69,12 @@ export default function TransactionsLayout({
         observer.current.disconnect();
       }
 
+      if (!node) return; // ← добавить это
+
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasNextPage && !isLoading) {
-          onChangeCurrentPage();
+          // onChangeCurrentPage();
+          onChangeCurrentPage((prev) => prev + 1);
         }
       });
 
@@ -131,7 +141,9 @@ export default function TransactionsLayout({
               <Loader className="w-2 h-2" />
             </div>
           )}
-          {!hasNextPage && !isLoading && <p>No more transactions</p>}
+          {transactions.length > 0 && !hasNextPage && !isLoading && (
+            <p>No more transactions</p>
+          )}
         </div>
       </div>
     </>

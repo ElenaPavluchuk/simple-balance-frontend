@@ -26,7 +26,8 @@ export default function ExpensePage() {
   const transactions = useSelector(selectTransactions);
   const dispatch = useDispatch();
   const TRANSACTION_TYPE = "EXPENSE";
-  const LIMIT = 20;
+  // const LIMIT = 20;
+  const LIMIT = 2; // test
 
   useEffect(() => {
     let isCancelled = false;
@@ -43,18 +44,8 @@ export default function ExpensePage() {
           ),
         );
 
-        const transactionsByType = transactions.filter(
-          (t) => t.type === TRANSACTION_TYPE,
-        );
-
-        // deduplication
-        const merged = [
-          ...transactionsByType,
-          ...(response.data.transactions ?? []),
-        ];
-        const unique = [...new Map(merged.map((t) => [t.id, t])).values()];
-
-        if (!isCancelled) dispatch(setTransactions(unique));
+        if (!isCancelled)
+          dispatch(setTransactions(response.data.transactions ?? []));
 
         if (!isCancelled) setHasNextPage(response.data?.pagination?.hasNext);
       } catch (err) {
@@ -72,14 +63,9 @@ export default function ExpensePage() {
     };
   }, [dispatch, currentPage]);
 
-  useEffect(() => {
-    setCurrentPage(1);
-    setHasNextPage(false);
-  }, [TRANSACTION_TYPE]);
-
-  const onChangeCurrentPage = () => {
-    setCurrentPage((prev) => prev + 1);
-  };
+  // const onChangeCurrentPage = () => {
+  //   setCurrentPage((prev) => prev + 1);
+  // };
 
   const handleCreateTransaction = async (data) => {
     try {
@@ -150,7 +136,7 @@ export default function ExpensePage() {
     <TransactionsLayout
       title="Expense transactions"
       type={TRANSACTION_TYPE}
-      transactions={transactions}
+      transactions={transactions.filter((t) => t.type === TRANSACTION_TYPE)}
       onCreate={handleCreateTransaction}
       onDelete={handleDeleteTransaction}
       onEdit={handleEditTransaction}
@@ -161,8 +147,10 @@ export default function ExpensePage() {
       deletingId={deletingId}
       editingId={editingId}
       updatingId={updatingId}
-      onChangeCurrentPage={onChangeCurrentPage}
+      // onChangeCurrentPage={onChangeCurrentPage}
+      onChangeCurrentPage={setCurrentPage}
       hasNextPage={hasNextPage}
+      setHasNextPage={setHasNextPage}
     />
   );
 }
