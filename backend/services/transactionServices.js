@@ -61,7 +61,7 @@ const addUserTransaction = async ({
       "t.note",
       "t.currency_id",
       "t.category_id",
-      "c.symbol as currency_symbol",
+      "c.code as currency_code",
       "cat.name as category_name",
     ])
     .first();
@@ -69,7 +69,16 @@ const addUserTransaction = async ({
   return transaction;
 };
 
-const getUserTransactions = async ({ userId, type }) => {
+const getUserTransactions = async ({ userId, type, page, limit }) => {
+  const offset = (page - 1) * limit;
+
+  const [{ count }] = await knex("transactions as t")
+    .where({
+      "t.user_id": userId,
+      "t.type": type,
+    })
+    .count("t.id as count");
+
   const transactions = await knex("transactions as t")
     .join("currencies as c", "t.currency_id", "c.id")
     .join("categories as cat", "t.category_id", "cat.id")
@@ -84,13 +93,25 @@ const getUserTransactions = async ({ userId, type }) => {
       "t.date",
       "t.title",
       "t.note",
-      "c.symbol as currency_symbol",
+      "c.code as currency_code",
       "cat.name as category_name",
     ])
     .orderBy("t.date", "desc")
-    .orderBy("t.id", "desc");
+    .orderBy("t.id", "desc")
+    .limit(limit)
+    .offset(offset);
 
-  return transactions;
+  return {
+    transactions,
+    pagination: {
+      page,
+      limit,
+      total: Number(count),
+      totalPages: Math.ceil(Number(count) / limit),
+      hasNext: page * limit < Number(count),
+      hasPrev: page > 1,
+    },
+  };
 };
 
 const deleteUserTransaction = async ({ transactionId, userId }) => {
@@ -102,7 +123,7 @@ const deleteUserTransaction = async ({ transactionId, userId }) => {
     throw ApiError.notFound("Transaction deletion error");
   }
 
-  return;
+  return deletedCount;
 };
 
 const updateUserTransaction = async ({
@@ -180,7 +201,7 @@ const updateUserTransaction = async ({
       "t.note",
       "t.currency_id",
       "t.category_id",
-      "c.symbol as currency_symbol",
+      "c.code as currency_code",
       "cat.name as category_name",
     ]);
 
@@ -191,14 +212,9 @@ const getData = async (userId) => {
   const user = await knex("users")
     .join("currencies", "users.base_currency_id", "currencies.id")
     .where("users.id", userId)
-    .select(
-      "currencies.id as currency_id",
-      "currencies.symbol as symbol",
-      "currencies.code as code",
-    )
+    .select("currencies.id as currency_id", "currencies.code as code")
     .first();
 
-  const baseCurrencySymbol = user.symbol;
   const baseCurrencyCode = user.code;
 
   const totals = await knex("transactions")
@@ -229,7 +245,7 @@ const getData = async (userId) => {
 
   last30DaysTransactionsByCategory.forEach((row) => {
     const item = {
-      amount: Number(row.amount),
+      amount: row.amount,
       category_name: row.category_name,
     };
 
@@ -263,11 +279,11 @@ const getData = async (userId) => {
     .map((t) => ({
       id: t.id,
       type: t.type,
-      amount: Number(t.amount),
+      amount: t.amount,
       date: t.date,
       title: t.title,
       category_name: t.category_name,
-      currency_symbol: baseCurrencySymbol,
+      currency_code: baseCurrencyCode,
     }));
 
   const last30DaysExpenseTransactions = last30DaysTransactions
@@ -276,11 +292,11 @@ const getData = async (userId) => {
     .map((t) => ({
       id: t.id,
       type: t.type,
-      amount: Number(t.amount),
+      amount: t.amount,
       date: t.date,
       title: t.title,
       category_name: t.category_name,
-      currency_symbol: baseCurrencySymbol,
+      currency_code: baseCurrencyCode,
     }));
 
   const last5Transactions = await knex("transactions as t")
@@ -302,8 +318,8 @@ const getData = async (userId) => {
 
   const last5TransactionsAllTime = last5Transactions.map((t) => ({
     ...t,
-    amount: Number(t.amount),
-    currency_symbol: baseCurrencySymbol,
+    amount: t.amount,
+    currency_code: baseCurrencyCode,
   }));
 
   return {
@@ -319,7 +335,6 @@ const getData = async (userId) => {
       incomeTransactions: last30DaysIncomeTransactions,
       expenseTransactions: last30DaysExpenseTransactions,
     },
-    symbol: { baseCurrencySymbol },
     code: { baseCurrencyCode },
   };
 };

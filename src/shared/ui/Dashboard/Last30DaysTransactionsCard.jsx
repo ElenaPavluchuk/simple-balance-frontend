@@ -5,13 +5,13 @@ Last30DaysTransactionsCard.propTypes = {
   transactions: PropTypes.arrayOf(
     PropTypes.shape({
       category_name: PropTypes.string.isRequired,
-      amount: PropTypes.number.isRequired,
+      amount: PropTypes.string.isRequired,
     }),
   ).isRequired,
   title: PropTypes.string.isRequired,
   code: PropTypes.string.isRequired,
-  order: PropTypes.string,
-  spanningColumns: PropTypes.string,
+  order: PropTypes.string.isRequired,
+  spanningColumns: PropTypes.string.isRequired,
 };
 
 export default function Last30DaysTransactionsCard({
@@ -21,9 +21,9 @@ export default function Last30DaysTransactionsCard({
   order,
   spanningColumns,
 }) {
-  const data = transactions.map((t, index) => ({
-    name: t?.category_name,
-    value: t?.amount,
+  const DATA = transactions.map((t, index) => ({
+    name: t.category_name,
+    value: Number(t.amount) || 0,
     code,
     fill: index % 2 === 0 ? "#ffb3c6" : "#ffe5ec",
   }));
@@ -34,7 +34,7 @@ export default function Last30DaysTransactionsCard({
         <h5 className="text-lg">{`Last 30 Days ${title}`}</h5>
       </div>
 
-      {data.length === 0 && (
+      {DATA.length === 0 && (
         <div className="h-20 flex flex-col items-center justify-center">
           <p className="text-sm">No transactions yet</p>
           <p className="text-xs text-gray-300 mt-1">
@@ -43,7 +43,7 @@ export default function Last30DaysTransactionsCard({
         </div>
       )}
 
-      <CustomBarChart data={data} />
+      <CustomBarChart data={DATA} />
     </div>
   );
 }

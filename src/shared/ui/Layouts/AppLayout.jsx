@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet } from "react-router";
 import Sidebar from "./Sidebar/Sidebar";
 
-export default function Layout() {
+export default function AppLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
@@ -11,7 +11,9 @@ export default function Layout() {
         isOpen={isSidebarOpen}
         toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
       />
-      <main className={`bg-pink-100 w-full flex-1 min-w-0`}>
+      <main
+        className={`bg-pink-100 w-full flex-1 min-w-0 mx-5 my-10 ${isSidebarOpen ? "hidden sm:block" : ""}`}
+      >
         <Outlet />
       </main>
     </div>

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 Button.propTypes = {
   children: PropTypes.node.isRequired,
   onClick: PropTypes.func,
+  type: PropTypes.string,
   size: PropTypes.number,
   fontSize: PropTypes.string,
   variant: PropTypes.oneOf(["primary", "secondary", "link", "danger", "icon"]),
@@ -14,6 +15,7 @@ Button.propTypes = {
 export default function Button({
   children,
   onClick,
+  type = "button",
   size = null,
   fontSize = "text-sm",
   variant = "primary",
@@ -32,10 +34,8 @@ export default function Button({
   const baseClasses = `
     flex items-center justify-center gap-2
     rounded-md transition-all select-none whitespace-nowrap
-    disabled:opacity-50 disabled:pointer-events-none
-    font-medium cursor-pointer ${fontSize}
-    ${variants[variant] || variants.primary}
-  `;
+    disabled:opacity-50 disabled:pointer-events-none cursor-pointer 
+    ${fontSize || "text-md"} ${variants[variant] || variants.primary}`;
 
   const sizeClasses = size
     ? `w-${size / 4} h-${size / 4} min-w-${size / 4}`
@@ -43,13 +43,13 @@ export default function Button({
 
   return (
     <button
-      type="button"
+      type={type}
       title={title}
       disabled={disabled}
       onClick={onClick}
       className={`
         ${baseClasses}
-        ${sizeClasses}
+         ${sizeClasses}
         ${className}
       `}
     >

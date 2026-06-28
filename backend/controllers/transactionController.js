@@ -57,14 +57,19 @@ const addTransaction = async (req, res, next) => {
 
 const getTransactions = async (req, res, next) => {
   const userId = req.user.id;
-  const { type } = req.query;
+  const { type, page = 1, limit = 20 } = req.query;
 
   if (!type) {
     return next(ApiError.badRequest("Type is required field"));
   }
 
   try {
-    const transactions = await getUserTransactions({ userId, type });
+    const transactions = await getUserTransactions({
+      userId,
+      type,
+      page: Number(page),
+      limit: Number(limit),
+    });
 
     return res.status(200).json(transactions);
   } catch (err) {
@@ -79,9 +84,9 @@ const deleteTransaction = async (req, res, next) => {
   try {
     await deleteUserTransaction({ transactionId, userId });
 
-    return res
-      .status(200)
-      .json({ message: "Transaction deleted successfully" });
+    return res.status(200).json({
+      message: "Transaction deleted successfully",
+    });
   } catch (err) {
     next(err);
   }

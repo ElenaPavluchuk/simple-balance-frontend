@@ -7,7 +7,8 @@ export const transactionsSlice = createSlice({
   },
   reducers: {
     setTransactions: (state, action) => {
-      state.value = action.payload;
+      const merged = [...state.value, ...action.payload];
+      state.value = [...new Map(merged.map((t) => [t.id, t])).values()]; // deduplication
     },
 
     addTransactionToRedux: (state, action) => {
@@ -28,9 +29,7 @@ export const transactionsSlice = createSlice({
 
     updateTransactionInRedux: (state, action) => {
       const updated = action.payload;
-
       const transaction = state.value.find((t) => t.id === updated.id);
-
       if (transaction) {
         Object.assign(transaction, updated);
       }

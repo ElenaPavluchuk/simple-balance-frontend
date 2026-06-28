@@ -2,7 +2,7 @@ import { AuthGuard } from "../guards/AuthGuard";
 import { AdminGuard } from "../guards/AdminGuard";
 import SignupPage from "../../../pages/Auth/SignupPage";
 import LoginPage from "../../../pages/Auth/LoginPage";
-import Layout from "../../ui/Layout/Layout";
+import AppLayout from "../../ui/Layouts/AppLayout";
 import DashboardPage from "../../../pages/DashboardPage";
 import ExpensePage from "../../../pages/ExpensePage";
 import IncomePage from "../../../pages/IncomePage";
@@ -17,7 +17,7 @@ export const routeConfig = [
     path: "/",
     element: (
       <AuthGuard>
-        <Layout />
+        <AppLayout />
       </AuthGuard>
     ),
     children: [

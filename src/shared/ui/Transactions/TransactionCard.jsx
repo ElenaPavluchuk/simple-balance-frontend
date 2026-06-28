@@ -1,19 +1,22 @@
 import { Trash2, Pencil } from "lucide-react";
 import dayjs from "dayjs";
+import Button from "../Button";
+import { currencyFormat } from "../../utils/format";
 import PropTypes from "prop-types";
 
 TransactionCard.propTypes = {
   transaction: PropTypes.shape({
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
-    amount: PropTypes.number.isRequired,
+    amount: PropTypes.string.isRequired,
     category_name: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
-    note: PropTypes.string.isRequired,
-    currency_symbol: PropTypes.string.isRequired,
+    note: PropTypes.string,
+    currency_code: PropTypes.string.isRequired,
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
+  isDeleteLoading: PropTypes.bool.isRequired,
 };
 
 export default function TransactionCard({
@@ -21,46 +24,47 @@ export default function TransactionCard({
   onDelete,
   onEdit,
   hideDetails,
+  isDeleteLoading,
 }) {
   return (
-    <>
-      <div className="w-full">
-        <div className="flex justify-between items-center ">
+    <div className="flex gap-2">
+      <div className="w-full flex flex-col gap-4">
+        <div className="flex justify-between items-center">
           <p>{transaction.title}</p>
-          <div className="flex flex-row">
-            <p>
-              <span>{transaction.type === "INCOME" ? "+" : "-"}</span>
-              {transaction.currency_symbol}
-            </p>
-            <p>{transaction.amount}</p>
-          </div>
+          <p>
+            <span>{transaction.type === "INCOME" ? "+" : "-"}</span>
+            {currencyFormat(transaction.amount, transaction.currency_code)}
+          </p>
         </div>
-        <div className="flex justify-between items-center mt-2 text-sm text-gray-500 ">
+
+        <div className="flex justify-between items-center text-sm text-gray-700">
           <span className="bg-gray-100 px-2 py-1 rounded-lg">
             <p>{transaction.category_name}</p>
           </span>
-          <span>{dayjs(transaction.date).format("DD-MM-YYYY")}</span>
+          <p>{dayjs(transaction.date).format("DD-MM-YYYY")}</p>
         </div>
+
         {!hideDetails && (
-          <p className="mt-4 italic">
+          <p className="italic mt-4">
             Note: <span>{transaction.note}</span>
           </p>
         )}
       </div>
+
       {!hideDetails && (
-        <div className="flex flex-col gap-4 items-start">
-          <button onClick={() => onEdit(transaction)} size={10}>
-            <Pencil className="text-gray-700" />
-          </button>
-          <button>
-            <Trash2
-              onClick={() => onDelete(transaction.id)}
-              className="text-gray-700"
-              size={20}
-            />
-          </button>
+        <div className="flex flex-col items-center justify-between w-fit">
+          <Button onClick={() => onEdit(transaction)} variant="icon">
+            <Pencil className="text-gray-700" size={20} />
+          </Button>
+          <Button
+            onClick={() => onDelete(transaction.id)}
+            disabled={isDeleteLoading}
+            variant="icon"
+          >
+            <Trash2 className="text-gray-700" size={20} />
+          </Button>
         </div>
       )}
-    </>
+    </div>
   );
 }

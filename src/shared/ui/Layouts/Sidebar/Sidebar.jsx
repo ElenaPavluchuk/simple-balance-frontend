@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { Link, useLocation } from "react-router";
-import { data } from "./config/data";
+import { MENU_DATA } from "./config/data";
 import { Menu, X } from "lucide-react";
 import { useAuth } from "../../../context/auth/useAuth";
 import Button from "../../Button";
@@ -14,8 +14,8 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   const location = useLocation();
   const { user, logout } = useAuth();
 
-  const filteredData = data.filter((item) => {
-    if (item.key === "manage-users" || item.key === "manage-content") {
+  const filteredData = MENU_DATA.filter((item) => {
+    if (item.KEY === "manage-users" || item.KEY === "manage-content") {
       return user?.user_role === "ADMIN";
     }
 
@@ -35,23 +35,23 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       <nav className="flex-1 pt-4 bg-white">
         <ul className="space-y-2 px-3">
           {filteredData.map((item) => (
-            <li key={item.key}>
+            <li key={item.KEY}>
               <Link
-                to={item.path}
+                to={item.PATH}
                 className={`
                     flex items-center gap-3 px-3 py-3 rounded-lg transition-colors
                     ${
-                      location.pathname === item.path
+                      location.pathname === item.PATH
                         ? "bg-teal-100 text-teal-800 font-medium"
                         : "text-gray-700 hover:bg-gray-100"
                     }
                   `}
               >
                 <span className={`${isOpen ? "" : "mx-auto"}`}>
-                  <item.icon size={20} />
+                  <item.ICON size={20} />
                 </span>
 
-                {isOpen && <span>{item.label}</span>}
+                {isOpen && <span>{item.LABEL}</span>}
               </Link>
             </li>
           ))}
