@@ -7,9 +7,9 @@ import RecentTransactionsCard from "../shared/ui/Dashboard/RecentTransactionsCar
 import FinanceOverviewCard from "../shared/ui/Dashboard/FinanceOverviewCard";
 import Last30DaysTransactionsCard from "../shared/ui/Dashboard/Last30DaysTransactionsCard";
 import {
-  totalCardsData,
-  recentCardsData,
-  lastChartCardsData,
+  TOTAL_CARDS_DATA,
+  RECENT_CARDS_DATA,
+  LAST_CHART_CARDS_DATA,
 } from "../shared/ui/Dashboard/config/data";
 import toast from "react-hot-toast";
 import Loader from "../shared/ui/Loader";
@@ -24,17 +24,20 @@ export default function DashboardPage() {
     let isCancelled = false;
 
     const getDashboardData = async () => {
-      try {
-        setIsLoading(true);
+      setIsLoading(true);
 
+      try {
         const response = await axiosInstance.get(
           API_PATHS.TRANSACTIONS.DASHBOARD,
         );
 
-        if (!isCancelled) setDashboardData(response.data);
+        if (isCancelled) return;
+
+        setDashboardData(response.data);
       } catch (err) {
-        if (!isCancelled) console.error(err);
-        if (!isCancelled) toast.error(getErrorMessage(err));
+        if (isCancelled) return;
+        console.error(err);
+        toast.error(getErrorMessage(err));
       } finally {
         if (!isCancelled) setIsLoading(false);
       }
@@ -53,16 +56,16 @@ export default function DashboardPage() {
         <Loader className="min-h-screen flex justify-center items-center" />
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-          {totalCardsData.map((item) => (
+          {TOTAL_CARDS_DATA.map((item) => (
             <TotalCard
-              key={item.id}
-              icon={<item.Icon />}
-              label={item.label}
-              total={dashboardData?.total?.[item.dataKey] || 0}
-              color={item.color}
+              key={item.ID}
+              icon={<item.ICON />}
+              label={item.LABEL}
+              total={dashboardData?.total?.[item.DATA_KEY] || 0}
+              color={item.COLOR}
               code={dashboardData?.code?.baseCurrencyCode}
-              order={item.order}
-              spanningColumns={item.spanningColumns}
+              order={item.ORDER}
+              spanningColumns={item.SPANNING_COLUMNS}
             />
           ))}
 
@@ -75,26 +78,26 @@ export default function DashboardPage() {
             spanningColumns={"col-start-1 col-end-3"}
           />
 
-          {recentCardsData.map((item) => (
+          {RECENT_CARDS_DATA.map((item) => (
             <RecentTransactionsCard
-              key={item.id}
-              transactions={dashboardData?.[item.source]?.[item.dataKey] ?? []}
-              onViewAll={item.navigateTo && (() => navigate(item.navigateTo))}
-              title={item.title}
-              hideBtn={item.hideBtn}
-              order={item.order}
-              spanningColumns={item.spanningColumns}
+              key={item.ID}
+              transactions={dashboardData?.[item.SOURCE]?.[item.DATA_KEY] ?? []}
+              onViewAll={item.NAVIGATE_TO && (() => navigate(item.NAVIGATE_TO))}
+              title={item.TITLE}
+              hideBtn={item.HIDE_BTN}
+              order={item.ORDER}
+              spanningColumns={item.SPANNING_COLUMNS}
             />
           ))}
 
-          {lastChartCardsData.map((item) => (
+          {LAST_CHART_CARDS_DATA.map((item) => (
             <Last30DaysTransactionsCard
-              key={item.id}
-              transactions={dashboardData?.[item.source]?.[item.dataKey] ?? []}
-              title={item.title}
+              key={item.ID}
+              transactions={dashboardData?.[item.SOURCE]?.[item.DATA_KEY] ?? []}
+              title={item.TITLE}
               code={dashboardData?.code?.baseCurrencyCode}
-              order={item.order}
-              spanningColumns={item.spanningColumns}
+              order={item.ORDER}
+              spanningColumns={item.SPANNING_COLUMNS}
             />
           ))}
         </div>

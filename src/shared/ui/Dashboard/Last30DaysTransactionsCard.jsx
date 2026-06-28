@@ -21,7 +21,7 @@ export default function Last30DaysTransactionsCard({
   order,
   spanningColumns,
 }) {
-  const data = transactions.map((t, index) => ({
+  const DATA = transactions.map((t, index) => ({
     name: t.category_name,
     value: Number(t.amount) || 0,
     code,
@@ -34,7 +34,7 @@ export default function Last30DaysTransactionsCard({
         <h5 className="text-lg">{`Last 30 Days ${title}`}</h5>
       </div>
 
-      {data.length === 0 && (
+      {DATA.length === 0 && (
         <div className="h-20 flex flex-col items-center justify-center">
           <p className="text-sm">No transactions yet</p>
           <p className="text-xs text-gray-300 mt-1">
@@ -43,7 +43,7 @@ export default function Last30DaysTransactionsCard({
         </div>
       )}
 
-      <CustomBarChart data={data} />
+      <CustomBarChart data={DATA} />
     </div>
   );
 }

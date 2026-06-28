@@ -18,7 +18,7 @@ export default function FinanceOverviewCard({
   order,
   spanningColumns,
 }) {
-  const balanceData = [
+  const BALANCE_DATA = [
     {
       name: "Total Expense",
       value: totalExpense,
@@ -32,6 +32,7 @@ export default function FinanceOverviewCard({
       fill: "#ffc6ff",
     },
   ];
+
   return (
     <div className={`card ${order} ${spanningColumns} bg-white rounded h-125`}>
       <div className="flex items-center justify-between">
@@ -39,7 +40,7 @@ export default function FinanceOverviewCard({
       </div>
 
       <CustomPieChart
-        data={balanceData}
+        data={BALANCE_DATA}
         label="Total Balance"
         totalAmount={totalBalance}
         code={code}

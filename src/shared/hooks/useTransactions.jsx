@@ -7,7 +7,7 @@ import {
   deleteTransactionFromRedux,
   setTransactions,
   updateTransactionInRedux,
-} from "../slices/transactionsSlice";
+} from "../redux/slices/transactionsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "../utils/getErrorMessage";

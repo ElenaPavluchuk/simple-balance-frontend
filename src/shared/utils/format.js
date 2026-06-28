@@ -7,13 +7,13 @@ export const currencyFormat = (num, currencyCode) => {
     parseFloat(num);
   }
 
-  const locales = {
+  const LOCALES = {
     USD: "en-US",
     EUR: "de-DE",
     RUB: "ru-RU",
   };
 
-  const currFormat = new Intl.NumberFormat(locales[currencyCode], {
+  const currFormat = new Intl.NumberFormat(LOCALES[currencyCode], {
     style: "currency",
     currency: currencyCode,
     currencyDisplay: "symbol",
