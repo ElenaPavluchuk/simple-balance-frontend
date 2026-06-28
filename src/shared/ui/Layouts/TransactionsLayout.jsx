@@ -61,11 +61,11 @@ export default function TransactionsLayout({
 
   const observerTarget = useCallback(
     (node) => {
+      if (!node) return;
+
       if (observer.current) {
         observer.current.disconnect();
       }
-
-      if (!node) return;
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasNextPage && !isLoading) {

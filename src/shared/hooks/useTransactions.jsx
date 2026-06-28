@@ -23,7 +23,7 @@ export function useTransactions(type) {
   const [hasNextPage, setHasNextPage] = useState(false);
   const transactions = useSelector(selectTransactions);
   const dispatch = useDispatch();
-  const LIMIT = 20;
+  const LIMIT = 2;
 
   useEffect(() => {
     let isCancelled = false;
