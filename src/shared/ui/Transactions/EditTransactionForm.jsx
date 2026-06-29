@@ -5,6 +5,7 @@ import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import { transactionsValidate, clearFieldError } from "../../utils/validate";
 import dayjs from "dayjs";
+import Input from "../Input";
 import Button from "../Button";
 import PropTypes from "prop-types";
 
@@ -75,6 +76,23 @@ export default function EditTransactionForm({
     getCategories();
   }, [transaction.id]);
 
+  const handleTitleChange = (value) => {
+    setTitle(value);
+    clearFieldError("title", setValidateErrors);
+  };
+
+  const handleAmountChange = (value) => {
+    setAmount(value);
+    clearFieldError("amount", setValidateErrors);
+  };
+
+  const handleDateChange = (value) => {
+    setDate(value);
+    clearFieldError("date", setValidateErrors);
+  };
+
+  const handleNoteChange = (value) => setNote(value);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -106,15 +124,10 @@ export default function EditTransactionForm({
     <form onSubmit={handleSubmit} className="w-full flex flex-col gap-2">
       <div className="flex justify-between gap-2">
         <div className="w-full">
-          <input
+          <Input
             value={title}
-            onChange={(e) => {
-              setTitle(e.target.value);
-              clearFieldError("title", setValidateErrors);
-            }}
+            onChange={handleTitleChange}
             placeholder="Title"
-            autoComplete="off"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           {validateErrors.title && (
             <p className="text-red-500 italic text-xs mt-1">
@@ -124,18 +137,12 @@ export default function EditTransactionForm({
         </div>
 
         <div className="w-full">
-          <input
+          <Input
             value={amount}
-            onChange={(e) => {
-              setAmount(e.target.value);
-              clearFieldError("amount", setValidateErrors);
-            }}
-            placeholder="Amount"
+            onChange={handleAmountChange}
             type="number"
-            min="0.01"
+            placeholder="0.00"
             step="0.01"
-            autoComplete="off"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           {validateErrors.amount && (
             <p className="text-red-500 italic text-xs mt-1">
@@ -170,15 +177,7 @@ export default function EditTransactionForm({
         </div>
 
         <div className="w-1/2">
-          <input
-            value={date}
-            onChange={(e) => {
-              setDate(e.target.value);
-              clearFieldError("date", setValidateErrors);
-            }}
-            type="date"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
+          <Input value={date} onChange={handleDateChange} type="date" />
           {validateErrors.date && (
             <p className="text-red-500 italic text-xs mt-1">
               {validateErrors.date}
@@ -186,11 +185,12 @@ export default function EditTransactionForm({
           )}
         </div>
       </div>
-      <textarea
+      <Input
         value={note}
-        onChange={(e) => setNote(e.target.value)}
+        onChange={handleNoteChange}
         placeholder="Note"
-        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+        multiline
+        rows={2}
       />
 
       <div className="flex gap-4 justify-center mt-4">

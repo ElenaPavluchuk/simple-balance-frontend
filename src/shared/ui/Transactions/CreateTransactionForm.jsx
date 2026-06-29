@@ -10,7 +10,7 @@ import Input from "../Input";
 import PropTypes from "prop-types";
 
 CreateTransactionForm.propTypes = {
-  type: PropTypes.oneOf(["income", "expense"]).isRequired,
+  type: PropTypes.oneOf(["INCOME", "EXPENSE"]).isRequired,
   onCreate: PropTypes.func.isRequired,
   isCreateLoading: PropTypes.bool,
 };
@@ -75,12 +75,12 @@ export default function CreateTransactionForm({
 
   const handleNoteChange = (value) => setNote(value);
 
-  const handleChangeCategory = (option) => {
+  const handleCategoryChange = (option) => {
     setSelectedCategory(option || null);
     clearFieldError("selectedCategory", setValidateErrors);
   };
 
-  const handleChangeDate = (value) => {
+  const handleDateChange = (value) => {
     setDate(value);
     clearFieldError("date", setValidateErrors);
   };
@@ -146,7 +146,7 @@ export default function CreateTransactionForm({
         <CreatableSelect
           isClearable
           value={selectedCategory}
-          onChange={handleChangeCategory}
+          onChange={handleCategoryChange}
           options={categoryOptions}
           getNewOptionData={(inputValue, label) => ({
             label: label.trim(),
@@ -166,7 +166,7 @@ export default function CreateTransactionForm({
       <div>
         <Input
           value={date}
-          onChange={handleChangeDate}
+          onChange={handleDateChange}
           type="date"
           label="Select date"
         />
