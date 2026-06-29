@@ -6,6 +6,7 @@ import { useAuth } from "../../context/auth/useAuth";
 import { transactionsValidate, clearFieldError } from "../../utils/validate";
 import { getErrorMessage } from "../../utils/getErrorMessage";
 import Button from "../Button";
+import Input from "../Input";
 import PropTypes from "prop-types";
 
 CreateTransactionForm.propTypes = {
@@ -115,13 +116,11 @@ export default function CreateTransactionForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div>
-        <label>Title</label>
-        <input
+        <Input
           value={title}
-          onChange={(e) => handleTitleChange(e.target.value)}
-          autoComplete="off"
+          onChange={handleTitleChange}
+          label="Title"
           placeholder="Add title"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
         />
         {validateErrors.title && (
           <p className="text-red-500 italic">{validateErrors.title}</p>
@@ -129,16 +128,13 @@ export default function CreateTransactionForm({
       </div>
 
       <div>
-        <label>Amount</label>
-        <input
-          type="number"
+        <Input
           value={amount}
-          onChange={(e) => handleAmountChange(e.target.value)}
-          min="0.01"
+          onChange={handleAmountChange}
+          type={"number"}
+          label="Amount"
+          placeholder="0.00"
           step="0.01"
-          autoComplete="off"
-          placeholder="0,00"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
         />
         {validateErrors.amount && (
           <p className="text-red-500 italic">{validateErrors.amount}</p>
@@ -168,12 +164,11 @@ export default function CreateTransactionForm({
       </div>
 
       <div>
-        <label>Select date</label>
-        <input
-          type="date"
+        <Input
           value={date}
-          onChange={(e) => handleChangeDate(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          onChange={handleChangeDate}
+          type="date"
+          label="Select date"
         />
         {validateErrors.date && (
           <p className="text-red-500 italic">{validateErrors.date}</p>
@@ -181,13 +176,13 @@ export default function CreateTransactionForm({
       </div>
 
       <div>
-        <label>Note</label>
-        <textarea
+        <Input
           value={note}
-          onChange={(e) => handleNoteChange(e.target.value)}
-          autoComplete="off"
+          onChange={handleNoteChange}
+          label="Note"
           placeholder="Add note"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          multiline
+          rows={2}
         />
       </div>
 
