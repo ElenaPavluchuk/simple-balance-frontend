@@ -1,5 +1,5 @@
 import { X, Check } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CreatableSelect from "react-select/creatable";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
@@ -7,6 +7,7 @@ import { transactionsValidate, clearFieldError } from "../../utils/validate";
 import dayjs from "dayjs";
 import Input from "../Input";
 import Button from "../Button";
+import { useOptions } from "../../hooks/useOptions";
 import PropTypes from "prop-types";
 
 EditTransactionForm.propTypes = {
@@ -35,46 +36,27 @@ export default function EditTransactionForm({
   const [date, setDate] = useState(
     transaction.date ? dayjs(transaction.date).format("YYYY-MM-DD") : "",
   );
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [categoryOptions, setCategoryOptions] = useState([]);
   const [note, setNote] = useState(transaction.note);
   const [validateErrors, setValidateErrors] = useState({});
-  const [apiError, setApiError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const getCategories = async () => {
-      setIsLoading(true);
+  const {
+    selectedOption,
+    setSelectedOption,
+    allOptions,
+    isOptionsLoading,
+    optionsApiError,
+  } = useOptions({
+    queryKey: [transaction.id],
+    queryFn: async () => {
+      const response = await axiosInstance.get(
+        API_PATHS.TRANSACTIONS.GET_CATEGORIES_BY_TYPE(transaction.type),
+      );
 
-      try {
-        const response = await axiosInstance.get(
-          API_PATHS.TRANSACTIONS.GET_CATEGORIES_BY_TYPE(transaction.type),
-        );
-
-        const normalizedOptions = response?.data?.map((o) => ({
-          label: o.name,
-          value: o.id,
-        }));
-
-        setCategoryOptions(normalizedOptions || []);
-
-        setSelectedCategory(
-          normalizedOptions?.find((o) => o.value === transaction.category_id) ||
-            null,
-        );
-      } catch (err) {
-        console.error(err);
-        const message =
-          err?.response?.data?.message ||
-          "Something went wrong. Please try again";
-        setApiError(message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    getCategories();
-  }, [transaction.id]);
+      return response.data;
+    },
+    initialData: transaction.category_id,
+    // defOption: "Other",
+  });
 
   const handleTitleChange = (value) => {
     setTitle(value);
@@ -93,13 +75,18 @@ export default function EditTransactionForm({
 
   const handleNoteChange = (value) => setNote(value);
 
+  const handleCategoryChange = (option) => {
+    setSelectedOption(option || null);
+    clearFieldError("selectedCategory", setValidateErrors);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const errors = transactionsValidate({
       title,
       amount,
-      selectedCategory,
+      selectedCategory: selectedOption,
       date,
     });
 
@@ -112,8 +99,8 @@ export default function EditTransactionForm({
       title: title.trim(),
       amount,
       date,
-      categoryId: selectedCategory?.isCustom ? null : selectedCategory?.value,
-      categoryName: selectedCategory?.isCustom ? selectedCategory?.label : null,
+      categoryId: selectedOption?.isCustom ? null : selectedOption?.value,
+      categoryName: selectedOption?.isCustom ? selectedOption?.label : null,
       note: note.trim(),
     };
 
@@ -156,23 +143,23 @@ export default function EditTransactionForm({
         <div className="w-1/2">
           <CreatableSelect
             isClearable
-            value={selectedCategory}
-            options={categoryOptions}
-            onChange={(option) => {
-              setSelectedCategory(option || null);
-              clearFieldError("selectedCategory", setValidateErrors);
-            }}
+            value={selectedOption}
+            options={allOptions}
+            onChange={handleCategoryChange}
             getNewOptionData={(inputValue, label) => ({
               label: label.trim(),
               value: inputValue,
               isCustom: true,
             })}
-            isLoading={isLoading}
+            isLoading={isOptionsLoading}
           />
           {validateErrors.selectedCategory && (
             <p className="text-red-500 italic text-xs mt-1">
               {validateErrors.selectedCategory}
             </p>
+          )}
+          {optionsApiError && (
+            <p className="text-red-500 italic">{optionsApiError}</p>
           )}
         </div>
 
@@ -200,10 +187,6 @@ export default function EditTransactionForm({
         <Button variant="icon" onClick={onCancel} disabled={isSaveEditLoading}>
           <X className="text-gray-700" />
         </Button>
-
-        {apiError && (
-          <p className="text-red-500 italic text-center">{apiError}</p>
-        )}
       </div>
     </form>
   );
