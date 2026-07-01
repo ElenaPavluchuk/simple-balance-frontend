@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { getErrorMessage } from "../utils/getErrorMessage";
 
-export function useOptions({ queryKey, queryFn, initialData, defOption }) {
+export function useOptions({ queryKey, queryFn, initialData }) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [allOptions, setAllOptions] = useState([]);
   const [isOptionsLoading, setIsOptionsLoading] = useState(false);
@@ -27,7 +27,7 @@ export function useOptions({ queryKey, queryFn, initialData, defOption }) {
 
         const option =
           normalizedOptions.find((o) => o.value === initialData) ??
-          normalizedOptions.find((o) => o.label === defOption) ??
+          normalizedOptions.find((o) => o.label === initialData) ??
           null;
 
         setSelectedOption(option);

@@ -55,7 +55,6 @@ export default function EditTransactionForm({
       return response.data;
     },
     initialData: transaction.category_id,
-    // defOption: "Other",
   });
 
   const handleTitleChange = (value) => {
@@ -68,16 +67,16 @@ export default function EditTransactionForm({
     clearFieldError("amount", setValidateErrors);
   };
 
-  const handleDateChange = (value) => {
-    setDate(value);
-    clearFieldError("date", setValidateErrors);
-  };
-
   const handleNoteChange = (value) => setNote(value);
 
   const handleCategoryChange = (option) => {
     setSelectedOption(option || null);
     clearFieldError("selectedCategory", setValidateErrors);
+  };
+
+  const handleDateChange = (value) => {
+    setDate(value);
+    clearFieldError("date", setValidateErrors);
   };
 
   const handleSubmit = (e) => {

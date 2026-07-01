@@ -42,7 +42,7 @@ export default function CreateTransactionForm({
 
       return response.data;
     },
-    defOption: "Other",
+    initialData: "Other",
   });
 
   const handleTitleChange = (value) => {
@@ -78,6 +78,7 @@ export default function CreateTransactionForm({
     });
 
     setValidateErrors(errors);
+
     if (Object.keys(errors).length) return;
 
     const data = {
