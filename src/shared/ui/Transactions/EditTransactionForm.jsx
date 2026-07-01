@@ -1,11 +1,13 @@
 import { X, Check } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CreatableSelect from "react-select/creatable";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import { transactionsValidate, clearFieldError } from "../../utils/validate";
 import dayjs from "dayjs";
+import Input from "../Input";
 import Button from "../Button";
+import { useOptions } from "../../hooks/useOptions";
 import PropTypes from "prop-types";
 
 EditTransactionForm.propTypes = {
@@ -34,46 +36,48 @@ export default function EditTransactionForm({
   const [date, setDate] = useState(
     transaction.date ? dayjs(transaction.date).format("YYYY-MM-DD") : "",
   );
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [categoryOptions, setCategoryOptions] = useState([]);
   const [note, setNote] = useState(transaction.note);
   const [validateErrors, setValidateErrors] = useState({});
-  const [apiError, setApiError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const getCategories = async () => {
-      setIsLoading(true);
+  const {
+    selectedOption,
+    setSelectedOption,
+    allOptions,
+    isOptionsLoading,
+    optionsApiError,
+  } = useOptions({
+    queryKey: [transaction.id],
+    queryFn: async () => {
+      const response = await axiosInstance.get(
+        API_PATHS.TRANSACTIONS.GET_CATEGORIES_BY_TYPE(transaction.type),
+      );
 
-      try {
-        const response = await axiosInstance.get(
-          API_PATHS.TRANSACTIONS.GET_CATEGORIES_BY_TYPE(transaction.type),
-        );
+      return response.data;
+    },
+    initialData: transaction.category_id,
+  });
 
-        const normalizedOptions = response?.data?.map((o) => ({
-          label: o.name,
-          value: o.id,
-        }));
+  const handleTitleChange = (value) => {
+    setTitle(value);
+    clearFieldError("title", setValidateErrors);
+  };
 
-        setCategoryOptions(normalizedOptions || []);
+  const handleAmountChange = (value) => {
+    setAmount(value);
+    clearFieldError("amount", setValidateErrors);
+  };
 
-        setSelectedCategory(
-          normalizedOptions?.find((o) => o.value === transaction.category_id) ||
-            null,
-        );
-      } catch (err) {
-        console.error(err);
-        const message =
-          err?.response?.data?.message ||
-          "Something went wrong. Please try again";
-        setApiError(message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const handleNoteChange = (value) => setNote(value);
 
-    getCategories();
-  }, [transaction.id]);
+  const handleCategoryChange = (option) => {
+    setSelectedOption(option || null);
+    clearFieldError("selectedCategory", setValidateErrors);
+  };
+
+  const handleDateChange = (value) => {
+    setDate(value);
+    clearFieldError("date", setValidateErrors);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -81,7 +85,7 @@ export default function EditTransactionForm({
     const errors = transactionsValidate({
       title,
       amount,
-      selectedCategory,
+      selectedCategory: selectedOption,
       date,
     });
 
@@ -94,8 +98,8 @@ export default function EditTransactionForm({
       title: title.trim(),
       amount,
       date,
-      categoryId: selectedCategory?.isCustom ? null : selectedCategory?.value,
-      categoryName: selectedCategory?.isCustom ? selectedCategory?.label : null,
+      categoryId: selectedOption?.isCustom ? null : selectedOption?.value,
+      categoryName: selectedOption?.isCustom ? selectedOption?.label : null,
       note: note.trim(),
     };
 
@@ -106,15 +110,10 @@ export default function EditTransactionForm({
     <form onSubmit={handleSubmit} className="w-full flex flex-col gap-2">
       <div className="flex justify-between gap-2">
         <div className="w-full">
-          <input
+          <Input
             value={title}
-            onChange={(e) => {
-              setTitle(e.target.value);
-              clearFieldError("title", setValidateErrors);
-            }}
+            onChange={handleTitleChange}
             placeholder="Title"
-            autoComplete="off"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           {validateErrors.title && (
             <p className="text-red-500 italic text-xs mt-1">
@@ -124,18 +123,12 @@ export default function EditTransactionForm({
         </div>
 
         <div className="w-full">
-          <input
+          <Input
             value={amount}
-            onChange={(e) => {
-              setAmount(e.target.value);
-              clearFieldError("amount", setValidateErrors);
-            }}
-            placeholder="Amount"
+            onChange={handleAmountChange}
             type="number"
-            min="0.01"
+            placeholder="0.00"
             step="0.01"
-            autoComplete="off"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           {validateErrors.amount && (
             <p className="text-red-500 italic text-xs mt-1">
@@ -149,36 +142,28 @@ export default function EditTransactionForm({
         <div className="w-1/2">
           <CreatableSelect
             isClearable
-            value={selectedCategory}
-            options={categoryOptions}
-            onChange={(option) => {
-              setSelectedCategory(option || null);
-              clearFieldError("selectedCategory", setValidateErrors);
-            }}
+            value={selectedOption}
+            options={allOptions}
+            onChange={handleCategoryChange}
             getNewOptionData={(inputValue, label) => ({
               label: label.trim(),
               value: inputValue,
               isCustom: true,
             })}
-            isLoading={isLoading}
+            isLoading={isOptionsLoading}
           />
           {validateErrors.selectedCategory && (
             <p className="text-red-500 italic text-xs mt-1">
               {validateErrors.selectedCategory}
             </p>
           )}
+          {optionsApiError && (
+            <p className="text-red-500 italic">{optionsApiError}</p>
+          )}
         </div>
 
         <div className="w-1/2">
-          <input
-            value={date}
-            onChange={(e) => {
-              setDate(e.target.value);
-              clearFieldError("date", setValidateErrors);
-            }}
-            type="date"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
+          <Input value={date} onChange={handleDateChange} type="date" />
           {validateErrors.date && (
             <p className="text-red-500 italic text-xs mt-1">
               {validateErrors.date}
@@ -186,11 +171,12 @@ export default function EditTransactionForm({
           )}
         </div>
       </div>
-      <textarea
+      <Input
         value={note}
-        onChange={(e) => setNote(e.target.value)}
+        onChange={handleNoteChange}
         placeholder="Note"
-        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+        multiline
+        rows={2}
       />
 
       <div className="flex gap-4 justify-center mt-4">
@@ -200,10 +186,6 @@ export default function EditTransactionForm({
         <Button variant="icon" onClick={onCancel} disabled={isSaveEditLoading}>
           <X className="text-gray-700" />
         </Button>
-
-        {apiError && (
-          <p className="text-red-500 italic text-center">{apiError}</p>
-        )}
       </div>
     </form>
   );

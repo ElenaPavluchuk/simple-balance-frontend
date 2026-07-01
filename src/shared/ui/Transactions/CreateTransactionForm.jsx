@@ -1,15 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CreatableSelect from "react-select/creatable";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import { useAuth } from "../../context/auth/useAuth";
 import { transactionsValidate, clearFieldError } from "../../utils/validate";
-import { getErrorMessage } from "../../utils/getErrorMessage";
 import Button from "../Button";
+import Input from "../Input";
+import { useOptions } from "../../hooks/useOptions";
 import PropTypes from "prop-types";
 
 CreateTransactionForm.propTypes = {
-  type: PropTypes.oneOf(["income", "expense"]).isRequired,
+  type: PropTypes.oneOf(["INCOME", "EXPENSE"]).isRequired,
   onCreate: PropTypes.func.isRequired,
   isCreateLoading: PropTypes.bool,
 };
@@ -21,46 +22,28 @@ export default function CreateTransactionForm({
 }) {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [categoryOptions, setCategoryOptions] = useState([]);
   const [date, setDate] = useState("");
   const [note, setNote] = useState("");
   const [validateErrors, setValidateErrors] = useState({});
-  const [apiError, setApiError] = useState("");
-  const [isCategoriesLoading, setIsCategoriesLoading] = useState(false);
   const { user } = useAuth();
 
-  useEffect(() => {
-    const getCategories = async () => {
-      try {
-        setIsCategoriesLoading(true);
+  const {
+    selectedOption,
+    setSelectedOption,
+    allOptions,
+    isOptionsLoading,
+    optionsApiError,
+  } = useOptions({
+    queryKey: [type],
+    queryFn: async () => {
+      const response = await axiosInstance.get(
+        API_PATHS.TRANSACTIONS.GET_CATEGORIES_BY_TYPE(type),
+      );
 
-        const response = await axiosInstance.get(
-          API_PATHS.TRANSACTIONS.GET_CATEGORIES_BY_TYPE(type),
-        );
-
-        const normalizedOptions = response.data?.map((o) => ({
-          label: o.name,
-          value: o.id,
-        }));
-
-        setCategoryOptions(normalizedOptions ?? []);
-
-        const defaultCategory = normalizedOptions?.find(
-          (o) => o.label === "Other",
-        );
-
-        setSelectedCategory(defaultCategory || null);
-      } catch (err) {
-        console.error(err);
-        setApiError(getErrorMessage(err, "Categories not loaded"));
-      } finally {
-        setIsCategoriesLoading(false);
-      }
-    };
-
-    getCategories();
-  }, [type]);
+      return response.data;
+    },
+    initialData: "Other",
+  });
 
   const handleTitleChange = (value) => {
     setTitle(value);
@@ -74,28 +57,28 @@ export default function CreateTransactionForm({
 
   const handleNoteChange = (value) => setNote(value);
 
-  const handleChangeCategory = (option) => {
-    setSelectedCategory(option || null);
+  const handleCategoryChange = (option) => {
+    setSelectedOption(option || null);
     clearFieldError("selectedCategory", setValidateErrors);
   };
 
-  const handleChangeDate = (value) => {
+  const handleDateChange = (value) => {
     setDate(value);
     clearFieldError("date", setValidateErrors);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setApiError("");
 
     const errors = transactionsValidate({
       title,
       amount,
-      selectedCategory,
+      selectedCategory: selectedOption,
       date,
     });
 
     setValidateErrors(errors);
+
     if (Object.keys(errors).length) return;
 
     const data = {
@@ -105,8 +88,8 @@ export default function CreateTransactionForm({
       currencyId: user.base_currency_id,
       note: note.trim(),
       date,
-      categoryId: selectedCategory?.isCustom ? null : selectedCategory?.value,
-      categoryName: selectedCategory?.isCustom ? selectedCategory?.label : null,
+      categoryId: selectedOption?.isCustom ? null : selectedOption?.value,
+      categoryName: selectedOption?.isCustom ? selectedOption?.label : null,
     };
 
     onCreate(data);
@@ -115,13 +98,11 @@ export default function CreateTransactionForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div>
-        <label>Title</label>
-        <input
+        <Input
           value={title}
-          onChange={(e) => handleTitleChange(e.target.value)}
-          autoComplete="off"
+          onChange={handleTitleChange}
+          label="Title"
           placeholder="Add title"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
         />
         {validateErrors.title && (
           <p className="text-red-500 italic">{validateErrors.title}</p>
@@ -129,16 +110,13 @@ export default function CreateTransactionForm({
       </div>
 
       <div>
-        <label>Amount</label>
-        <input
-          type="number"
+        <Input
           value={amount}
-          onChange={(e) => handleAmountChange(e.target.value)}
-          min="0.01"
+          onChange={handleAmountChange}
+          type={"number"}
+          label="Amount"
+          placeholder="0.00"
           step="0.01"
-          autoComplete="off"
-          placeholder="0,00"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
         />
         {validateErrors.amount && (
           <p className="text-red-500 italic">{validateErrors.amount}</p>
@@ -149,31 +127,32 @@ export default function CreateTransactionForm({
         <label>Select category</label>
         <CreatableSelect
           isClearable
-          value={selectedCategory}
-          onChange={handleChangeCategory}
-          options={categoryOptions}
+          value={selectedOption}
+          onChange={handleCategoryChange}
+          options={allOptions}
           getNewOptionData={(inputValue, label) => ({
             label: label.trim(),
             value: inputValue,
             isCustom: true,
           })}
-          isLoading={isCategoriesLoading}
+          isLoading={isOptionsLoading}
         />
         {validateErrors.selectedCategory && (
           <p className="text-red-500 italic">
             {validateErrors.selectedCategory}
           </p>
         )}
-        {apiError && <p className="text-red-500 italic">{apiError}</p>}
+        {optionsApiError && (
+          <p className="text-red-500 italic">{optionsApiError}</p>
+        )}
       </div>
 
       <div>
-        <label>Select date</label>
-        <input
-          type="date"
+        <Input
           value={date}
-          onChange={(e) => handleChangeDate(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          onChange={handleDateChange}
+          type="date"
+          label="Select date"
         />
         {validateErrors.date && (
           <p className="text-red-500 italic">{validateErrors.date}</p>
@@ -181,13 +160,13 @@ export default function CreateTransactionForm({
       </div>
 
       <div>
-        <label>Note</label>
-        <textarea
+        <Input
           value={note}
-          onChange={(e) => handleNoteChange(e.target.value)}
-          autoComplete="off"
+          onChange={handleNoteChange}
+          label="Note"
           placeholder="Add note"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          multiline
+          rows={2}
         />
       </div>
 
