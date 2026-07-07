@@ -2,14 +2,11 @@ import { useState, useEffect } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import Select from "react-select";
-import dayjs from "dayjs";
 import { exchangeRatesValidate, clearFieldError } from "../../utils/validate";
-import toast, { Toaster } from "react-hot-toast";
 
-export default function GetRatesByBaseCurrencyCard() {
+export default function GetRatesByBaseCurrencyCard({ onGetRates }) {
   const [selectedBaseCurrency, setSelectedBaseCurrency] = useState(null);
   const [currencyOptions, setCurrencyOptions] = useState([]);
-  const [rates, setRates] = useState([]);
   const [validateErrors, setValidateErrors] = useState({});
 
   useEffect(() => {
@@ -46,7 +43,7 @@ export default function GetRatesByBaseCurrencyCard() {
     clearFieldError("selectedBaseCurrency", setValidateErrors);
   };
 
-  const getRatesByBaseCurrency = async () => {
+  const handleGetRates = () => {
     const errors = exchangeRatesValidate({
       selectedBaseCurrency,
     });
@@ -54,42 +51,7 @@ export default function GetRatesByBaseCurrencyCard() {
     setValidateErrors(errors);
     if (Object.keys(errors).length) return;
 
-    try {
-      const response = await axiosInstance.get(
-        API_PATHS.ADMINS.GET_EXCHANGE_RATES_BY_BASE_ID(
-          selectedBaseCurrency.value,
-        ),
-      );
-
-      setRates(response?.data?.rates);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const deleteRatesByDate = async (date) => {
-    if (!date) return;
-
-    const formattedDate = dayjs(date).format("YYYY-MM-DD");
-
-    try {
-      const response = await axiosInstance.delete(
-        API_PATHS.ADMINS.DELETE_EXCHANGE_RATES_BY_DATE(
-          selectedBaseCurrency.value,
-          formattedDate,
-        ),
-      );
-
-      setRates(
-        rates.filter(
-          (rate) =>
-            dayjs(rate.date).format("YYYY-MM-DD") !== response?.data?.date,
-        ),
-      );
-      toast.success(response?.data?.message);
-    } catch (err) {
-      console.error(err);
-    }
+    onGetRates(selectedBaseCurrency);
   };
 
   return (
@@ -112,40 +74,11 @@ export default function GetRatesByBaseCurrencyCard() {
       </div>
 
       <button
-        onClick={getRatesByBaseCurrency}
+        onClick={handleGetRates}
         className="px-5 py-2 border rounded mt-4"
       >
         Get rates
       </button>
-
-      <ul>
-        {rates.map((rate) => (
-          <li key={rate.date} className="my-8">
-            <div className="flex justify-between">
-              <p>{dayjs(rate.date).format("DD-MM-YYYY")}</p>
-              <button
-                onClick={() => deleteRatesByDate(rate.date)}
-                className="italic underline"
-              >
-                Delete
-              </button>
-            </div>
-            {rate.rates.map((r) => (
-              <div key={r.id} className="flex justify-around border p-3">
-                <p>
-                  <span>{r.target_symbol}</span>
-                  {r.target_code}
-                </p>
-                <p>{r.rate}</p>
-              </div>
-            ))}
-          </li>
-        ))}
-      </ul>
-
-      <div>
-        <Toaster position="top-center" />
-      </div>
     </div>
   );
 }

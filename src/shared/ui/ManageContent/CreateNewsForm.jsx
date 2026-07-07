@@ -29,7 +29,7 @@ export default function CreateNewsForm({ onSave, isLoading }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded shadow flex flex-col p-5 gap-4 w-md"
+      className="bg-white rounded shadow flex flex-col p-5 gap-4 w-full h-full"
     >
       <h3 className="font-semibold text-center">Add News</h3>
       <label>

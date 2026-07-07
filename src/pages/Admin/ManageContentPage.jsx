@@ -5,9 +5,11 @@ import axiosInstance from "../../shared/utils/axiosInstance";
 import { API_PATHS } from "../../shared/utils/apiPaths";
 import toast, { Toaster } from "react-hot-toast";
 import NewsList from "../../shared/ui/CurrenciesAndNews/NewsList";
+import dayjs from "dayjs";
 
 export default function ManageContenPage() {
   const [news, setNews] = useState([]);
+  const [rates, setRates] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
@@ -86,33 +88,98 @@ export default function ManageContenPage() {
 
   const handleCancelEdit = () => setEditingId(null);
 
-  return (
-    <div className="w-full h-full flex flex-row items-start justify-around gap-4 p-4 mt-10">
-      <div>
-        <CreateNewsForm isLoading={isLoading} onSave={handleAddNews} />
+  // rates
+  const getRatesByBaseCurrency = async (selectedBaseCurrency) => {
+    try {
+      const response = await axiosInstance.get(
+        API_PATHS.ADMINS.GET_EXCHANGE_RATES_BY_BASE_ID(
+          selectedBaseCurrency.value,
+        ),
+      );
 
-        <div className="mt-20 max-w-md">
-          <p>Our news: </p>
-          <ul>
-            {(news ?? []).map((item) => (
-              <NewsList
-                key={item?.id}
-                item={item}
-                onDelete={handleDeleteNews}
-                isEdit={editingId === item.id}
-                onEdit={setEditingId}
-                onSave={handleSaveEdit}
-                onCancel={handleCancelEdit}
-              />
-            ))}
-          </ul>
-        </div>
+      setRates(response?.data?.rates);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // const deleteRatesByDate = async (date) => {
+  //   if (!date) return;
+
+  //   const formattedDate = dayjs(date).format("YYYY-MM-DD");
+
+  //   try {
+  //     const response = await axiosInstance.delete(
+  //       API_PATHS.ADMINS.DELETE_EXCHANGE_RATES_BY_DATE(
+  //         selectedBaseCurrency.value,
+  //         formattedDate,
+  //       ),
+  //     );
+
+  //     setRates(
+  //       rates.filter(
+  //         (rate) =>
+  //           dayjs(rate.date).format("YYYY-MM-DD") !== response?.data?.date,
+  //       ),
+  //     );
+  //     toast.success(response?.data?.message);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
+  return (
+    <div className="grid grid-cols-2 gap-5">
+      <div className="bg-teal-200 grid-1">
+        <CreateNewsForm isLoading={isLoading} onSave={handleAddNews} />
       </div>
 
-      <ExchangeRatesToggle />
+      <div className="bg-rose-200 grid-1">
+        <ExchangeRatesToggle onGetRates={getRatesByBaseCurrency} />
+      </div>
 
-      <div>
-        <Toaster position="top-center" />
+      <div className="grid-1 bg-rose-200">
+        <p>Our news: </p>
+        <ul>
+          {(news ?? []).map((item) => (
+            <NewsList
+              key={item?.id}
+              item={item}
+              onDelete={handleDeleteNews}
+              isEdit={editingId === item.id}
+              onEdit={setEditingId}
+              onSave={handleSaveEdit}
+              onCancel={handleCancelEdit}
+            />
+          ))}
+        </ul>
+      </div>
+
+      <div className="grid-1">
+        {rates.length > 0 && <p>Our rates: </p>}
+        {rates.map((rate) => (
+          <div key={rate.date} className="bg-rose-500">
+            <div className="flex justify-between">
+              <p>{dayjs(rate.date).format("DD-MM-YYYY")}</p>
+              <button
+                // onClick={() => deleteRatesByDate(rate.date)}
+                className="italic underline"
+              >
+                Delete
+              </button>
+            </div>
+
+            {rate.rates.map((r) => (
+              <div key={r.id} className="flex justify-around border p-3">
+                <p>
+                  <span>{r.target_symbol}</span>
+                  {r.target_code}
+                </p>
+                <p>{r.rate}</p>
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
     </div>
   );

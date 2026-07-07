@@ -7,10 +7,11 @@ const cardTypes = {
   get: "get",
 };
 
-export default function ExchangeRatesToggle() {
+export default function ExchangeRatesToggle({ onGetRates }) {
   const [type, setType] = useState(cardTypes.add);
+
   return (
-    <div className="max-w-md w-full bg-white p-6 rounded shadow">
+    <div className="w-full h-full bg-white p-6 rounded shadow">
       <p className="text-center font-semibold my-3">Exchange Rates</p>
       <div className="flex justify-center gap-4 mb-6">
         {[
@@ -42,7 +43,7 @@ export default function ExchangeRatesToggle() {
       {type === cardTypes.add ? (
         <CreateExchangeRateForm />
       ) : (
-        <GetRatesByBaseCurrencyCard />
+        <GetRatesByBaseCurrencyCard onGetRates={onGetRates} />
       )}
     </div>
   );
