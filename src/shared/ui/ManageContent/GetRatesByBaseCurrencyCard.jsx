@@ -55,27 +55,29 @@ export default function GetRatesByBaseCurrencyCard({ onGetRates }) {
   };
 
   return (
-    <div>
-      <h2 className="font-semibold mb-4">
-        Get exchange rates by base currency
-      </h2>
+    <div className="flex flex-col min-h-80">
       <div>
-        <label className="text-gray-500 text-sm">Select base currency:</label>
-        <Select
-          value={selectedBaseCurrency}
-          onChange={handleChangeCurrency}
-          options={currencyOptions}
-        />
-        {validateErrors.selectedBaseCurrency && (
-          <p className="text-red-500 italic">
-            {validateErrors.selectedBaseCurrency}
-          </p>
-        )}
+        <h2 className="font-semibold mb-4">
+          Get exchange rates by base currency
+        </h2>
+        <div>
+          <label className="text-gray-500 text-sm">Select base currency:</label>
+          <Select
+            value={selectedBaseCurrency}
+            onChange={handleChangeCurrency}
+            options={currencyOptions}
+          />
+          {validateErrors.selectedBaseCurrency && (
+            <p className="text-red-500 italic">
+              {validateErrors.selectedBaseCurrency}
+            </p>
+          )}
+        </div>
       </div>
 
       <button
         onClick={handleGetRates}
-        className="px-5 py-2 border rounded mt-4"
+        className="px-5 py-2 border rounded mt-auto"
       >
         Get rates
       </button>

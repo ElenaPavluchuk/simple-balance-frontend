@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 export default function ManageContenPage() {
   const [news, setNews] = useState([]);
   const [rates, setRates] = useState([]);
+  const [baseCurrency, setBaseCurrency] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
@@ -97,36 +98,38 @@ export default function ManageContenPage() {
         ),
       );
 
-      setRates(response?.data?.rates);
+      setRates(response.data?.rates);
+      setBaseCurrency(response.data?.base_currency_id);
     } catch (err) {
       console.error(err);
     }
   };
 
-  // const deleteRatesByDate = async (date) => {
-  //   if (!date) return;
+  const deleteRatesByDate = async (date) => {
+    if (!date) return;
 
-  //   const formattedDate = dayjs(date).format("YYYY-MM-DD");
+    const formattedDate = dayjs(date).format("YYYY-MM-DD");
 
-  //   try {
-  //     const response = await axiosInstance.delete(
-  //       API_PATHS.ADMINS.DELETE_EXCHANGE_RATES_BY_DATE(
-  //         selectedBaseCurrency.value,
-  //         formattedDate,
-  //       ),
-  //     );
+    try {
+      const response = await axiosInstance.delete(
+        API_PATHS.ADMINS.DELETE_EXCHANGE_RATES_BY_DATE(
+          baseCurrency,
+          formattedDate,
+        ),
+      );
 
-  //     setRates(
-  //       rates.filter(
-  //         (rate) =>
-  //           dayjs(rate.date).format("YYYY-MM-DD") !== response?.data?.date,
-  //       ),
-  //     );
-  //     toast.success(response?.data?.message);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
+      setRates(
+        rates.filter(
+          (rate) =>
+            dayjs(rate.date).format("YYYY-MM-DD") !== response?.data?.date,
+        ),
+      );
+
+      toast.success(response?.data?.message);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="grid grid-cols-2 gap-5">
@@ -138,7 +141,7 @@ export default function ManageContenPage() {
         <ExchangeRatesToggle onGetRates={getRatesByBaseCurrency} />
       </div>
 
-      <div className="grid-1 bg-rose-200">
+      <div className="grid-1">
         <p>Our news: </p>
         <ul>
           {(news ?? []).map((item) => (
@@ -158,11 +161,11 @@ export default function ManageContenPage() {
       <div className="grid-1">
         {rates.length > 0 && <p>Our rates: </p>}
         {rates.map((rate) => (
-          <div key={rate.date} className="bg-rose-500">
+          <div key={rate.date} className="bg-white mb-2 rounded">
             <div className="flex justify-between">
               <p>{dayjs(rate.date).format("DD-MM-YYYY")}</p>
               <button
-                // onClick={() => deleteRatesByDate(rate.date)}
+                onClick={() => deleteRatesByDate(rate.date)}
                 className="italic underline"
               >
                 Delete
