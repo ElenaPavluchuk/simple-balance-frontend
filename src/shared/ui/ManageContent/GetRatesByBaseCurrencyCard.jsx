@@ -1,57 +1,44 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import Select from "react-select";
+import { useOptions } from "../../hooks/useOptions";
 import { exchangeRatesValidate, clearFieldError } from "../../utils/validate";
 
 export default function GetRatesByBaseCurrencyCard({ onGetRates }) {
-  const [selectedBaseCurrency, setSelectedBaseCurrency] = useState(null);
-  const [currencyOptions, setCurrencyOptions] = useState([]);
   const [validateErrors, setValidateErrors] = useState({});
+  const {
+    selectedOption,
+    setSelectedOption,
+    allOptions,
+    isOptionsLoading,
+    optionsApiError,
+  } = useOptions({
+    queryKey: [],
+    queryFn: async () => {
+      const response = await axiosInstance.get(
+        API_PATHS.CURRENCIES.GET_CURRENCIES,
+      );
 
-  useEffect(() => {
-    const getCurrencyOptions = async () => {
-      try {
-        const response = await axiosInstance.get(
-          API_PATHS.CURRENCIES.GET_CURRENCIES,
-        );
-
-        const normalizedOptions = response?.data?.map((o) => ({
-          label: o.code,
-          value: o.id,
-        }));
-
-        setCurrencyOptions(normalizedOptions || []);
-
-        const defaultCurrency = normalizedOptions?.find(
-          (c) => c.label === "USD",
-        );
-
-        if (defaultCurrency) {
-          setSelectedBaseCurrency(defaultCurrency);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    getCurrencyOptions();
-  }, []);
+      return response.data;
+    },
+    initialData: "USD",
+  });
 
   const handleChangeCurrency = (option) => {
-    setSelectedBaseCurrency(option || null);
+    setSelectedOption(option || null);
     clearFieldError("selectedBaseCurrency", setValidateErrors);
   };
 
   const handleGetRates = () => {
     const errors = exchangeRatesValidate({
-      selectedBaseCurrency,
+      selectedBaseCurrency: selectedOption,
     });
 
     setValidateErrors(errors);
     if (Object.keys(errors).length) return;
 
-    onGetRates(selectedBaseCurrency);
+    onGetRates(selectedOption);
   };
 
   return (
@@ -63,14 +50,18 @@ export default function GetRatesByBaseCurrencyCard({ onGetRates }) {
         <div>
           <label className="text-gray-500 text-sm">Select base currency:</label>
           <Select
-            value={selectedBaseCurrency}
+            value={selectedOption}
             onChange={handleChangeCurrency}
-            options={currencyOptions}
+            options={allOptions}
+            isLoading={isOptionsLoading}
           />
           {validateErrors.selectedBaseCurrency && (
             <p className="text-red-500 italic">
               {validateErrors.selectedBaseCurrency}
             </p>
+          )}
+          {optionsApiError && (
+            <p className="text-red-500 italic">{optionsApiError}</p>
           )}
         </div>
       </div>

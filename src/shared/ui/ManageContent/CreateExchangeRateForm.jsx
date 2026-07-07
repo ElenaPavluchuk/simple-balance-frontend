@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import Select from "react-select";
+import { useOptions } from "../../hooks/useOptions";
 import { exchangeRatesValidate, clearFieldError } from "../../utils/validate";
 import dayjs from "dayjs";
 
@@ -9,49 +10,36 @@ export default function CreateExchangeRateForm({
   onCreateRates,
   isCreateLoading,
 }) {
-  const [selectedBaseCurrency, setSelectedBaseCurrency] = useState(null);
-  const [currencyOptions, setCurrencyOptions] = useState([]);
   const [date, setDate] = useState("");
   const [rates, setRates] = useState({});
   const [validateErrors, setValidateErrors] = useState({});
 
-  useEffect(() => {
-    const getCurrencyOptions = async () => {
-      try {
-        const response = await axiosInstance.get(
-          API_PATHS.CURRENCIES.GET_CURRENCIES,
-        );
+  const {
+    selectedOption,
+    setSelectedOption,
+    allOptions,
+    isOptionsLoading,
+    optionsApiError,
+  } = useOptions({
+    queryKey: [],
+    queryFn: async () => {
+      const response = await axiosInstance.get(
+        API_PATHS.CURRENCIES.GET_CURRENCIES,
+      );
 
-        const normalizedOptions = response?.data?.map((o) => ({
-          label: o.code,
-          value: o.id,
-        }));
-
-        setCurrencyOptions(normalizedOptions || []);
-
-        const defaultCurrency = normalizedOptions?.find(
-          (c) => c.label === "USD",
-        );
-
-        if (defaultCurrency) {
-          setSelectedBaseCurrency(defaultCurrency);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    getCurrencyOptions();
-  }, []);
+      return response.data;
+    },
+    initialData: "USD",
+  });
 
   const handleChangeCurrency = (option) => {
-    setSelectedBaseCurrency(option || null);
+    setSelectedOption(option || null);
     setRates({});
     clearFieldError("selectedBaseCurrency", setValidateErrors);
   };
 
-  const targetCurrencies = currencyOptions.filter(
-    (option) => option.value !== selectedBaseCurrency.value,
+  const targetCurrencies = allOptions.filter(
+    (option) => option?.value !== selectedOption?.value,
   );
 
   const handleRateChange = (targetId, value) => {
@@ -67,7 +55,7 @@ export default function CreateExchangeRateForm({
 
     const errors = exchangeRatesValidate(
       {
-        selectedBaseCurrency,
+        selectedBaseCurrency: selectedOption,
         date,
         rates,
       },
@@ -78,7 +66,7 @@ export default function CreateExchangeRateForm({
     if (Object.keys(errors).length) return;
 
     const data = {
-      baseCurrencyId: selectedBaseCurrency.value,
+      baseCurrencyId: selectedOption.value,
       date,
       rates: Object.entries(rates).map(([targetCurrencyId, value]) => ({
         targetCurrencyId: parseInt(targetCurrencyId),
@@ -96,14 +84,18 @@ export default function CreateExchangeRateForm({
       <div>
         <label className="text-gray-500 text-sm">Select base currency:</label>
         <Select
-          value={selectedBaseCurrency}
+          value={selectedOption}
           onChange={handleChangeCurrency}
-          options={currencyOptions}
+          options={allOptions}
+          isLoading={isOptionsLoading}
         />
         {validateErrors.selectedBaseCurrency && (
           <p className="text-red-500 italic">
             {validateErrors.selectedBaseCurrency}
           </p>
+        )}
+        {optionsApiError && (
+          <p className="text-red-500 italic">{optionsApiError}</p>
         )}
       </div>
 
@@ -130,9 +122,7 @@ export default function CreateExchangeRateForm({
           <div key={currency.value}>
             <label className="text-gray-500 text-sm">
               From {currency.label}{" "}
-              <span className="text-gray-500">
-                to {selectedBaseCurrency?.label}
-              </span>
+              <span className="text-gray-500">to {selectedOption?.label}</span>
             </label>
             <input
               type="number"
