@@ -2,16 +2,17 @@ import { useState, useEffect } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import Select from "react-select";
-import toast, { Toaster } from "react-hot-toast";
 import { exchangeRatesValidate, clearFieldError } from "../../utils/validate";
 import dayjs from "dayjs";
 
-export default function CreateExchangeRateForm() {
+export default function CreateExchangeRateForm({
+  onCreateRates,
+  isCreateLoading,
+}) {
   const [selectedBaseCurrency, setSelectedBaseCurrency] = useState(null);
   const [currencyOptions, setCurrencyOptions] = useState([]);
   const [date, setDate] = useState("");
   const [rates, setRates] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
   const [validateErrors, setValidateErrors] = useState({});
 
   useEffect(() => {
@@ -85,27 +86,12 @@ export default function CreateExchangeRateForm() {
       })),
     };
 
-    try {
-      setIsLoading(true);
-      const response = await axiosInstance.post(
-        API_PATHS.ADMINS.ADD_EXCHANGE_RATES,
-        data,
-      );
-      toast.success(response?.data?.message);
-
-      setRates({});
-      setDate("");
-    } catch (err) {
-      console.error(err);
-      toast.error(
-        err?.response?.data?.message || "Something went wrong, pleae try again",
-      );
-    } finally {
-      setIsLoading(false);
-    }
+    onCreateRates(data);
+    setRates({});
+    setDate("");
   };
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="flex flex-col min-h-125">
       <h2 className="font-semibold mb-4">Add exchange rates</h2>
       <div>
         <label className="text-gray-500 text-sm">Select base currency:</label>
@@ -165,16 +151,12 @@ export default function CreateExchangeRateForm() {
       </div>
 
       <button
-        className="px-4 py-3 border rounded my-4"
+        className="px-4 py-3 border rounded mt-auto"
         type="submit"
-        disabled={isLoading}
+        disabled={isCreateLoading}
       >
-        {isLoading ? "Loading..." : "Add rates"}
+        {isCreateLoading ? "Loading..." : "Add rates"}
       </button>
-
-      <div>
-        <Toaster position="top-center" />
-      </div>
     </form>
   );
 }

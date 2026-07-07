@@ -7,7 +7,7 @@ const cardTypes = {
   get: "get",
 };
 
-export default function ExchangeRatesToggle({ onGetRates }) {
+export default function ExchangeRatesToggle({ onGetRates, onCreateRates }) {
   const [type, setType] = useState(cardTypes.add);
 
   return (
@@ -41,7 +41,7 @@ export default function ExchangeRatesToggle({ onGetRates }) {
         ))}
       </div>
       {type === cardTypes.add ? (
-        <CreateExchangeRateForm />
+        <CreateExchangeRateForm onCreateRates={onCreateRates} />
       ) : (
         <GetRatesByBaseCurrencyCard onGetRates={onGetRates} />
       )}

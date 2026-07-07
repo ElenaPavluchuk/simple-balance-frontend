@@ -6,6 +6,7 @@ import { API_PATHS } from "../../shared/utils/apiPaths";
 import toast, { Toaster } from "react-hot-toast";
 import NewsList from "../../shared/ui/CurrenciesAndNews/NewsList";
 import dayjs from "dayjs";
+import { getErrorMessage } from "../../shared/utils/getErrorMessage";
 
 export default function ManageContenPage() {
   const [news, setNews] = useState([]);
@@ -13,6 +14,7 @@ export default function ManageContenPage() {
   const [baseCurrency, setBaseCurrency] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [isCreateRateLoading, setIsCreateRateLoading] = useState(false);
 
   useEffect(() => {
     const getNews = async () => {
@@ -90,6 +92,25 @@ export default function ManageContenPage() {
   const handleCancelEdit = () => setEditingId(null);
 
   // rates
+
+  const handleCreateRate = async (data) => {
+    setIsCreateRateLoading(true);
+
+    try {
+      const response = await axiosInstance.post(
+        API_PATHS.ADMINS.ADD_EXCHANGE_RATES,
+        data,
+      );
+
+      toast.success(response.data?.message);
+    } catch (err) {
+      console.error(err);
+      toast.error(getErrorMessage(err));
+    } finally {
+      setIsCreateRateLoading(false);
+    }
+  };
+
   const getRatesByBaseCurrency = async (selectedBaseCurrency) => {
     try {
       const response = await axiosInstance.get(
@@ -138,7 +159,11 @@ export default function ManageContenPage() {
       </div>
 
       <div className="bg-rose-200 grid-1">
-        <ExchangeRatesToggle onGetRates={getRatesByBaseCurrency} />
+        <ExchangeRatesToggle
+          onGetRates={getRatesByBaseCurrency}
+          onCreateRates={handleCreateRate}
+          isCreateLoading={isCreateRateLoading}
+        />
       </div>
 
       <div className="grid-1">
