@@ -183,8 +183,16 @@ export default function ManageContenPage() {
         </ul>
       </div>
 
-      <div className="grid-1">
-        {rates.length > 0 && <p>Our rates: </p>}
+      <div
+        className={`grid-1 ${rates.length === 0 && "border rounded border-dashed p-2"}`}
+      >
+        <p>Our rates: </p>
+        {rates.length === 0 && (
+          <div className="h-125 flex items-center justify-center">
+            <p className="italic">Click "Get Rates" and get actually rates</p>
+          </div>
+        )}
+
         {rates.map((rate) => (
           <div key={rate.date} className="bg-white mb-2 rounded">
             <div className="flex justify-between">
