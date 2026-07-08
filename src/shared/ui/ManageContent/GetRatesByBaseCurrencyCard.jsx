@@ -4,8 +4,18 @@ import { API_PATHS } from "../../utils/apiPaths";
 import Select from "react-select";
 import { useOptions } from "../../hooks/useOptions";
 import { exchangeRatesValidate, clearFieldError } from "../../utils/validate";
+import Button from "../Button";
+import PropTypes from "prop-types";
 
-export default function GetRatesByBaseCurrencyCard({ onGetRates }) {
+GetRatesByBaseCurrencyCard.propTypes = {
+  onGetRates: PropTypes.func.isRequired,
+  isGetLoading: PropTypes.bool.isRequired,
+};
+
+export default function GetRatesByBaseCurrencyCard({
+  onGetRates,
+  isGetLoading,
+}) {
   const [validateErrors, setValidateErrors] = useState({});
   const {
     selectedOption,
@@ -25,7 +35,7 @@ export default function GetRatesByBaseCurrencyCard({ onGetRates }) {
     initialData: "USD",
   });
 
-  const handleChangeCurrency = (option) => {
+  const handleCurrencyChange = (option) => {
     setSelectedOption(option || null);
     clearFieldError("selectedBaseCurrency", setValidateErrors);
   };
@@ -51,7 +61,7 @@ export default function GetRatesByBaseCurrencyCard({ onGetRates }) {
           <label className="text-gray-500 text-sm">Select base currency:</label>
           <Select
             value={selectedOption}
-            onChange={handleChangeCurrency}
+            onChange={handleCurrencyChange}
             options={allOptions}
             isLoading={isOptionsLoading}
           />
@@ -66,12 +76,14 @@ export default function GetRatesByBaseCurrencyCard({ onGetRates }) {
         </div>
       </div>
 
-      <button
+      <Button
         onClick={handleGetRates}
-        className="px-5 py-2 border rounded mt-auto"
+        disabled={isGetLoading}
+        variant="primary"
+        className="mt-auto"
       >
-        Get rates
-      </button>
+        {isGetLoading ? "Loading..." : "Get rates"}
+      </Button>
     </div>
   );
 }

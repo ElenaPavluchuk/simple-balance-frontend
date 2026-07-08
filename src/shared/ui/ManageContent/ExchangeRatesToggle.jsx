@@ -1,28 +1,41 @@
 import { useState } from "react";
 import CreateExchangeRateForm from "./CreateExchangeRateForm";
 import GetRatesByBaseCurrencyCard from "./GetRatesByBaseCurrencyCard";
+import PropTypes from "prop-types";
 
-const cardTypes = {
-  add: "add",
-  get: "get",
+ExchangeRatesToggle.propTypes = {
+  onGetRates: PropTypes.func.isRequired,
+  onCreateRates: PropTypes.func.isRequired,
+  isCreateLoading: PropTypes.bool.isRequired,
+  isGetLoading: PropTypes.bool.isRequired,
 };
 
-export default function ExchangeRatesToggle({ onGetRates, onCreateRates }) {
-  const [type, setType] = useState(cardTypes.add);
+const CARD_TYPES = {
+  ADD: "ADD",
+  GET: "GET",
+};
+
+export default function ExchangeRatesToggle({
+  onGetRates,
+  onCreateRates,
+  isCreateLoading,
+  isGetLoading,
+}) {
+  const [type, setType] = useState(CARD_TYPES.ADD);
 
   return (
     <div className="w-full h-full bg-white p-6 rounded shadow">
       <p className="text-center font-semibold my-3">Exchange Rates</p>
       <div className="flex justify-center gap-4 mb-6">
         {[
-          { label: "Add rates", value: cardTypes.add },
-          { label: "Get rates", value: cardTypes.get },
+          { LABEL: "Add rates", VALUE: CARD_TYPES.ADD },
+          { LABEL: "Get rates", VALUE: CARD_TYPES.GET },
         ].map((item) => (
-          <label key={item.value} className="flex items-center cursor-pointer">
+          <label key={item.VALUE} className="flex items-center cursor-pointer">
             <input
               type="radio"
-              value={item.value}
-              checked={type === item.value}
+              value={item.VALUE}
+              checked={type === item.VALUE}
               onChange={(e) => setType(e.target.value)}
               className="hidden peer"
             />
@@ -30,20 +43,27 @@ export default function ExchangeRatesToggle({ onGetRates, onCreateRates }) {
             <span
               className={`px-6 py-2 rounded-lg text-sm font-medium transition-all
               ${
-                type === item.value
+                type === item.VALUE
                   ? "bg-green-500 text-white shadow-md"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
-              {item.label}
+              {item.LABEL}
             </span>
           </label>
         ))}
       </div>
-      {type === cardTypes.add ? (
-        <CreateExchangeRateForm onCreateRates={onCreateRates} />
+
+      {type === CARD_TYPES.ADD ? (
+        <CreateExchangeRateForm
+          onCreateRates={onCreateRates}
+          isCreateLoading={isCreateLoading}
+        />
       ) : (
-        <GetRatesByBaseCurrencyCard onGetRates={onGetRates} />
+        <GetRatesByBaseCurrencyCard
+          onGetRates={onGetRates}
+          isGetLoading={isGetLoading}
+        />
       )}
     </div>
   );

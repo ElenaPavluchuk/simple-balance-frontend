@@ -15,6 +15,8 @@ export default function ManageContenPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [isCreateRateLoading, setIsCreateRateLoading] = useState(false);
+  const [isGetRateLoading, setIsGetRateLoading] = useState(false);
+  const [isDeleteRateLoading, setIsDeleteRateLoading] = useState(false);
 
   useEffect(() => {
     const getNews = async () => {
@@ -111,7 +113,11 @@ export default function ManageContenPage() {
     }
   };
 
-  const getRatesByBaseCurrency = async (selectedBaseCurrency) => {
+  const handleGetRatesByBaseCurrency = async (selectedBaseCurrency) => {
+    if (!selectedBaseCurrency) return;
+
+    setIsGetRateLoading(true);
+
     try {
       const response = await axiosInstance.get(
         API_PATHS.ADMINS.GET_EXCHANGE_RATES_BY_BASE_ID(
@@ -123,13 +129,18 @@ export default function ManageContenPage() {
       setBaseCurrency(response.data?.base_currency_id);
     } catch (err) {
       console.error(err);
+      toast.error(getErrorMessage(err));
+    } finally {
+      setIsGetRateLoading(false);
     }
   };
 
-  const deleteRatesByDate = async (date) => {
+  const handleDeleteRatesByDate = async (date) => {
     if (!date) return;
 
     const formattedDate = dayjs(date).format("YYYY-MM-DD");
+
+    setIsDeleteRateLoading(true);
 
     try {
       const response = await axiosInstance.delete(
@@ -142,13 +153,16 @@ export default function ManageContenPage() {
       setRates(
         rates.filter(
           (rate) =>
-            dayjs(rate.date).format("YYYY-MM-DD") !== response?.data?.date,
+            dayjs(rate.date).format("YYYY-MM-DD") !== response.data?.date,
         ),
       );
 
-      toast.success(response?.data?.message);
+      toast.success(response.data?.message);
     } catch (err) {
       console.error(err);
+      toast.error(getErrorMessage(err));
+    } finally {
+      setIsDeleteRateLoading(false);
     }
   };
 
@@ -160,9 +174,10 @@ export default function ManageContenPage() {
 
       <div className="bg-rose-200 grid-1">
         <ExchangeRatesToggle
-          onGetRates={getRatesByBaseCurrency}
+          onGetRates={handleGetRatesByBaseCurrency}
           onCreateRates={handleCreateRate}
           isCreateLoading={isCreateRateLoading}
+          isGetLoading={isGetRateLoading}
         />
       </div>
 
@@ -198,10 +213,11 @@ export default function ManageContenPage() {
             <div className="flex justify-between">
               <p>{dayjs(rate.date).format("DD-MM-YYYY")}</p>
               <button
-                onClick={() => deleteRatesByDate(rate.date)}
+                onClick={() => handleDeleteRatesByDate(rate.date)}
+                disabled={isDeleteRateLoading}
                 className="italic underline"
               >
-                Delete
+                {isDeleteRateLoading ? "Loading..." : "Delete"}
               </button>
             </div>
 
