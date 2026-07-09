@@ -9,6 +9,7 @@ Input.propTypes = {
   placeholder: PropTypes.string,
   type: PropTypes.oneOf(["text", "number", "password", "date"]),
   step: PropTypes.string,
+  max: PropTypes.string,
   multiline: PropTypes.bool,
   rows: PropTypes.number,
 };
@@ -22,6 +23,7 @@ export default function Input({
   step,
   multiline = false,
   rows = 4,
+  max,
 }) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -48,6 +50,7 @@ export default function Input({
             placeholder={placeholder}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             step={step}
+            max={max}
           />
 
           {type === "password" && (

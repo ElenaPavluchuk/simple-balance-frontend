@@ -9,17 +9,25 @@ export default function NewsList({
   onSave,
   onCancel,
   hideBtn,
+  isDeleteNewsLoading,
+  isUpdateNewsLoading,
 }) {
   return (
     <li>
       {isEdit ? (
-        <EditNewsForm item={item} onSave={onSave} onCancel={onCancel} />
+        <EditNewsForm
+          item={item}
+          onSave={onSave}
+          onCancel={onCancel}
+          isUpdateNewsLoading={isUpdateNewsLoading}
+        />
       ) : (
         <NewsCard
           item={item}
           onDelete={onDelete}
           onEdit={onEdit}
           hideBtn={hideBtn}
+          isDeleteNewsLoading={isDeleteNewsLoading}
         />
       )}
     </li>

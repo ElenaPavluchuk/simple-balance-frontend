@@ -1,56 +1,53 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import Select from "react-select";
-import toast, { Toaster } from "react-hot-toast";
+import { useOptions } from "../../hooks/useOptions";
 import { exchangeRatesValidate, clearFieldError } from "../../utils/validate";
 import dayjs from "dayjs";
+import Button from "../Button";
+import Input from "../Input";
+import PropTypes from "prop-types";
 
-export default function CreateExchangeRateForm() {
-  const [selectedBaseCurrency, setSelectedBaseCurrency] = useState(null);
-  const [currencyOptions, setCurrencyOptions] = useState([]);
+CreateExchangeRateForm.propTypes = {
+  onCreateRates: PropTypes.func.isRequired,
+  isCreateLoading: PropTypes.bool.isRequired,
+};
+
+export default function CreateExchangeRateForm({
+  onCreateRates,
+  isCreateLoading,
+}) {
   const [date, setDate] = useState("");
   const [rates, setRates] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
   const [validateErrors, setValidateErrors] = useState({});
 
-  useEffect(() => {
-    const getCurrencyOptions = async () => {
-      try {
-        const response = await axiosInstance.get(
-          API_PATHS.CURRENCIES.GET_CURRENCIES,
-        );
+  const {
+    selectedOption,
+    setSelectedOption,
+    allOptions,
+    isOptionsLoading,
+    optionsApiError,
+  } = useOptions({
+    queryKey: [],
+    queryFn: async () => {
+      const response = await axiosInstance.get(
+        API_PATHS.CURRENCIES.GET_CURRENCIES,
+      );
 
-        const normalizedOptions = response?.data?.map((o) => ({
-          label: o.code,
-          value: o.id,
-        }));
+      return response.data;
+    },
+    initialData: "USD",
+  });
 
-        setCurrencyOptions(normalizedOptions || []);
-
-        const defaultCurrency = normalizedOptions?.find(
-          (c) => c.label === "USD",
-        );
-
-        if (defaultCurrency) {
-          setSelectedBaseCurrency(defaultCurrency);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    getCurrencyOptions();
-  }, []);
-
-  const handleChangeCurrency = (option) => {
-    setSelectedBaseCurrency(option || null);
+  const handleCurrencyChange = (option) => {
+    setSelectedOption(option || null);
     setRates({});
     clearFieldError("selectedBaseCurrency", setValidateErrors);
   };
 
-  const targetCurrencies = currencyOptions.filter(
-    (option) => option.value !== selectedBaseCurrency.value,
+  const targetCurrencies = allOptions.filter(
+    (option) => option?.value !== selectedOption?.value,
   );
 
   const handleRateChange = (targetId, value) => {
@@ -61,12 +58,17 @@ export default function CreateExchangeRateForm() {
     clearFieldError(targetId, setValidateErrors);
   };
 
+  const handleDateChange = (e) => {
+    setDate(e);
+    clearFieldError("date", setValidateErrors);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const errors = exchangeRatesValidate(
       {
-        selectedBaseCurrency,
+        selectedBaseCurrency: selectedOption,
         date,
         rates,
       },
@@ -77,61 +79,48 @@ export default function CreateExchangeRateForm() {
     if (Object.keys(errors).length) return;
 
     const data = {
-      baseCurrencyId: selectedBaseCurrency.value,
+      baseCurrencyId: selectedOption.value,
       date,
       rates: Object.entries(rates).map(([targetCurrencyId, value]) => ({
         targetCurrencyId: parseInt(targetCurrencyId),
-        value: parseFloat(value),
+        value: value,
       })),
     };
 
-    try {
-      setIsLoading(true);
-      const response = await axiosInstance.post(
-        API_PATHS.ADMINS.ADD_EXCHANGE_RATES,
-        data,
-      );
-      toast.success(response?.data?.message);
+    onCreateRates(data);
 
-      setRates({});
-      setDate("");
-    } catch (err) {
-      console.error(err);
-      toast.error(
-        err?.response?.data?.message || "Something went wrong, pleae try again",
-      );
-    } finally {
-      setIsLoading(false);
-    }
+    setRates({});
+    setDate("");
   };
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="flex flex-col min-h-125">
       <h2 className="font-semibold mb-4">Add exchange rates</h2>
       <div>
         <label className="text-gray-500 text-sm">Select base currency:</label>
         <Select
-          value={selectedBaseCurrency}
-          onChange={handleChangeCurrency}
-          options={currencyOptions}
+          value={selectedOption}
+          onChange={handleCurrencyChange}
+          options={allOptions}
+          isLoading={isOptionsLoading}
         />
         {validateErrors.selectedBaseCurrency && (
           <p className="text-red-500 italic">
             {validateErrors.selectedBaseCurrency}
           </p>
         )}
+        {optionsApiError && (
+          <p className="text-red-500 italic">{optionsApiError}</p>
+        )}
       </div>
 
       <div className="mt-4">
-        <label className="text-gray-500 text-sm">Date:</label>
-        <input
-          type="date"
+        <Input
           value={date}
-          onChange={(e) => {
-            setDate(e.target.value);
-            clearFieldError("date", setValidateErrors);
-          }}
-          className="w-full border border-gray-300 rounded px-3 py-2"
+          type="date"
+          onChange={handleDateChange}
           max={dayjs().format("YYYY-MM-DD")}
+          label="Date: "
         />
         {validateErrors.date && (
           <p className="text-red-500 italic">{validateErrors.date}</p>
@@ -144,9 +133,7 @@ export default function CreateExchangeRateForm() {
           <div key={currency.value}>
             <label className="text-gray-500 text-sm">
               From {currency.label}{" "}
-              <span className="text-gray-500">
-                to {selectedBaseCurrency?.label}
-              </span>
+              <span className="text-gray-500">to {selectedOption?.label}</span>
             </label>
             <input
               type="number"
@@ -164,17 +151,14 @@ export default function CreateExchangeRateForm() {
         ))}
       </div>
 
-      <button
-        className="px-4 py-3 border rounded my-4"
+      <Button
         type="submit"
-        disabled={isLoading}
+        disabled={isCreateLoading}
+        variant="primary"
+        className="mt-auto"
       >
-        {isLoading ? "Loading..." : "Add rates"}
-      </button>
-
-      <div>
-        <Toaster position="top-center" />
-      </div>
+        {isCreateLoading ? "Loading..." : "Add rates"}
+      </Button>
     </form>
   );
 }

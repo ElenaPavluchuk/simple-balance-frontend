@@ -5,33 +5,52 @@ import axiosInstance from "../../shared/utils/axiosInstance";
 import { API_PATHS } from "../../shared/utils/apiPaths";
 import toast, { Toaster } from "react-hot-toast";
 import NewsList from "../../shared/ui/CurrenciesAndNews/NewsList";
+import dayjs from "dayjs";
+import { getErrorMessage } from "../../shared/utils/getErrorMessage";
 
 export default function ManageContenPage() {
   const [news, setNews] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [rates, setRates] = useState([]);
+  const [baseCurrency, setBaseCurrency] = useState("");
+  const [isGetNewsLoading, setIsGetNewsLoading] = useState(false);
+  const [isCreateNewsLoading, setIsCreateNewsLoading] = useState(false);
+  const [isDeleteNewsLoading, setIsDeleteNewsLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [isUpdateNewsLoading, setIsUpdateNewsLoading] = useState(false);
+  const [isCreateRateLoading, setIsCreateRateLoading] = useState(false);
+  const [isGetRateLoading, setIsGetRateLoading] = useState(false);
+  const [isDeleteRateLoading, setIsDeleteRateLoading] = useState(false);
 
   useEffect(() => {
-    const getNews = async () => {
-      try {
-        setIsLoading(true);
+    let isCancelled = false;
 
+    const getNews = async () => {
+      setIsGetNewsLoading(true);
+
+      try {
         const response = await axiosInstance.get(API_PATHS.USERS.GET_NEWS);
 
-        setNews(response?.data);
+        if (isCancelled) return;
+
+        setNews(response.data ?? []);
       } catch (err) {
+        if (isCancelled) return;
         console.error(err);
-        toast.error(err?.response?.data?.message || "Something went wrong");
+        toast.error(getErrorMessage(err));
       } finally {
-        setIsLoading(false);
+        setIsGetNewsLoading(false);
       }
     };
 
     getNews();
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   const handleAddNews = async (data) => {
-    setIsLoading(true);
+    setIsCreateNewsLoading(true);
 
     try {
       const response = await axiosInstance.post(
@@ -40,34 +59,37 @@ export default function ManageContenPage() {
       );
 
       setNews(
-        [...news, response?.data].sort((a, b) => (b.id || 0) - (a.id || 0)),
+        [...news, response.data].sort((a, b) => (b.id || 0) - (a.id || 0)),
       );
     } catch (err) {
       console.error(err);
-      toast.error(err?.response?.data?.message || "Something went wrong");
+      toast.error(getErrorMessage(err));
     } finally {
-      setIsLoading(false);
+      setIsCreateNewsLoading(false);
     }
   };
 
   const handleDeleteNews = async (id) => {
+    setIsDeleteNewsLoading(true);
+
     try {
       const response = await axiosInstance.delete(
         API_PATHS.ADMINS.NEWS_BY_ID(id),
       );
 
-      toast.success(response?.data?.message);
-
-      setNews(
-        news.filter((news) => news.id !== parseFloat(response?.data?.id)),
-      );
+      toast.success(response.data?.message);
+      setNews(news.filter((news) => news.id !== parseFloat(response.data?.id)));
     } catch (err) {
       console.error(err);
-      toast.error(err?.response?.data?.message || "Something went wrong");
+      toast.error(getErrorMessage(err));
+    } finally {
+      setIsDeleteNewsLoading(false);
     }
   };
 
   const handleSaveEdit = async (data) => {
+    setIsUpdateNewsLoading(true);
+
     try {
       const response = await axiosInstance.put(
         API_PATHS.ADMINS.NEWS_BY_ID(editingId),
@@ -80,39 +102,172 @@ export default function ManageContenPage() {
       );
     } catch (err) {
       console.error(err);
-      toast.error(err?.response?.data?.message || "Something went wrong");
+      toast.error(getErrorMessage(err));
+    } finally {
+      setIsUpdateNewsLoading(false);
     }
   };
 
   const handleCancelEdit = () => setEditingId(null);
 
-  return (
-    <div className="w-full h-full flex flex-row items-start justify-around gap-4 p-4 mt-10">
-      <div>
-        <CreateNewsForm isLoading={isLoading} onSave={handleAddNews} />
+  const handleCreateRate = async (data) => {
+    setIsCreateRateLoading(true);
 
-        <div className="mt-20 max-w-md">
-          <p>Our news: </p>
-          <ul>
-            {(news ?? []).map((item) => (
-              <NewsList
-                key={item?.id}
-                item={item}
-                onDelete={handleDeleteNews}
-                isEdit={editingId === item.id}
-                onEdit={setEditingId}
-                onSave={handleSaveEdit}
-                onCancel={handleCancelEdit}
-              />
-            ))}
-          </ul>
-        </div>
+    try {
+      const response = await axiosInstance.post(
+        API_PATHS.ADMINS.ADD_EXCHANGE_RATES,
+        data,
+      );
+
+      toast.success(response.data?.message);
+    } catch (err) {
+      console.error(err);
+      toast.error(getErrorMessage(err));
+    } finally {
+      setIsCreateRateLoading(false);
+    }
+  };
+
+  const handleGetRatesByBaseCurrency = async (selectedBaseCurrency) => {
+    if (!selectedBaseCurrency) return;
+
+    setIsGetRateLoading(true);
+
+    try {
+      const response = await axiosInstance.get(
+        API_PATHS.ADMINS.GET_EXCHANGE_RATES_BY_BASE_ID(
+          selectedBaseCurrency.value,
+        ),
+      );
+
+      setRates(response.data?.rates);
+      setBaseCurrency(response.data?.base_currency_id);
+    } catch (err) {
+      console.error(err);
+      toast.error(getErrorMessage(err));
+    } finally {
+      setIsGetRateLoading(false);
+    }
+  };
+
+  const handleDeleteRatesByDate = async (date) => {
+    if (!date) return;
+
+    const formattedDate = dayjs(date).format("YYYY-MM-DD");
+
+    setIsDeleteRateLoading(true);
+
+    try {
+      const response = await axiosInstance.delete(
+        API_PATHS.ADMINS.DELETE_EXCHANGE_RATES_BY_DATE(
+          baseCurrency,
+          formattedDate,
+        ),
+      );
+
+      setRates(
+        rates.filter(
+          (rate) =>
+            dayjs(rate.date).format("YYYY-MM-DD") !== response.data?.date,
+        ),
+      );
+
+      toast.success(response.data?.message);
+    } catch (err) {
+      console.error(err);
+      toast.error(getErrorMessage(err));
+    } finally {
+      setIsDeleteRateLoading(false);
+    }
+  };
+
+  return (
+    <div className="grid grid-cols-2 gap-5">
+      <div className="bg-teal-200 grid-1">
+        <CreateNewsForm
+          isCreateLoading={isCreateNewsLoading}
+          onSave={handleAddNews}
+        />
       </div>
 
-      <ExchangeRatesToggle />
+      <div className="bg-rose-200 grid-1">
+        <ExchangeRatesToggle
+          onGetRates={handleGetRatesByBaseCurrency}
+          onCreateRates={handleCreateRate}
+          isCreateLoading={isCreateRateLoading}
+          isGetLoading={isGetRateLoading}
+        />
+      </div>
 
-      <div>
-        <Toaster position="top-center" />
+      <div className="grid-1">
+        <p>Our news: </p>
+        {isGetNewsLoading && (
+          <div>
+            <p>Loading...</p>
+          </div>
+        )}
+
+        {news.length === 0 && (
+          <div className="mt-2 h-125 flex items-center justify-center border rounded border-dashed p-2">
+            <p className="italic">No news yet...</p>
+          </div>
+        )}
+
+        <ul>
+          {news.map((item) => (
+            <NewsList
+              key={item?.id}
+              item={item}
+              onDelete={handleDeleteNews}
+              isEdit={editingId === item?.id}
+              onEdit={setEditingId}
+              onSave={handleSaveEdit}
+              onCancel={handleCancelEdit}
+              isDeleteNewsLoading={isDeleteNewsLoading}
+              isUpdateNewsLoading={isUpdateNewsLoading}
+            />
+          ))}
+        </ul>
+      </div>
+
+      <div className={"grid-1"}>
+        <p>Our rates: </p>
+        {isGetRateLoading && (
+          <div>
+            <p>Loading...</p>
+          </div>
+        )}
+
+        {rates.length === 0 && (
+          <div className="mt-2 h-125 flex items-center justify-center border rounded border-dashed p-2">
+            <p className="italic">Click "Get Rates" and get actually rates</p>
+          </div>
+        )}
+
+        {rates.map((rate) => (
+          <div key={rate?.date} className="bg-white mb-2 rounded">
+            <div className="flex justify-between">
+              <p>{dayjs(rate?.date).format("DD-MM-YYYY")}</p>
+              <button
+                onClick={() => handleDeleteRatesByDate(rate?.date)}
+                disabled={isDeleteRateLoading}
+                className="italic underline"
+              >
+                {isDeleteRateLoading ? "Loading..." : "Delete"}
+              </button>
+            </div>
+
+            {rate?.rates.map((r) => (
+              <div key={r?.id} className="flex justify-around border p-3">
+                <p>
+                  <span>{r?.target_symbol}</span>
+                  {r?.target_code}
+                </p>
+                <p>{r?.rate}</p>
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
     </div>
   );
