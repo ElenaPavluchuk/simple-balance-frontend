@@ -8,6 +8,7 @@ import NewsList from "../../shared/ui/CurrenciesAndNews/NewsList";
 import dayjs from "dayjs";
 import { getErrorMessage } from "../../shared/utils/getErrorMessage";
 import Loader from "../../shared/ui/Loader";
+import ExchangeRateCard from "../../shared/ui/CurrenciesAndNews/ExchangeRateCard";
 
 export default function ManageContenPage() {
   const [news, setNews] = useState([]);
@@ -246,8 +247,11 @@ export default function ManageContenPage() {
         )}
 
         {rates.map((rate) => (
-          <div key={rate?.date} className="bg-white mb-2 rounded">
-            <div className="flex justify-between">
+          <div
+            key={rate?.date}
+            className="bg-white mb-2 rounded px-4 py-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+          >
+            <div className="flex justify-between mb-2">
               <p>{dayjs(rate?.date).format("DD-MM-YYYY")}</p>
               <button
                 onClick={() => handleDeleteRatesByDate(rate?.date)}
@@ -259,13 +263,7 @@ export default function ManageContenPage() {
             </div>
 
             {rate?.rates.map((r) => (
-              <div key={r?.id} className="flex justify-around border p-3">
-                <p>
-                  <span>{r?.target_symbol}</span>
-                  {r?.target_code}
-                </p>
-                <p>{r?.rate}</p>
-              </div>
+              <ExchangeRateCard key={r?.id} rate={r} isManagedCardStyle />
             ))}
           </div>
         ))}
