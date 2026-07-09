@@ -3,7 +3,13 @@ import { Link } from "react-router";
 import { Trash2, Pencil } from "lucide-react";
 import { useAuth } from "../../context/auth/useAuth";
 
-export default function NewsCard({ item, onDelete, onEdit, hideBtn }) {
+export default function NewsCard({
+  item,
+  onDelete,
+  onEdit,
+  hideBtn,
+  isDeleteNewsLoading,
+}) {
   const { user } = useAuth();
   const displayManageBtn = (user.user_role === "ADMIN") & !hideBtn;
 
@@ -33,7 +39,7 @@ export default function NewsCard({ item, onDelete, onEdit, hideBtn }) {
           <button
             onClick={() => onDelete(item?.id)}
             className="text-gray-700"
-            disabled={!displayManageBtn}
+            disabled={!displayManageBtn || isDeleteNewsLoading}
           >
             <Trash2 size={20} />
           </button>

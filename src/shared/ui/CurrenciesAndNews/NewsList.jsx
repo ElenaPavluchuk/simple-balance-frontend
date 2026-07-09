@@ -9,6 +9,7 @@ export default function NewsList({
   onSave,
   onCancel,
   hideBtn,
+  isDeleteNewsLoading,
   isUpdateNewsLoading,
 }) {
   return (
@@ -26,6 +27,7 @@ export default function NewsList({
           onDelete={onDelete}
           onEdit={onEdit}
           hideBtn={hideBtn}
+          isDeleteNewsLoading={isDeleteNewsLoading}
         />
       )}
     </li>

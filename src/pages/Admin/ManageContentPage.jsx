@@ -12,8 +12,9 @@ export default function ManageContenPage() {
   const [news, setNews] = useState([]);
   const [rates, setRates] = useState([]);
   const [baseCurrency, setBaseCurrency] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isGetNewsLoading, setIsGetNewsLoading] = useState(false);
   const [isCreateNewsLoading, setIsCreateNewsLoading] = useState(false);
+  const [isDeleteNewsLoading, setIsDeleteNewsLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [isUpdateNewsLoading, setIsUpdateNewsLoading] = useState(false);
   const [isCreateRateLoading, setIsCreateRateLoading] = useState(false);
@@ -21,22 +22,31 @@ export default function ManageContenPage() {
   const [isDeleteRateLoading, setIsDeleteRateLoading] = useState(false);
 
   useEffect(() => {
-    const getNews = async () => {
-      try {
-        setIsLoading(true);
+    let isCancelled = false;
 
+    const getNews = async () => {
+      setIsGetNewsLoading(true);
+
+      try {
         const response = await axiosInstance.get(API_PATHS.USERS.GET_NEWS);
 
-        setNews(response?.data);
+        if (isCancelled) return;
+
+        setNews(response.data ?? []);
       } catch (err) {
+        if (isCancelled) return;
         console.error(err);
-        toast.error(err?.response?.data?.message || "Something went wrong");
+        toast.error(getErrorMessage(err));
       } finally {
-        setIsLoading(false);
+        setIsGetNewsLoading(false);
       }
     };
 
     getNews();
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   const handleAddNews = async (data) => {
@@ -60,19 +70,20 @@ export default function ManageContenPage() {
   };
 
   const handleDeleteNews = async (id) => {
+    setIsDeleteNewsLoading(true);
+
     try {
       const response = await axiosInstance.delete(
         API_PATHS.ADMINS.NEWS_BY_ID(id),
       );
 
-      toast.success(response?.data?.message);
-
-      setNews(
-        news.filter((news) => news.id !== parseFloat(response?.data?.id)),
-      );
+      toast.success(response.data?.message);
+      setNews(news.filter((news) => news.id !== parseFloat(response.data?.id)));
     } catch (err) {
       console.error(err);
-      toast.error(err?.response?.data?.message || "Something went wrong");
+      toast.error(getErrorMessage(err));
+    } finally {
+      setIsDeleteNewsLoading(false);
     }
   };
 
@@ -98,8 +109,6 @@ export default function ManageContenPage() {
   };
 
   const handleCancelEdit = () => setEditingId(null);
-
-  // rates
 
   const handleCreateRate = async (data) => {
     setIsCreateRateLoading(true);
@@ -192,38 +201,55 @@ export default function ManageContenPage() {
 
       <div className="grid-1">
         <p>Our news: </p>
+        {isGetNewsLoading && (
+          <div>
+            <p>Loading...</p>
+          </div>
+        )}
+
+        {news.length === 0 && (
+          <div className="mt-2 h-125 flex items-center justify-center border rounded border-dashed p-2">
+            <p className="italic">No news yet...</p>
+          </div>
+        )}
+
         <ul>
-          {(news ?? []).map((item) => (
+          {news.map((item) => (
             <NewsList
               key={item?.id}
               item={item}
               onDelete={handleDeleteNews}
-              isEdit={editingId === item.id}
+              isEdit={editingId === item?.id}
               onEdit={setEditingId}
               onSave={handleSaveEdit}
               onCancel={handleCancelEdit}
+              isDeleteNewsLoading={isDeleteNewsLoading}
               isUpdateNewsLoading={isUpdateNewsLoading}
             />
           ))}
         </ul>
       </div>
 
-      <div
-        className={`grid-1 ${rates.length === 0 && "border rounded border-dashed p-2"}`}
-      >
+      <div className={"grid-1"}>
         <p>Our rates: </p>
+        {isGetRateLoading && (
+          <div>
+            <p>Loading...</p>
+          </div>
+        )}
+
         {rates.length === 0 && (
-          <div className="h-125 flex items-center justify-center">
+          <div className="mt-2 h-125 flex items-center justify-center border rounded border-dashed p-2">
             <p className="italic">Click "Get Rates" and get actually rates</p>
           </div>
         )}
 
         {rates.map((rate) => (
-          <div key={rate.date} className="bg-white mb-2 rounded">
+          <div key={rate?.date} className="bg-white mb-2 rounded">
             <div className="flex justify-between">
-              <p>{dayjs(rate.date).format("DD-MM-YYYY")}</p>
+              <p>{dayjs(rate?.date).format("DD-MM-YYYY")}</p>
               <button
-                onClick={() => handleDeleteRatesByDate(rate.date)}
+                onClick={() => handleDeleteRatesByDate(rate?.date)}
                 disabled={isDeleteRateLoading}
                 className="italic underline"
               >
@@ -231,13 +257,13 @@ export default function ManageContenPage() {
               </button>
             </div>
 
-            {rate.rates.map((r) => (
-              <div key={r.id} className="flex justify-around border p-3">
+            {rate?.rates.map((r) => (
+              <div key={r?.id} className="flex justify-around border p-3">
                 <p>
-                  <span>{r.target_symbol}</span>
-                  {r.target_code}
+                  <span>{r?.target_symbol}</span>
+                  {r?.target_code}
                 </p>
-                <p>{r.rate}</p>
+                <p>{r?.rate}</p>
               </div>
             ))}
           </div>
