@@ -7,6 +7,7 @@ import toast, { Toaster } from "react-hot-toast";
 import NewsList from "../../shared/ui/CurrenciesAndNews/NewsList";
 import dayjs from "dayjs";
 import { getErrorMessage } from "../../shared/utils/getErrorMessage";
+import Loader from "../../shared/ui/Loader";
 
 export default function ManageContenPage() {
   const [news, setNews] = useState([]);
@@ -202,12 +203,12 @@ export default function ManageContenPage() {
       <div className="grid-1">
         <p>Our news: </p>
         {isGetNewsLoading && (
-          <div>
-            <p>Loading...</p>
+          <div className="mt-2 h-125 flex items-center justify-center">
+            <Loader />
           </div>
         )}
 
-        {news.length === 0 && (
+        {!isGetNewsLoading && news.length === 0 && (
           <div className="mt-2 h-125 flex items-center justify-center border rounded border-dashed p-2">
             <p className="italic">No news yet...</p>
           </div>
@@ -233,12 +234,12 @@ export default function ManageContenPage() {
       <div className={"grid-1"}>
         <p>Our rates: </p>
         {isGetRateLoading && (
-          <div>
-            <p>Loading...</p>
+          <div className="mt-2 h-125 flex items-center justify-center">
+            <Loader />
           </div>
         )}
 
-        {rates.length === 0 && (
+        {!isGetRateLoading && rates.length === 0 && (
           <div className="mt-2 h-125 flex items-center justify-center border rounded border-dashed p-2">
             <p className="italic">Click "Get Rates" and get actually rates</p>
           </div>
