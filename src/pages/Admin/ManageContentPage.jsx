@@ -15,6 +15,7 @@ export default function ManageContenPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isCreateNewsLoading, setIsCreateNewsLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [isUpdateNewsLoading, setIsUpdateNewsLoading] = useState(false);
   const [isCreateRateLoading, setIsCreateRateLoading] = useState(false);
   const [isGetRateLoading, setIsGetRateLoading] = useState(false);
   const [isDeleteRateLoading, setIsDeleteRateLoading] = useState(false);
@@ -76,6 +77,8 @@ export default function ManageContenPage() {
   };
 
   const handleSaveEdit = async (data) => {
+    setIsUpdateNewsLoading(true);
+
     try {
       const response = await axiosInstance.put(
         API_PATHS.ADMINS.NEWS_BY_ID(editingId),
@@ -88,7 +91,9 @@ export default function ManageContenPage() {
       );
     } catch (err) {
       console.error(err);
-      toast.error(err?.response?.data?.message || "Something went wrong");
+      toast.error(getErrorMessage(err));
+    } finally {
+      setIsUpdateNewsLoading(false);
     }
   };
 
@@ -197,6 +202,7 @@ export default function ManageContenPage() {
               onEdit={setEditingId}
               onSave={handleSaveEdit}
               onCancel={handleCancelEdit}
+              isUpdateNewsLoading={isUpdateNewsLoading}
             />
           ))}
         </ul>
