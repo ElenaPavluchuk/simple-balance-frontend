@@ -1,17 +1,34 @@
 import { useState } from "react";
 import { newsValidate, clearFieldError } from "../../utils/validate";
+import Input from "../Input";
+import Button from "../Button";
+import PropTypes from "prop-types";
 
-export default function CreateNewsForm({ onSave, isLoading }) {
+CreateNewsForm.propTypes = {
+  onSave: PropTypes.func.isRequired,
+  isCreateLoading: PropTypes.bool.isRequired,
+};
+
+export default function CreateNewsForm({ onSave, isCreateLoading }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [validateErrors, setValidateErrors] = useState({});
+
+  const handleTitleChange = (e) => {
+    setTitle(e);
+    clearFieldError("title", setValidateErrors);
+  };
+
+  const handleContentChange = (e) => {
+    setContent(e);
+    clearFieldError("content", setValidateErrors);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const errors = newsValidate({ title, content });
     setValidateErrors(errors);
-
     if (Object.keys(errors).length) return;
 
     const data = {
@@ -32,47 +49,41 @@ export default function CreateNewsForm({ onSave, isLoading }) {
       className="bg-white rounded shadow flex flex-col p-5 gap-4 w-full h-full"
     >
       <h3 className="font-semibold text-center">Add News</h3>
-      <label>
-        Titile:
-        <input
+      <div>
+        <Input
           value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-            clearFieldError("title", setValidateErrors);
-          }}
+          onChange={handleTitleChange}
           placeholder="Add title"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          label="Titile:"
         />
         {validateErrors.title && (
-          <p className="text-red-500 italic text-">{validateErrors.title}</p>
+          <p className="text-red-500 italic text-md">{validateErrors.title}</p>
         )}
-      </label>
+      </div>
 
-      <label>
-        {" "}
-        Content:
-        <textarea
+      <div>
+        <Input
           value={content}
-          onChange={(e) => {
-            setContent(e.target.value);
-            clearFieldError("content", setValidateErrors);
-          }}
+          onChange={handleContentChange}
           placeholder="Add content"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 h-50"
-        ></textarea>
+          multiline
+          rows={14}
+        />
         {validateErrors.content && (
           <p className="text-red-500 italic text-md">
             {validateErrors.content}
           </p>
         )}
-      </label>
-      <button
+      </div>
+
+      <Button
         type="submit"
-        disabled={isLoading}
-        className="w-full bg-rose-400 text-white rounded py-2 mt-8"
+        disabled={isCreateLoading}
+        variant="primary"
+        className="mt-auto"
       >
-        {isLoading ? "Loading..." : "Add news"}
-      </button>
+        {isCreateLoading ? "Loading..." : "Add news"}
+      </Button>
     </form>
   );
 }

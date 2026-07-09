@@ -13,6 +13,7 @@ export default function ManageContenPage() {
   const [rates, setRates] = useState([]);
   const [baseCurrency, setBaseCurrency] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isCreateNewsLoading, setIsCreateNewsLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [isCreateRateLoading, setIsCreateRateLoading] = useState(false);
   const [isGetRateLoading, setIsGetRateLoading] = useState(false);
@@ -38,7 +39,7 @@ export default function ManageContenPage() {
   }, []);
 
   const handleAddNews = async (data) => {
-    setIsLoading(true);
+    setIsCreateNewsLoading(true);
 
     try {
       const response = await axiosInstance.post(
@@ -47,13 +48,13 @@ export default function ManageContenPage() {
       );
 
       setNews(
-        [...news, response?.data].sort((a, b) => (b.id || 0) - (a.id || 0)),
+        [...news, response.data].sort((a, b) => (b.id || 0) - (a.id || 0)),
       );
     } catch (err) {
       console.error(err);
-      toast.error(err?.response?.data?.message || "Something went wrong");
+      toast.error(getErrorMessage(err));
     } finally {
-      setIsLoading(false);
+      setIsCreateNewsLoading(false);
     }
   };
 
@@ -169,7 +170,10 @@ export default function ManageContenPage() {
   return (
     <div className="grid grid-cols-2 gap-5">
       <div className="bg-teal-200 grid-1">
-        <CreateNewsForm isLoading={isLoading} onSave={handleAddNews} />
+        <CreateNewsForm
+          isCreateLoading={isCreateNewsLoading}
+          onSave={handleAddNews}
+        />
       </div>
 
       <div className="bg-rose-200 grid-1">
