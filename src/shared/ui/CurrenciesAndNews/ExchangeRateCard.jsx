@@ -37,7 +37,7 @@ export default function ExchangeRateCard({ rate, date, isManagedCardStyle }) {
       </div>
 
       {date && (
-        <div className="flex gap-2 justify-center items-center mt-3">
+        <div className="flex gap-2 items-center mt-4">
           <span className="text-xs text-italic text-gray-600">
             The rate is valid on the date:{" "}
           </span>

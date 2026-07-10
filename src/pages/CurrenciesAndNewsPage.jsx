@@ -8,6 +8,8 @@ import ExchangeRateCard from "../shared/ui/CurrenciesAndNews/ExchangeRateCard";
 import { Link } from "react-router";
 import toast, { Toaster } from "react-hot-toast";
 import NewsList from "../shared/ui/CurrenciesAndNews/NewsList";
+import { getErrorMessage } from "../shared/utils/getErrorMessage";
+import Loader from "../shared/ui/Loader";
 
 export default function CurrenciesAndNewsPage() {
   const [news, setNews] = useState([]);
@@ -21,60 +23,67 @@ export default function CurrenciesAndNewsPage() {
   const targetCurrencies = ["USD", "RUB", "EUR"]
     .filter((currency) => currency !== user.currency_code)
     .join(",");
+
   const today = dayjs().format("YYYY-MM-DD");
 
+  const options = {
+    method: "GET",
+    url: "https://currency-conversion-and-exchange-rates.p.rapidapi.com/timeseries",
+    params: {
+      start_date: today,
+      end_date: today,
+      base: user?.currency_code,
+      symbols: targetCurrencies,
+    },
+    headers: {
+      "x-rapidapi-key": import.meta.env.VITE_RAPIDAPI_KEY,
+      "x-rapidapi-host":
+        "currency-conversion-and-exchange-rates.p.rapidapi.com",
+      "Content-Type": "application/json",
+    },
+  };
+
   useEffect(() => {
+    let isCancelled = false;
+
     const getExchangeRates = async () => {
       setIsRatesLoading(true);
-
-      const options = {
-        method: "GET",
-        url: "https://currency-conversion-and-exchange-rates.p.rapidapi.com/timeseries",
-        params: {
-          start_date: today,
-          end_date: today,
-          base: user.currency_code,
-          symbols: targetCurrencies,
-        },
-        headers: {
-          "x-rapidapi-key": import.meta.env.VITE_RAPIDAPI_KEY,
-          "x-rapidapi-host":
-            "currency-conversion-and-exchange-rates.p.rapidapi.com",
-          "Content-Type": "application/json",
-        },
-      };
 
       try {
         const response = await axios.request(options);
 
-        const normalizedRates = Object.entries(
-          response?.data?.rates[today],
-        ).map(([target_code, rate]) => ({
-          target_code,
-          rate,
-        }));
+        if (isCancelled) return;
 
-        setExchangeRates(normalizedRates || []);
+        const normalizedRates = Object.entries(response.data?.rates[today]).map(
+          ([target_code, rate]) => ({
+            target_code,
+            rate,
+          }),
+        );
+
+        setExchangeRates(normalizedRates ?? []);
         setCurrentDate(
-          dayjs(response?.data?.end_date || "").format("DD-MM-YYYY"),
+          dayjs(response.data?.end_date ?? "").format("DD-MM-YYYY"),
         );
         setIsRatesLoading(false);
       } catch (err) {
-        console.warn("API failed, fallback to DB", err);
+        if (isCancelled) return;
+        console.warn(getErrorMessage(err, "API failed, fallback to DB"));
+
+        setIsRatesLoading(true);
 
         try {
           const fallback = await axiosInstance.get(
             API_PATHS.USERS.GET_EXCHANGE_RATES,
           );
 
-          console.log("fallback: ", fallback.data);
+          if (isCancelled) return;
 
-          setExchangeRates(fallback?.data?.rates || []);
-          setCurrentDate(
-            dayjs(fallback?.data?.date ?? "").format("DD-MM-YYYY"),
-          );
+          setExchangeRates(fallback.data?.rates ?? []);
+          setCurrentDate(dayjs(fallback.data?.date ?? "").format("DD-MM-YYYY"));
         } catch (fallbackError) {
-          console.error("Fallback also failed", fallbackError);
+          if (isCancelled) return;
+          console.error(getErrorMessage(fallbackError, "Fallback also failed"));
           setApiError("Sorry, rates are not available. Please try again later");
         } finally {
           setIsRatesLoading(false);
@@ -83,6 +92,10 @@ export default function CurrenciesAndNewsPage() {
     };
 
     getExchangeRates();
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -104,32 +117,32 @@ export default function CurrenciesAndNewsPage() {
     getNews();
   }, []);
 
-  useEffect(() => {
-    console.log("curr date: ", currentDate);
-  }, [currentDate]);
-
   return (
     <div className="grid grid-cols-2 gap-5">
-      <div className="bg-cyan-50 p-5 rounded grid-1">
-        <h3 className="font-semibold p-2 text-center">Exchange rates</h3>
-        {(isRatesLoading || isNewsLoading) && (
-          <div className="w-md h-28 flex items-center justify-center">
-            <p className="italic text-gray-400">Loading...</p>
+      <div className="p-5 rounded grid-1">
+        <div className="flex flex-row items-center justify-between">
+          <h3 className="font-semibold p-2">Exchange rates</h3>
+          <p className="text-gray-700 italic">from {user?.currency_code}</p>
+        </div>
+
+        {isRatesLoading && (
+          <div className="w-full min-h-125 flex items-center justify-center">
+            <Loader />
           </div>
         )}
 
         {apiError && !isRatesLoading && (
-          <div className="w-md h-28 flex items-center justify-center">
+          <div className="w-full min-h-125 flex items-center justify-center border border-dashed rounded">
             <p className="italic">{apiError}</p>
           </div>
         )}
 
-        {exchangeRates.length === 0 && !isRatesLoading && (
-          <div className="w-md h-28 flex flex-col gap-5 items-center justify-center">
-            <p className="italic">Rates not added or something went wrong</p>
-            {user.user_role === "ADMIN" && (
+        {exchangeRates.length === 0 && !isRatesLoading && !apiError && (
+          <div className="w-full min-h-125 flex flex-col gap-5 items-center justify-center border border-dashed rounded">
+            <p className="italic">Rates not added yet</p>
+            {user?.user_role === "ADMIN" && (
               <span>
-                You can try adding exchange rates{" "}
+                You can adding exchange rates{" "}
                 <Link
                   className="font-semibold underline italic"
                   to="/manage-content"
@@ -142,8 +155,8 @@ export default function CurrenciesAndNewsPage() {
         )}
 
         <ul className="grid gap-4">
-          {(exchangeRates ?? []).map((rate) => (
-            <li key={rate.target_code}>
+          {exchangeRates.map((rate) => (
+            <li key={rate?.target_code}>
               <ExchangeRateCard rate={rate} date={currentDate} />
             </li>
           ))}
@@ -152,15 +165,16 @@ export default function CurrenciesAndNewsPage() {
 
       <div className="bg-cyan-50 p-5 rounded grid-1">
         <p className="text-center font-semibold">Our news:</p>
+        {/* {(isRatesLoading || isNewsLoading) && (
+          <div className="w-md h-28 flex items-center justify-center">
+            <p className="italic text-gray-400">Loading...</p>
+          </div>
+        )} */}
         <ul>
           {(news ?? []).map((item) => (
             <NewsList key={item?.id} item={item} hideBtn={true} />
           ))}
         </ul>
-      </div>
-
-      <div>
-        <Toaster position="top-center" />
       </div>
     </div>
   );
