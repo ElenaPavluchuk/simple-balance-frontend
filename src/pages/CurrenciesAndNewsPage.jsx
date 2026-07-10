@@ -21,7 +21,7 @@ export default function CurrenciesAndNewsPage() {
   const { user } = useAuth();
 
   const targetCurrencies = ["USD", "RUB", "EUR"]
-    .filter((currency) => currency !== user.currency_code)
+    .filter((currency) => currency !== user?.currency_code)
     .join(",");
 
   const today = dayjs().format("YYYY-MM-DD");
@@ -157,7 +157,11 @@ export default function CurrenciesAndNewsPage() {
         <ul className="grid gap-4">
           {exchangeRates.map((rate) => (
             <li key={rate?.target_code}>
-              <ExchangeRateCard rate={rate} date={currentDate} />
+              <ExchangeRateCard
+                rate={rate}
+                date={currentDate}
+                baseCurrencyCode={user?.currency_code}
+              />
             </li>
           ))}
         </ul>

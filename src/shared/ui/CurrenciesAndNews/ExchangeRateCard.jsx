@@ -1,3 +1,4 @@
+import { exchangeRateFormat } from "../../utils/format";
 import PropTypes from "prop-types";
 
 ExchangeRateCard.propTypes = {
@@ -8,14 +9,28 @@ ExchangeRateCard.propTypes = {
     }),
   ).isRequired,
   date: PropTypes.string,
+  baseCurrencyCode: PropTypes.string,
+  selectedCurrencyCode: PropTypes.number,
   isManagedCardStyle: PropTypes.bool,
 };
 
-export default function ExchangeRateCard({ rate, date, isManagedCardStyle }) {
+export default function ExchangeRateCard({
+  rate,
+  date,
+  baseCurrencyCode,
+  selectedCurrencyCode,
+  isManagedCardStyle,
+}) {
   const CURRENCY_SYMBOLS = {
     USD: "$",
     EUR: "€",
     RUB: "₽",
+  };
+
+  const CURRENCIES_BY_ID = {
+    1: "USD",
+    2: "RUB",
+    3: "EUR",
   };
 
   return (
@@ -30,10 +45,15 @@ export default function ExchangeRateCard({ rate, date, isManagedCardStyle }) {
     >
       <div className="flex justify-between w-full">
         <span className="flex items-center gap-2">
-          {CURRENCY_SYMBOLS[rate.target_code]}
-          <p className="text-lg font-semibold">{rate.target_code}</p>
+          {CURRENCY_SYMBOLS[rate?.target_code]}
+          <p className="text-lg font-semibold">{rate?.target_code}</p>
         </span>
-        <p className="font-bold text-green-700">{rate.rate}</p>
+        <p className="font-bold text-green-700">
+          {exchangeRateFormat(
+            rate?.rate,
+            baseCurrencyCode || CURRENCIES_BY_ID[selectedCurrencyCode],
+          )}
+        </p>
       </div>
 
       {date && (

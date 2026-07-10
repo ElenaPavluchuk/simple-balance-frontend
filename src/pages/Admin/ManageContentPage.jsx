@@ -263,7 +263,12 @@ export default function ManageContenPage() {
             </div>
 
             {rate?.rates.map((r) => (
-              <ExchangeRateCard key={r?.id} rate={r} isManagedCardStyle />
+              <ExchangeRateCard
+                key={r?.id}
+                rate={r}
+                selectedCurrencyCode={baseCurrency}
+                isManagedCardStyle
+              />
             ))}
           </div>
         ))}
