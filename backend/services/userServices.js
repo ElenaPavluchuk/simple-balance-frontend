@@ -134,6 +134,10 @@ const getCurrentRates = async (userId) => {
     .select("base_currency_id")
     .first();
 
+  const latestDateQuery = knex("exchange_rates")
+    .max("date")
+    .where("base_currency_id", user.base_currency_id);
+
   const rates = await knex("exchange_rates")
     .select(
       "exchange_rates.id",
@@ -148,7 +152,8 @@ const getCurrentRates = async (userId) => {
       "exchange_rates.target_currency_id",
     )
     .where("exchange_rates.base_currency_id", user.base_currency_id)
-    .orderBy("exchange_rates.date", "desc");
+    .where("exchange_rates.date", "=", latestDateQuery)
+    .orderBy("exchange_rates.target_currency_id");
 
   return {
     base_currency_id: user.base_currency_id,

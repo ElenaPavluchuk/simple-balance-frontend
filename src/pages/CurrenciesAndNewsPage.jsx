@@ -67,6 +67,8 @@ export default function CurrenciesAndNewsPage() {
             API_PATHS.USERS.GET_EXCHANGE_RATES,
           );
 
+          console.log("fallback: ", fallback.data);
+
           setExchangeRates(fallback?.data?.rates || []);
           setCurrentDate(
             dayjs(fallback?.data?.date ?? "").format("DD-MM-YYYY"),
@@ -102,9 +104,13 @@ export default function CurrenciesAndNewsPage() {
     getNews();
   }, []);
 
+  useEffect(() => {
+    console.log("curr date: ", currentDate);
+  }, [currentDate]);
+
   return (
-    <div className="m-5 flex gap-10 justify-around">
-      <div className="bg-cyan-50 p-5 rounded w-md">
+    <div className="grid grid-cols-2 gap-5">
+      <div className="bg-cyan-50 p-5 rounded grid-1">
         <h3 className="font-semibold p-2 text-center">Exchange rates</h3>
         {(isRatesLoading || isNewsLoading) && (
           <div className="w-md h-28 flex items-center justify-center">
@@ -144,7 +150,7 @@ export default function CurrenciesAndNewsPage() {
         </ul>
       </div>
 
-      <div className="bg-cyan-50 p-5 rounded w-md">
+      <div className="bg-cyan-50 p-5 rounded grid-1">
         <p className="text-center font-semibold">Our news:</p>
         <ul>
           {(news ?? []).map((item) => (
