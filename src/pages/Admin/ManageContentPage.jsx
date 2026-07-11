@@ -40,7 +40,7 @@ export default function ManageContenPage() {
         console.error(err);
         toast.error(getErrorMessage(err));
       } finally {
-        setIsGetNewsLoading(false);
+        if (!isCancelled) setIsGetNewsLoading(false);
       }
     };
 
