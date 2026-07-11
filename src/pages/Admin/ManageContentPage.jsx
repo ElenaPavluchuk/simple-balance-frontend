@@ -215,7 +215,7 @@ export default function ManageContenPage() {
           </div>
         )}
 
-        <ul>
+        <ul className="grid gap-4 mt-5">
           {news.map((item) => (
             <NewsList
               key={item?.id}
@@ -232,7 +232,7 @@ export default function ManageContenPage() {
         </ul>
       </div>
 
-      <div className={"grid-1"}>
+      <div className="grid-1">
         <p>Our rates: </p>
         {isGetRateLoading && (
           <div className="mt-2 h-125 flex items-center justify-center">
@@ -249,7 +249,7 @@ export default function ManageContenPage() {
         {rates.map((rate) => (
           <div
             key={rate?.date}
-            className="bg-white mb-2 rounded px-4 py-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+            className="bg-white mt-5 mb-2 rounded px-4 py-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
           >
             <div className="flex justify-between mb-2">
               <p>{dayjs(rate?.date).format("DD-MM-YYYY")}</p>

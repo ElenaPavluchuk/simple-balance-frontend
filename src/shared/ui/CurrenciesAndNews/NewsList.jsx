@@ -1,5 +1,23 @@
 import NewsCard from "./NewsCard";
 import EditNewsForm from "../ManageContent/EditNewsForm";
+import PropTypes from "prop-types";
+
+NewsList.propTypes = {
+  item: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+    published_at: PropTypes.string.isRequired,
+  }).isRequired,
+  onDelete: PropTypes.func,
+  isEdit: PropTypes.bool,
+  onEdit: PropTypes.func,
+  onSave: PropTypes.func,
+  onCancel: PropTypes.func,
+  hideBtn: PropTypes.bool,
+  isDeleteNewsLoading: PropTypes.bool,
+  isUpdateNewsLoading: PropTypes.bool,
+};
 
 export default function NewsList({
   item,

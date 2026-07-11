@@ -6,7 +6,6 @@ import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
 import ExchangeRateCard from "../shared/ui/CurrenciesAndNews/ExchangeRateCard";
 import { Link } from "react-router";
-import toast, { Toaster } from "react-hot-toast";
 import NewsList from "../shared/ui/CurrenciesAndNews/NewsList";
 import { getErrorMessage } from "../shared/utils/getErrorMessage";
 import Loader from "../shared/ui/Loader";
@@ -17,7 +16,8 @@ export default function CurrenciesAndNewsPage() {
   const [currentDate, setCurrentDate] = useState("");
   const [isRatesLoading, setIsRatesLoading] = useState(false);
   const [isNewsLoading, setIsNewsLoading] = useState(false);
-  const [apiError, setApiError] = useState("");
+  const [ratesApiError, setRatesApiError] = useState("");
+  const [newsApiError, setNewsApiError] = useState("");
   const { user } = useAuth();
 
   const targetCurrencies = ["USD", "RUB", "EUR"]
@@ -84,7 +84,9 @@ export default function CurrenciesAndNewsPage() {
         } catch (fallbackError) {
           if (isCancelled) return;
           console.error(getErrorMessage(fallbackError, "Fallback also failed"));
-          setApiError("Sorry, rates are not available. Please try again later");
+          setRatesApiError(
+            "Sorry, rates are not available. Please try again later",
+          );
         } finally {
           setIsRatesLoading(false);
         }
@@ -99,87 +101,130 @@ export default function CurrenciesAndNewsPage() {
   }, []);
 
   useEffect(() => {
-    const getNews = async () => {
-      try {
-        setIsNewsLoading(true);
+    let isCancelled = false;
 
+    const getNews = async () => {
+      setIsNewsLoading(true);
+
+      try {
         const response = await axiosInstance.get(API_PATHS.USERS.GET_NEWS);
 
-        setNews(response?.data);
+        if (isCancelled) return;
+
+        setNews(response.data ?? []);
       } catch (err) {
+        if (isCancelled) return;
         console.error(err);
-        toast.error(err?.response?.data?.message || "Something went wrong");
+        setNewsApiError(
+          "Sorry, news are not available. Please try again later",
+        );
       } finally {
         setIsNewsLoading(false);
       }
     };
 
     getNews();
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   return (
-    <div className="grid grid-cols-2 gap-5">
-      <div className="p-5 rounded grid-1">
-        <div className="flex flex-row items-center justify-between">
-          <h3 className="font-semibold p-2">Exchange rates</h3>
-          <p className="text-gray-700 italic">from {user?.currency_code}</p>
+    <>
+      <h2 className="text-2xl font-bold text-gray-800 mb-8">
+        News & Currencies
+      </h2>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div className="col-span-1 h-fit space-y-4">
+          <h3 className="font-semibold">
+            Exchange rates{" "}
+            <span className="text-gray-500 italic text-xs ml-2">
+              from {user?.currency_code}
+            </span>
+          </h3>
+
+          {isRatesLoading && (
+            <div className="w-full min-h-125 flex items-center justify-center">
+              <Loader />
+            </div>
+          )}
+
+          {ratesApiError && !isRatesLoading && (
+            <div className="w-full min-h-125 flex items-center justify-center border border-dashed rounded">
+              <p className="italic">{ratesApiError}</p>
+            </div>
+          )}
+
+          {exchangeRates.length === 0 && !isRatesLoading && !ratesApiError && (
+            <div className="w-full min-h-125 flex flex-col gap-5 items-center justify-center border border-dashed rounded">
+              <p className="italic">Rates not added yet</p>
+              {user?.user_role === "ADMIN" && (
+                <span>
+                  You can adding exchange rates{" "}
+                  <Link
+                    className="font-semibold underline italic"
+                    to="/manage-content"
+                  >
+                    here
+                  </Link>
+                </span>
+              )}
+            </div>
+          )}
+
+          <ul className="grid gap-4 mt-5">
+            {exchangeRates.map((rate) => (
+              <li key={rate?.target_code}>
+                <ExchangeRateCard
+                  rate={rate}
+                  date={currentDate}
+                  baseCurrencyCode={user?.currency_code}
+                />
+              </li>
+            ))}
+          </ul>
         </div>
 
-        {isRatesLoading && (
-          <div className="w-full min-h-125 flex items-center justify-center">
-            <Loader />
-          </div>
-        )}
+        <div className="col-span-1 lg:col-span-2 space-y-6">
+          <h3 className="font-semibold">Our news:</h3>
 
-        {apiError && !isRatesLoading && (
-          <div className="w-full min-h-125 flex items-center justify-center border border-dashed rounded">
-            <p className="italic">{apiError}</p>
-          </div>
-        )}
+          {isNewsLoading && (
+            <div className="w-full min-h-125 flex items-center justify-center">
+              <Loader />
+            </div>
+          )}
 
-        {exchangeRates.length === 0 && !isRatesLoading && !apiError && (
-          <div className="w-full min-h-125 flex flex-col gap-5 items-center justify-center border border-dashed rounded">
-            <p className="italic">Rates not added yet</p>
-            {user?.user_role === "ADMIN" && (
-              <span>
-                You can adding exchange rates{" "}
-                <Link
-                  className="font-semibold underline italic"
-                  to="/manage-content"
-                >
-                  here
-                </Link>
-              </span>
-            )}
-          </div>
-        )}
+          {newsApiError && !isNewsLoading && (
+            <div className="w-full min-h-125 flex items-center justify-center border border-dashed rounded">
+              <p className="italic">{newsApiError}</p>
+            </div>
+          )}
 
-        <ul className="grid gap-4">
-          {exchangeRates.map((rate) => (
-            <li key={rate?.target_code}>
-              <ExchangeRateCard
-                rate={rate}
-                date={currentDate}
-                baseCurrencyCode={user?.currency_code}
-              />
-            </li>
-          ))}
-        </ul>
+          {news.length === 0 && !isNewsLoading && !newsApiError && (
+            <div className="w-full min-h-125 flex flex-col gap-5 items-center justify-center border border-dashed rounded">
+              <p className="italic">News not added yet</p>
+              {user?.user_role === "ADMIN" && (
+                <span>
+                  You can adding news{" "}
+                  <Link
+                    className="font-semibold underline italic"
+                    to="/manage-content"
+                  >
+                    here
+                  </Link>
+                </span>
+              )}
+            </div>
+          )}
+
+          <ul className="grid gap-4 mt-5">
+            {news.map((item) => (
+              <NewsList key={item?.id} item={item} hideBtn />
+            ))}
+          </ul>
+        </div>
       </div>
-
-      <div className="bg-cyan-50 p-5 rounded grid-1">
-        <p className="text-center font-semibold">Our news:</p>
-        {/* {(isRatesLoading || isNewsLoading) && (
-          <div className="w-md h-28 flex items-center justify-center">
-            <p className="italic text-gray-400">Loading...</p>
-          </div>
-        )} */}
-        <ul>
-          {(news ?? []).map((item) => (
-            <NewsList key={item?.id} item={item} hideBtn={true} />
-          ))}
-        </ul>
-      </div>
-    </div>
+    </>
   );
 }
