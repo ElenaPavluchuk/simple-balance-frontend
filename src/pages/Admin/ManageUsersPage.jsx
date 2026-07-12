@@ -119,22 +119,25 @@ export default function ManageUsersPage() {
               </td>
 
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <Button
-                  variant="icon"
-                  onClick={() => {
-                    setSelectedUserId(user?.id);
-                    setOpenDialogModal(true);
-                  }}
-                  className={`p-2 rounded-full transition duration-200 ${user?.user_role === "ADMIN" ? "text-gray-400 cursor-not-allowed" : "text-gray-400 bg-white hover:bg-white hover:text-red-500"}`}
-                  disabled={user?.user_role === "ADMIN"}
+                <span
                   title={
                     user?.user_role === "ADMIN"
                       ? "Administrators cannot be removed"
                       : "Delete user"
                   }
                 >
-                  <Trash size={18} />
-                </Button>
+                  <Button
+                    variant="icon"
+                    onClick={() => {
+                      setSelectedUserId(user?.id);
+                      setOpenDialogModal(true);
+                    }}
+                    className={`p-2 rounded-full transition duration-200 ${user?.user_role === "ADMIN" ? "text-gray-400 cursor-not-allowed" : "text-gray-400 bg-white hover:bg-white hover:text-red-500"}`}
+                    disabled={user?.user_role === "ADMIN"}
+                  >
+                    <Trash size={18} />
+                  </Button>
+                </span>
               </td>
             </tr>
           ))}

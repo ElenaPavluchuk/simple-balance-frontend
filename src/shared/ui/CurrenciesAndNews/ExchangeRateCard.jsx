@@ -1,3 +1,6 @@
+import { useState, useEffect } from "react";
+import axiosInstance from "../../utils/axiosInstance";
+import { API_PATHS } from "../../utils/apiPaths";
 import { exchangeRateFormat } from "../../utils/format";
 import PropTypes from "prop-types";
 
@@ -10,7 +13,7 @@ ExchangeRateCard.propTypes = {
   ).isRequired,
   date: PropTypes.string,
   baseCurrencyCode: PropTypes.string,
-  selectedCurrencyCode: PropTypes.number,
+  selectedCurrencyId: PropTypes.string,
   isManagedCardStyle: PropTypes.bool,
 };
 
@@ -18,20 +21,43 @@ export default function ExchangeRateCard({
   rate,
   date,
   baseCurrencyCode,
-  selectedCurrencyCode,
+  selectedCurrencyId,
   isManagedCardStyle,
 }) {
-  const CURRENCY_SYMBOLS = {
-    USD: "$",
-    EUR: "€",
-    RUB: "₽",
-  };
+  const [currencies, setCurrencies] = useState([]);
 
-  const CURRENCIES_BY_ID = {
-    1: "USD",
-    2: "RUB",
-    3: "EUR",
-  };
+  useEffect(() => {
+    let isCancelled = false;
+
+    const getCurrencies = async () => {
+      try {
+        const response = await axiosInstance.get(
+          API_PATHS.CURRENCIES.GET_CURRENCIES,
+        );
+
+        if (isCancelled) return;
+
+        setCurrencies(response.data ?? []);
+      } catch (err) {
+        if (isCancelled) return;
+        console.error(err);
+      }
+    };
+
+    getCurrencies();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, []);
+
+  const currencySymbol = currencies.find(
+    (currency) => currency?.name === rate?.target_code,
+  )?.symbol;
+
+  const selectedCurrencyCode = currencies.find(
+    (currency) => currency?.id === Number(selectedCurrencyId),
+  )?.name;
 
   return (
     <div
@@ -45,13 +71,13 @@ export default function ExchangeRateCard({
     >
       <div className="flex justify-between w-full">
         <span className="flex items-center gap-2">
-          {CURRENCY_SYMBOLS[rate?.target_code]}
+          <p>{currencySymbol}</p>
           <p className="text-lg font-semibold">{rate?.target_code}</p>
         </span>
         <p className="font-bold text-green-700">
           {exchangeRateFormat(
             rate?.rate,
-            baseCurrencyCode || CURRENCIES_BY_ID[selectedCurrencyCode],
+            baseCurrencyCode || selectedCurrencyCode,
           )}
         </p>
       </div>

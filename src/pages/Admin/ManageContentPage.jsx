@@ -13,7 +13,7 @@ import ExchangeRateCard from "../../shared/ui/CurrenciesAndNews/ExchangeRateCard
 export default function ManageContenPage() {
   const [news, setNews] = useState([]);
   const [rates, setRates] = useState([]);
-  const [baseCurrency, setBaseCurrency] = useState("");
+  const [baseCurrencyId, setBaseCurrencyId] = useState("");
   const [isGetNewsLoading, setIsGetNewsLoading] = useState(false);
   const [isCreateNewsLoading, setIsCreateNewsLoading] = useState(false);
   const [isDeleteNewsLoading, setIsDeleteNewsLoading] = useState(false);
@@ -143,7 +143,7 @@ export default function ManageContenPage() {
       );
 
       setRates(response.data?.rates);
-      setBaseCurrency(response.data?.base_currency_id);
+      setBaseCurrencyId(response.data?.base_currency_id);
     } catch (err) {
       console.error(err);
       toast.error(getErrorMessage(err));
@@ -162,7 +162,7 @@ export default function ManageContenPage() {
     try {
       const response = await axiosInstance.delete(
         API_PATHS.ADMINS.DELETE_EXCHANGE_RATES_BY_DATE(
-          baseCurrency,
+          baseCurrencyId,
           formattedDate,
         ),
       );
@@ -266,7 +266,7 @@ export default function ManageContenPage() {
               <ExchangeRateCard
                 key={r?.id}
                 rate={r}
-                selectedCurrencyCode={baseCurrency}
+                selectedCurrencyId={baseCurrencyId}
                 isManagedCardStyle
               />
             ))}
