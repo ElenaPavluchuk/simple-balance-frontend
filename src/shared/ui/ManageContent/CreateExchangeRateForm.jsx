@@ -132,8 +132,8 @@ export default function CreateExchangeRateForm({
         {targetCurrencies.map((currency) => (
           <div key={currency.value}>
             <label className="text-gray-500 text-sm">
-              From {currency.label}{" "}
-              <span className="text-gray-500">to {selectedOption?.label}</span>
+              From {selectedOption?.label}{" "}
+              <span className="text-gray-500">to {currency.label}</span>
             </label>
             <input
               type="number"

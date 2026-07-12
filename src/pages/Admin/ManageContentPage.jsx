@@ -7,11 +7,13 @@ import toast, { Toaster } from "react-hot-toast";
 import NewsList from "../../shared/ui/CurrenciesAndNews/NewsList";
 import dayjs from "dayjs";
 import { getErrorMessage } from "../../shared/utils/getErrorMessage";
+import Loader from "../../shared/ui/Loader";
+import ExchangeRateCard from "../../shared/ui/CurrenciesAndNews/ExchangeRateCard";
 
 export default function ManageContenPage() {
   const [news, setNews] = useState([]);
   const [rates, setRates] = useState([]);
-  const [baseCurrency, setBaseCurrency] = useState("");
+  const [baseCurrencyId, setBaseCurrencyId] = useState("");
   const [isGetNewsLoading, setIsGetNewsLoading] = useState(false);
   const [isCreateNewsLoading, setIsCreateNewsLoading] = useState(false);
   const [isDeleteNewsLoading, setIsDeleteNewsLoading] = useState(false);
@@ -38,7 +40,7 @@ export default function ManageContenPage() {
         console.error(err);
         toast.error(getErrorMessage(err));
       } finally {
-        setIsGetNewsLoading(false);
+        if (!isCancelled) setIsGetNewsLoading(false);
       }
     };
 
@@ -141,7 +143,7 @@ export default function ManageContenPage() {
       );
 
       setRates(response.data?.rates);
-      setBaseCurrency(response.data?.base_currency_id);
+      setBaseCurrencyId(response.data?.base_currency_id);
     } catch (err) {
       console.error(err);
       toast.error(getErrorMessage(err));
@@ -160,7 +162,7 @@ export default function ManageContenPage() {
     try {
       const response = await axiosInstance.delete(
         API_PATHS.ADMINS.DELETE_EXCHANGE_RATES_BY_DATE(
-          baseCurrency,
+          baseCurrencyId,
           formattedDate,
         ),
       );
@@ -202,18 +204,18 @@ export default function ManageContenPage() {
       <div className="grid-1">
         <p>Our news: </p>
         {isGetNewsLoading && (
-          <div>
-            <p>Loading...</p>
+          <div className="mt-2 h-125 flex items-center justify-center">
+            <Loader />
           </div>
         )}
 
-        {news.length === 0 && (
+        {!isGetNewsLoading && news.length === 0 && (
           <div className="mt-2 h-125 flex items-center justify-center border rounded border-dashed p-2">
             <p className="italic">No news yet...</p>
           </div>
         )}
 
-        <ul>
+        <ul className="grid gap-4 mt-5">
           {news.map((item) => (
             <NewsList
               key={item?.id}
@@ -230,23 +232,26 @@ export default function ManageContenPage() {
         </ul>
       </div>
 
-      <div className={"grid-1"}>
+      <div className="grid-1">
         <p>Our rates: </p>
         {isGetRateLoading && (
-          <div>
-            <p>Loading...</p>
+          <div className="mt-2 h-125 flex items-center justify-center">
+            <Loader />
           </div>
         )}
 
-        {rates.length === 0 && (
+        {!isGetRateLoading && rates.length === 0 && (
           <div className="mt-2 h-125 flex items-center justify-center border rounded border-dashed p-2">
             <p className="italic">Click "Get Rates" and get actually rates</p>
           </div>
         )}
 
         {rates.map((rate) => (
-          <div key={rate?.date} className="bg-white mb-2 rounded">
-            <div className="flex justify-between">
+          <div
+            key={rate?.date}
+            className="bg-white mt-5 mb-2 rounded px-4 py-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+          >
+            <div className="flex justify-between mb-2">
               <p>{dayjs(rate?.date).format("DD-MM-YYYY")}</p>
               <button
                 onClick={() => handleDeleteRatesByDate(rate?.date)}
@@ -258,13 +263,12 @@ export default function ManageContenPage() {
             </div>
 
             {rate?.rates.map((r) => (
-              <div key={r?.id} className="flex justify-around border p-3">
-                <p>
-                  <span>{r?.target_symbol}</span>
-                  {r?.target_code}
-                </p>
-                <p>{r?.rate}</p>
-              </div>
+              <ExchangeRateCard
+                key={r?.id}
+                rate={r}
+                selectedCurrencyId={baseCurrencyId}
+                isManagedCardStyle
+              />
             ))}
           </div>
         ))}
