@@ -57,7 +57,7 @@ export default function ManageUsersPage() {
       );
 
       toast.success(response.data?.message);
-      setUsers(users.filter((user) => user.id !== selectedUserId));
+      setUsers(users.filter((user) => user?.id !== selectedUserId));
       setOpenDialogModal(false);
       setSelectedUserId(null);
     } catch (err) {
@@ -119,21 +119,6 @@ export default function ManageUsersPage() {
               </td>
 
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                {/* <button
-                  onClick={() => {
-                    setSelectedUserId(user?.id);
-                    setOpenDialogModal(true);
-                  }}
-                  className={`p-2 rounded-full transition duration-200 ${user?.user_role === "ADMIN" ? "text-gray-400 cursor-not-allowed" : "text-gray-400 bg-white hover:bg-white hover:text-red-500"}`}
-                  disabled={user?.user_role === "ADMIN"}
-                  title={
-                    user?.user_role === "ADMIN"
-                      ? "Cant remove administrator"
-                      : "Delete user"
-                  }
-                >
-                  <Trash size={18} />
-                </button> */}
                 <Button
                   variant="icon"
                   onClick={() => {
@@ -142,10 +127,9 @@ export default function ManageUsersPage() {
                   }}
                   className={`p-2 rounded-full transition duration-200 ${user?.user_role === "ADMIN" ? "text-gray-400 cursor-not-allowed" : "text-gray-400 bg-white hover:bg-white hover:text-red-500"}`}
                   disabled={user?.user_role === "ADMIN"}
-                  // TODO:
                   title={
                     user?.user_role === "ADMIN"
-                      ? "Cant remove administrator"
+                      ? "Administrators cannot be removed"
                       : "Delete user"
                   }
                 >
@@ -163,7 +147,7 @@ export default function ManageUsersPage() {
         title="Delete user"
       >
         <DeleteAlert
-          content="Are you sure you want to delete the user?"
+          message="Are you sure you want to delete the user?"
           onDelete={handleDeleteUser}
           onClose={() => setOpenDialogModal(false)}
           isLoading={isDeleteUserLoading}

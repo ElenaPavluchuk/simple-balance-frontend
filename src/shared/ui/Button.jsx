@@ -28,7 +28,7 @@ export default function Button({
     secondary: "border",
     link: "italic underline",
     danger: "bg-red-600 text-white hover:bg-red-700 active:bg-red-800",
-    icon: "hover:bg-gray-100 active:bg-gray-200",
+    icon: "hover:bg-gray-100 active:bg-gray-200 w-fit ",
   };
 
   const baseClasses = `
@@ -42,18 +42,27 @@ export default function Button({
     : "px-4 py-2";
 
   return (
-    <button
-      type={type}
+    <span
       title={title}
-      disabled={disabled}
-      onClick={onClick}
       className={`
         ${baseClasses}
          ${sizeClasses}
         ${className}
       `}
     >
-      {children}
-    </button>
+      <button
+        type={type}
+        // title={title}
+        disabled={disabled}
+        onClick={onClick}
+        // className={`
+        //   ${baseClasses}
+        //    ${sizeClasses}
+        //   ${className}
+        // `}
+      >
+        {children}
+      </button>
+    </span>
   );
 }
