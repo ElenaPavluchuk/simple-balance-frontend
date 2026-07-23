@@ -7,61 +7,68 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  { name: "Янв", income: 4000, expenses: 2400 },
-  { name: "Фев", income: 3000, expenses: 1398 },
-  { name: "Мар", income: 2000, expenses: 9800 },
-  { name: "Апр", income: 2780, expenses: 3908 },
-  { name: "Май", income: 1890, expenses: 4800 },
-  { name: "Июн", income: 2390, expenses: 3800 },
+const DATA = [
+  { name: "Jan", income: 4800, expenses: 1800 },
+  { name: "Feb", income: 6200, expenses: 2900 },
+  { name: "Mar", income: 5100, expenses: 4200 },
+  { name: "Apr", income: 7600, expenses: 3100 },
+  { name: "May", income: 4300, expenses: 5100 },
+  { name: "Jun", income: 6900, expenses: 2700 },
 ];
 
-const PRIMARY_PINK = "#e11d48";
-const LIGHT_PINK = "#ff8fab";
+const DARK_EMERALD = "#007a55";
+const LIGHT_EMERALD = "#00bc7d";
 
 export default function AnimatedLineChart() {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <AreaChart
-        data={data}
-        margin={{ top: 10, right: 10, left: -25, bottom: 0 }}
+        data={DATA}
+        margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
       >
-        {/* Градиент для заливки области под линией (Area) */}
         <defs>
           <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor={LIGHT_PINK} stopOpacity={0.8} />
-            <stop offset="95%" stopColor={LIGHT_PINK} stopOpacity={0} />
+            <stop offset="5%" stopColor={LIGHT_EMERALD} stopOpacity={0.8} />
+            <stop offset="95%" stopColor={LIGHT_EMERALD} stopOpacity={0} />
           </linearGradient>
           <linearGradient id="colorExpenses" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor={PRIMARY_PINK} stopOpacity={0.8} />
-            <stop offset="95%" stopColor={PRIMARY_PINK} stopOpacity={0} />
+            <stop offset="5%" stopColor={DARK_EMERALD} stopOpacity={0.8} />
+            <stop offset="95%" stopColor={DARK_EMERALD} stopOpacity={0} />
           </linearGradient>
         </defs>
 
-        {/* Ось X (Месяцы) */}
-        <XAxis dataKey="name" stroke="#a1a1aa" tickLine={false} />
+        <XAxis
+          dataKey="name"
+          stroke="#006045"
+          tickLine={false}
+          interval={0}
+          padding={{ left: 8, right: 8 }}
+        />
 
-        {/* Ось Y (Значения) - Скрываем для чистоты дизайна */}
-        <YAxis hide={true} domain={[0, "dataMax + 1000"]} />
+        <YAxis hide={true} />
 
-        {/* Всплывающая подсказка при наведении */}
         <Tooltip
           contentStyle={{
+            fontSize: "12px",
             borderRadius: "8px",
             border: "none",
             boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
           }}
+          labelStyle={{
+            fontSize: "14px",
+            fontWeight: 600,
+            color: "#004f3b",
+          }}
           formatter={(value, name) => [
             `$${value.toLocaleString()}`,
-            name === "income" ? "Доход" : "Расход",
+            name === "income" ? "Income" : "Expenses",
           ]}
         />
 
-        {/* Линия Дохода (Area) */}
         <Area
           type="monotone"
           dataKey="income"
-          stroke={LIGHT_PINK}
+          stroke={LIGHT_EMERALD}
           fillOpacity={1}
           fill="url(#colorIncome)"
           dot={false}
@@ -70,11 +77,10 @@ export default function AnimatedLineChart() {
           animationDuration={1500}
         />
 
-        {/* Линия Расходов (Area) */}
         <Area
           type="monotone"
           dataKey="expenses"
-          stroke={PRIMARY_PINK}
+          stroke={DARK_EMERALD}
           fillOpacity={1}
           fill="url(#colorExpenses)"
           dot={false}
