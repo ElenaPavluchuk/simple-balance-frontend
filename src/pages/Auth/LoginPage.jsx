@@ -63,7 +63,7 @@ export default function LoginPage() {
               setValidateErrors((prev) => ({ ...prev, email: "" }));
             }}
             placeholder="Email"
-            className="border rounded p-2 w-md"
+            className="border rounded p-2 w-xs"
             type="email"
           />
           {validateErrors.email && (
@@ -77,7 +77,7 @@ export default function LoginPage() {
               setValidateErrors((prev) => ({ ...prev, password: "" }));
             }}
             placeholder="Password"
-            className="border rounded p-2 w-md"
+            className="border rounded p-2 w-xs"
             type="password"
           />
           {validateErrors.password && (
