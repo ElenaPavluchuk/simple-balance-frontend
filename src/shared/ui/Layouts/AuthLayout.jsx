@@ -1,4 +1,4 @@
-import AnimatedLineChart from "../../auth/AnimatedLineChart";
+import AnimatedLineChart from "../Auth/AnimatedLineChart";
 import authImg from "../../assets/authImg.png";
 
 export default function AuthLayout({ children }) {
