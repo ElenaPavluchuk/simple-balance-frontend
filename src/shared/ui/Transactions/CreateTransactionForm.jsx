@@ -113,7 +113,7 @@ export default function CreateTransactionForm({
         <Input
           value={amount}
           onChange={handleAmountChange}
-          type={"number"}
+          type="number"
           label="Amount"
           placeholder="0.00"
           step="0.01"

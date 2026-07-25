@@ -40,7 +40,7 @@ export default function Input({
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
         />
       ) : (
-        <div className="input-box">
+        <div className="w-full flex justify-between items-center text-sm text-black relative">
           <input
             value={value}
             onChange={(e) => onChange(e.target.value)}
@@ -58,13 +58,13 @@ export default function Input({
               {showPassword ? (
                 <Eye
                   size={22}
-                  className="text-primary cursor-pointer"
+                  className="text-primary cursor-pointer absolute right-1/16"
                   onClick={() => setShowPassword(false)}
                 />
               ) : (
                 <EyeOff
                   size={22}
-                  className="text-slate-400 cursor-pointer"
+                  className="text-slate-400 cursor-pointer absolute right-1/16"
                   onClick={() => setShowPassword(true)}
                 />
               )}
