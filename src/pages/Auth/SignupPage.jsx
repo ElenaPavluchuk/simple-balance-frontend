@@ -6,6 +6,7 @@ import { useAuth } from "../../shared/context/auth/useAuth";
 import SignupForm from "../../shared/ui/Auth/SignupForm";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "../../shared/utils/getErrorMessage";
+import AuthLayout from "../../shared/ui/Layouts/AuthLayout";
 
 export default function SignupPage() {
   const [isSignupLoading, setIsSignupLoading] = useState(false);
@@ -34,6 +35,8 @@ export default function SignupPage() {
   };
 
   return (
-    <SignupForm onSignup={handleSignup} isSignupLoading={isSignupLoading} />
+    <AuthLayout>
+      <SignupForm onSignup={handleSignup} isSignupLoading={isSignupLoading} />
+    </AuthLayout>
   );
 }
