@@ -29,7 +29,7 @@ export default function Input({
 
   return (
     <div>
-      <label className="text-sm text-slate-800">{label}</label>
+      <label className="text-xs font-semibold text-cyan-950">{label}</label>
 
       {multiline ? (
         <textarea
@@ -37,10 +37,10 @@ export default function Input({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           rows={rows}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full px-2 py-1 border border-gray-400 rounded-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500"
         />
       ) : (
-        <div className="w-full flex justify-between items-center text-sm text-black relative">
+        <div className="w-full flex justify-between items-center text-sm text-cyan-950 relative">
           <input
             value={value}
             onChange={(e) => onChange(e.target.value)}
@@ -48,7 +48,7 @@ export default function Input({
               type === "password" ? (showPassword ? "text" : "password") : type
             }
             placeholder={placeholder}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full h-9 px-2 py-1 border border-gray-400 rounded-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500"
             step={step}
             max={max}
           />
@@ -57,14 +57,14 @@ export default function Input({
             <>
               {showPassword ? (
                 <Eye
-                  size={22}
-                  className="text-primary cursor-pointer absolute right-1/16"
+                  size={18}
+                  className="text-gray-400 cursor-pointer absolute right-1/16"
                   onClick={() => setShowPassword(false)}
                 />
               ) : (
                 <EyeOff
-                  size={22}
-                  className="text-slate-400 cursor-pointer absolute right-1/16"
+                  size={18}
+                  className="text-gray-400 cursor-pointer absolute right-1/16"
                   onClick={() => setShowPassword(true)}
                 />
               )}

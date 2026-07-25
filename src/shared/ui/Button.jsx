@@ -22,7 +22,8 @@ export default function Button({
   disabled = false,
 }) {
   const variants = {
-    primary: "bg-pink-400 text-white hover:bg-pink-500 active:bg-pink-700",
+    primary:
+      "bg-emerald-800 text-white hover:shadow-lg shadow-emerald-500/50 active:bg-emerald-900 text-base font-medium h-9",
     secondary: "border",
     link: "italic underline",
     danger: "bg-red-600 text-white hover:bg-red-700 active:bg-red-800",
@@ -31,7 +32,7 @@ export default function Button({
 
   const baseClasses = `px-4 py-2
     flex items-center justify-center gap-2
-    rounded-md transition-all select-none whitespace-nowrap
+    rounded-md transition-all duration-[120ms] ease-out select-none whitespace-nowrap
     disabled:opacity-50 disabled:pointer-events-none cursor-pointer 
     ${fontSize || "text-md"} ${variants[variant] || variants.primary}`;
 

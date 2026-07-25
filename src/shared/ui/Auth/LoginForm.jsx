@@ -46,15 +46,15 @@ export default function LoginForm({ onLogin, isLoginLoading }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col items-center justify-center gap-5 h-screen"
+      className="flex flex-col items-center justify-center gap-8 h-screen px-3"
     >
-      <h2 className="font-bold">Login user</h2>
+      <h2 className="text-emerald-800 text-3xl">Log in to your account</h2>
 
-      <div className="flex flex-col gap-2 w-fit">
+      <div className="flex flex-col gap-2 w-full max-w-sm">
         <Input
           value={email}
           onChange={handleEmailChange}
-          placeholder="Email"
+          label="Email Address"
           type="email"
         />
         {validateErrors.email && (
@@ -64,21 +64,26 @@ export default function LoginForm({ onLogin, isLoginLoading }) {
         <Input
           value={password}
           onChange={handlePasswordChange}
-          placeholder="Password"
+          label="Password"
           type="password"
         />
         {validateErrors.password && (
           <p className="text-red-500 italic">{validateErrors.password}</p>
         )}
 
-        <Button type="submit" disabled={isLoginLoading} variant="primary">
+        <Button
+          type="submit"
+          disabled={isLoginLoading}
+          variant="primary"
+          className="mt-8"
+        >
           {isLoginLoading ? "Loading..." : "Login"}
         </Button>
       </div>
 
-      <span className="flex gap-1 mt-5">
+      <span className="flex gap-1 text-slate-800 font-semibold text-lg">
         Don't have an account?
-        <Link to="/signup" className="underline">
+        <Link to="/signup" className="text-sky-500">
           Signup
         </Link>
       </span>
