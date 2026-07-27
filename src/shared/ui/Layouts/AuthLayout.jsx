@@ -2,12 +2,17 @@ import AnimatedLineChart from "../Auth/AnimatedLineChart";
 import authImg from "../../assets/authImg.png";
 import DollarIcon from "../Icons/DollarIcon";
 import LogoBig from "../Icons/LogoBig";
+import PropTypes from "prop-types";
+
+AuthLayout.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export default function AuthLayout({ children }) {
   return (
     <div className="flex h-screen">
       <div className="absolute top-4 left-4 2xl:top-8 2xl:left-8">
-        <LogoBig className="w-28 lg:w-32 2xl:w-36 text-emerald-700" />
+        <LogoBig className="w-30 lg:w-36 2xl:w-42 text-emerald-800" />
       </div>
 
       <div className="flex-1">{children}</div>
