@@ -4,7 +4,7 @@ import UserProfileCard from "../shared/ui/UserProfile/UserProfileCard";
 import EditUserProfileForm from "../shared/ui/UserProfile/EditUserProfileForm";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 export default function UserProfilePage() {
   const { user, updateUser, logout } = useAuth();
@@ -78,12 +78,8 @@ export default function UserProfilePage() {
     }
   };
   return (
-    <div className="m-10 flex flex-col items-center w-fit gap-5">
-      <h2 className="font-bold">UserProfilePage</h2>
-
-      <div>
-        <Toaster position="top-center" />
-      </div>
+    <div className="flex flex-col items-center gap-5">
+      <h2 className="font-bold">Profile Info</h2>
 
       {isEdit ? (
         <EditUserProfileForm
