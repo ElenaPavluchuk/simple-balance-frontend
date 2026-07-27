@@ -1,29 +1,39 @@
 import { useState } from "react";
 import { authValidate, clearFieldError } from "../../utils/validate";
 import ImageSelector from "./ImageSelector";
-import DialogModal from "../DialogModal";
-import DeleteAlert from "../DeleteAlert";
+import Input from "../Input";
+import Button from "../Button";
 
 export default function EditUserProfileForm({
   user,
   onSave,
   onCancel,
   isLoading,
-  onDeleteUser,
 }) {
   const [newProfileImage, setNewProfileImage] = useState(
-    user.profile_image_url || null,
+    user?.profile_image_url || null,
   );
-  const isImageChanged = newProfileImage !== user.profile_image_url;
   const [isRemoveImage, setIsRemoveImage] = useState(false);
   const [newUserName, setNewUserName] = useState(user.user_name);
   const [isEditPassword, setIsEditPassword] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [validateErrors, setValidateErrors] = useState({});
-  const [openDialogModal, setOpenDialogModal] = useState(false);
+  const isImageChanged = newProfileImage !== user?.profile_image_url;
 
-  const togglePasswordEdit = () => {
+  const handleUserNameChange = (e) => {
+    setNewUserName(e);
+    clearFieldError("userName", setValidateErrors);
+  };
+
+  const handleCurrentPasswordChange = (e) => setCurrentPassword(e);
+
+  const handleNewPasswordChange = (e) => {
+    setNewPassword(e);
+    clearFieldError("password", setValidateErrors);
+  };
+
+  const toggleEditPassword = () => {
     setIsEditPassword((prev) => !prev);
 
     if (isEditPassword) {
@@ -37,6 +47,7 @@ export default function EditUserProfileForm({
     e.preventDefault();
 
     const validatePayload = { userName: newUserName };
+
     if (isEditPassword) {
       validatePayload.password = newPassword;
     }
@@ -65,108 +76,66 @@ export default function EditUserProfileForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-3 bg-white p-4 shadow-md rounded w-md"
+      className="flex flex-col items-center bg-white md:p-6 p-4 shadow-md rounded-3xl w-full max-w-md"
     >
-      <h3 className="font-semibold text-center">Edit Profile</h3>
       <ImageSelector
         image={newProfileImage}
         setImage={setNewProfileImage}
         onRemoveImage={setIsRemoveImage}
       />
-      <label>
-        Name:{" "}
-        <input
+
+      <div className="flex flex-col gap-3 w-full my-9">
+        <Input
           value={newUserName}
-          onChange={(e) => {
-            setNewUserName(e.target.value);
-            clearFieldError("userName", setValidateErrors);
-          }}
-          placeholder="Change name"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          onChange={handleUserNameChange}
+          label="Change name"
         />
-      </label>
-      {validateErrors.userName && (
-        <p className="text-red-500 italic">{validateErrors.userName}</p>
-      )}
+        {validateErrors.userName && (
+          <p className="text-red-500 italic">{validateErrors.userName}</p>
+        )}
 
-      <button
-        type="button"
-        onClick={togglePasswordEdit}
-        className="w-full px-3 py-2 border border-red-500 rounded text-red-500 mt-3"
-      >
-        {isEditPassword ? "Cancel" : "Change password"}
-      </button>
-      {isEditPassword && (
-        <div className="flex flex-col gap-2">
-          <input
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            placeholder="Current password"
-            type="password"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-          <input
-            value={newPassword}
-            onChange={(e) => {
-              setNewPassword(e.target.value);
-              clearFieldError("password", setValidateErrors);
-            }}
-            placeholder="New password"
-            type="password"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-          {validateErrors.password && (
-            <p className="text-red-500 italic">{validateErrors.password}</p>
-          )}
-        </div>
-      )}
+        <Button onClick={toggleEditPassword} variant="secondary">
+          {isEditPassword ? "Cancel" : "Change password"}
+        </Button>
 
-      <button
-        type="submit"
-        disabled={isLoading}
-        className="w-full bg-rose-400 text-white rounded py-2 mt-8"
-      >
-        {isLoading ? "Updating..." : "Update profile"}
-      </button>
-      <button
-        type="button"
-        onClick={onCancel}
-        className="w-full border border-gray-700 text-gray-700 rounded py-2"
-      >
-        Cancel edit profile
-      </button>
-
-      <div className="bg-red-200 px-5 py-2 rounded mt-5">
-        <h4 className="text-red-500 font-semibold text-lg my-3 mx-2">
-          Danger zone
-        </h4>
-        <div className="bg-white rounded px-3 py-2 flex flex-row items-center">
-          <div>
-            <h4 className="text-lg py-2">Delete account</h4>
-            <p>Delete this user account and any excisting information</p>
+        {isEditPassword && (
+          <div className="flex flex-col gap-2">
+            <Input
+              value={currentPassword}
+              onChange={handleCurrentPasswordChange}
+              label="Current password"
+              type="password"
+            />
+            <Input
+              value={newPassword}
+              onChange={handleNewPasswordChange}
+              label="New password"
+              type="password"
+            />
+            {validateErrors.password && (
+              <p className="text-red-500 italic">{validateErrors.password}</p>
+            )}
           </div>
-          <button
-            onClick={() => setOpenDialogModal(true)}
-            type="button"
-            className="px-4 py-2 bg-red-500 rounded text-white h-15"
-          >
-            Delete account
-          </button>
-        </div>
+        )}
       </div>
 
-      <DialogModal
-        isOpen={openDialogModal}
-        onClose={() => setOpenDialogModal(false)}
-        title="Permanantly delete this account?"
-      >
-        <DeleteAlert
-          content="The account with any exsisting information will be removed"
-          onDelete={onDeleteUser}
-          onClose={() => setOpenDialogModal(false)}
-          isLoading={isLoading}
-        />
-      </DialogModal>
+      <div className="flex md:flex-row md:justify-around flex-col gap-3 w-full">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          variant="primary"
+          className="md:w-1/3"
+        >
+          {isLoading ? "Updating..." : "Update profile"}
+        </Button>
+        <Button
+          onClick={onCancel}
+          variant="secondary"
+          className="h-full md:w-1/3"
+        >
+          Cancel edit
+        </Button>
+      </div>
     </form>
   );
 }

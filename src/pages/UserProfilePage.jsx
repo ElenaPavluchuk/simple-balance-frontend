@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../shared/context/auth/useAuth";
 import UserProfileCard from "../shared/ui/UserProfile/UserProfileCard";
 import EditUserProfileForm from "../shared/ui/UserProfile/EditUserProfileForm";
+import DeleteUserProfileCard from "../shared/ui/UserProfile/DeleteUserProfileCard";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
 import toast from "react-hot-toast";
@@ -77,18 +78,22 @@ export default function UserProfilePage() {
       setIsLoading(false);
     }
   };
+
   return (
     <div className="flex flex-col items-center gap-5">
       <h2 className="font-bold">Profile Info</h2>
 
       {isEdit ? (
-        <EditUserProfileForm
-          user={user}
-          onSave={handleSaveEdit}
-          onCancel={handleCancelEdit}
-          isLoading={isLoading}
-          onDeleteUser={handleDelete}
-        />
+        <>
+          <EditUserProfileForm
+            user={user}
+            onSave={handleSaveEdit}
+            onCancel={handleCancelEdit}
+            isLoading={isLoading}
+          />
+
+          <DeleteUserProfileCard onDeleteUser={handleDelete} />
+        </>
       ) : (
         <UserProfileCard user={user} onEdit={handleEdit} />
       )}
