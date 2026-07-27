@@ -2,8 +2,8 @@ import PropTypes from "prop-types";
 import { Link, useLocation } from "react-router";
 import { MENU_DATA } from "./config/data";
 import { Menu, X } from "lucide-react";
-import { useAuth } from "../../../../context/auth/useAuth";
-import Button from "../../../Button";
+import { useAuth } from "../../context/auth/useAuth";
+import Button from "../Button";
 
 Sidebar.propTypes = {
   isOpen: PropTypes.bool.isRequired,

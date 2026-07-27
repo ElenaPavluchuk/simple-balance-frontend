@@ -2,7 +2,7 @@ import { AuthGuard } from "../guards/AuthGuard";
 import { AdminGuard } from "../guards/AdminGuard";
 import SignupPage from "../../../pages/Auth/SignupPage";
 import LoginPage from "../../../pages/Auth/LoginPage";
-import AppLayout from "../../ui/Layouts/AppLayout/AppLayout";
+import AppLayout from "../../ui/Layouts/AppLayout";
 import DashboardPage from "../../../pages/DashboardPage";
 import ExpensePage from "../../../pages/ExpensePage";
 import IncomePage from "../../../pages/IncomePage";
