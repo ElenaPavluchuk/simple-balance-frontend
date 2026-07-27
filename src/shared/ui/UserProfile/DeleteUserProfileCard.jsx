@@ -7,16 +7,18 @@ export default function DeleteUserProfileCard({ onDeleteUser, isLoading }) {
   const [openDialogModal, setOpenDialogModal] = useState(false);
 
   return (
-    <div className="flex flex-col bg-white p-6 shadow-md rounded-3xl w-full max-w-md">
-      <h4 className="text-lg mb-2">Delete account</h4>
-      <p>
-        You will lose access to your Simple Balance account once your deletion
-      </p>
+    <div className="flex flex-col items-center bg-white p-6 shadow-md rounded-3xl w-full max-w-md">
+      <div>
+        <h4 className="text-lg mb-3">Delete account</h4>
+        <p>
+          You will lose access to your Simple Balance account once your deletion
+        </p>
+      </div>
 
       <Button
         variant="danger"
         onClick={() => setOpenDialogModal(true)}
-        className="mt-8"
+        className="mt-9 max-w-1/3"
       >
         Delete account
       </Button>

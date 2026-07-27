@@ -99,7 +99,7 @@ export default function EditUserProfileForm({
         </Button>
 
         {isEditPassword && (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             <Input
               value={currentPassword}
               onChange={handleCurrentPasswordChange}
