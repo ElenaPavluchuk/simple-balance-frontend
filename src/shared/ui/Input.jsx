@@ -29,7 +29,7 @@ export default function Input({
 
   return (
     <div>
-      <label className="text-xs font-semibold text-cyan-950">{label}</label>
+      <label className="text-xs font-medium text-cyan-950">{label}</label>
 
       {multiline ? (
         <textarea
@@ -58,13 +58,13 @@ export default function Input({
               {showPassword ? (
                 <Eye
                   size={18}
-                  className="text-gray-400 cursor-pointer absolute right-1/16"
+                  className="text-gray-400 cursor-pointer absolute right-1/18"
                   onClick={() => setShowPassword(false)}
                 />
               ) : (
                 <EyeOff
                   size={18}
-                  className="text-gray-400 cursor-pointer absolute right-1/16"
+                  className="text-gray-400 cursor-pointer absolute right-1/18"
                   onClick={() => setShowPassword(true)}
                 />
               )}

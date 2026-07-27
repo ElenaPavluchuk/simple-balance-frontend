@@ -46,7 +46,7 @@ export default function LoginForm({ onLogin, isLoginLoading }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col items-center justify-center gap-8 h-screen px-3"
+      className="flex flex-col items-center justify-center gap-8 h-screen px-4"
     >
       <h2 className="text-emerald-800 text-3xl">Log in to your account</h2>
 
@@ -58,7 +58,7 @@ export default function LoginForm({ onLogin, isLoginLoading }) {
           type="email"
         />
         {validateErrors.email && (
-          <p className="text-red-500 italic">{validateErrors.email}</p>
+          <p className="text-red-600 text-xs">{validateErrors.email}</p>
         )}
 
         <Input
@@ -68,7 +68,7 @@ export default function LoginForm({ onLogin, isLoginLoading }) {
           type="password"
         />
         {validateErrors.password && (
-          <p className="text-red-500 italic">{validateErrors.password}</p>
+          <p className="text-red-600 text-xs">{validateErrors.password}</p>
         )}
 
         <Button
@@ -81,7 +81,7 @@ export default function LoginForm({ onLogin, isLoginLoading }) {
         </Button>
       </div>
 
-      <span className="flex gap-1 text-slate-800 font-semibold text-lg">
+      <span className="flex gap-1 text-slate-800 font-medium text-lg">
         Don't have an account?
         <Link to="/signup" className="text-sky-500">
           Signup

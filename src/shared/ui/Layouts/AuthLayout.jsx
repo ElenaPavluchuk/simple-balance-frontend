@@ -26,8 +26,8 @@ export default function AuthLayout({ children }) {
           <AnimatedLineChart />
         </div>
 
-        <div className="absolute xl:bottom-0 bottom-20 left-1/2 -translate-x-1/2 w-full">
-          <div className="w-full flex items-center justify-center relative">
+        <div className="absolute top-[60%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-full">
+          <div className="flex justify-center">
             <img
               className="xl:size-150 size-120 object-bottom object-fill"
               src={authImg}
