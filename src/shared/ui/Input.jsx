@@ -58,13 +58,13 @@ export default function Input({
               {showPassword ? (
                 <Eye
                   size={18}
-                  className="text-gray-400 cursor-pointer absolute right-1/18"
+                  className="text-gray-400 hover:text-gray-500 cursor-pointer absolute right-1/18"
                   onClick={() => setShowPassword(false)}
                 />
               ) : (
                 <EyeOff
                   size={18}
-                  className="text-gray-400 cursor-pointer absolute right-1/18"
+                  className="text-gray-400 hover:text-gray-500 cursor-pointer absolute right-1/18"
                   onClick={() => setShowPassword(true)}
                 />
               )}

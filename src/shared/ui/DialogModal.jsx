@@ -24,7 +24,8 @@ export default function DialogModal({ isOpen, onClose, title, children }) {
         <Button
           onClick={onClose}
           variant="icon"
-          className="absolute top-4 right-0"
+          iconColor="text-red-500"
+          className="absolute top-4 right-0 text-gray-400 hover:text-gray-600 active:text-gray-700"
         >
           <X className="w-6 h-6" />
         </Button>

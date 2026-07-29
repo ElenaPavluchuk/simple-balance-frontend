@@ -60,18 +60,18 @@ export default function ImageSelector({ image, setImage, onRemoveImage }) {
             className="absolute -bottom-1 -right-8"
             onClick={handleRemoveImage}
           >
-            <div className="w-8 h-8 bg-white border border-emerald-800 rounded-full flex items-center justify-center">
-              <Trash className="text-emerald-800" />
+            <div className="w-8 h-8 text-emerald-800 bg-white border border-emerald-800 hover:bg-emerald-800 hover:text-white rounded-full flex items-center justify-center">
+              <Trash />
             </div>
           </Button>
         </div>
       ) : (
         <Button variant="icon" onClick={onChooseFile} className="mt-5">
           <div className="w-20 h-20 flex items-center justify-center bg-gray-300 rounded-full relative">
-            <User className="text-emerald-800" />
+            <User className="text-emerald-800" size={30} />
 
-            <div className="w-8 h-8 flex items-center justify-center bg-primary rounded-full absolute -bottom-1 -right-1">
-              <ImageUp className="text-emerald-800" />
+            <div className="w-8 h-8 text-emerald-800 bg-white border border-emerald-800 hover:bg-emerald-800 hover:text-white flex items-center justify-center bg-primary rounded-full absolute -bottom-1 -right-1">
+              <ImageUp />
             </div>
           </div>
         </Button>

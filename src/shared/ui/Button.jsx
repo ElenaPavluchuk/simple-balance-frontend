@@ -5,6 +5,7 @@ Button.propTypes = {
   onClick: PropTypes.func,
   type: PropTypes.string,
   variant: PropTypes.oneOf(["primary", "secondary", "link", "danger", "icon"]),
+  iconColor: PropTypes.string,
   className: PropTypes.string,
   title: PropTypes.string,
   disabled: PropTypes.bool,
@@ -27,7 +28,7 @@ export default function Button({
     link: "italic underline",
     danger:
       "bg-red-600 text-white hover:shadow-lg shadow-red-400/50 active:bg-red-800",
-    icon: "text-gray-400 hover:text-gray-500 active:text-gray-600",
+    icon: "bg-transparent",
   };
 
   const baseClasses = `px-6 py-2 h-9
