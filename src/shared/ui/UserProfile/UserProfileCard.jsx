@@ -17,9 +17,9 @@ export default function UserProfileCard({ user, onEdit }) {
     <Card className="flex flex-col items-center w-full max-w-md">
       {user?.profile_image_url ? (
         <img
-          src={user.profile_image_url}
+          src={user?.profile_image_url}
           alt="Profile"
-          className="w-20 h-20 rounded-full"
+          className="w-20 h-20 rounded-full border border-gray-300 object-center object-cover"
         />
       ) : (
         <div className="w-20 h-20 bg-gray-400 rounded-full flex items-center justify-center">
