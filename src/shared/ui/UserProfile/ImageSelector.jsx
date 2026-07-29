@@ -49,7 +49,7 @@ export default function ImageSelector({ image, setImage, onRemoveImage }) {
         className="hidden"
       />
       {image ? (
-        <div className="relative rounded-full border-2">
+        <div className="relative rounded-full border border-gray-400">
           <img
             src={previewUrl}
             alt="profile photo"
