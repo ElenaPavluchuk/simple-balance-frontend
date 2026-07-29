@@ -20,15 +20,17 @@ export default function DialogModal({ isOpen, onClose, title, children }) {
         onClick={onClose}
       />
 
-      <div className="relative bg-pink-100 rounded-xl shadow-2xl w-full max-w-md mx-4 p-6 animate-in fade-in zoom-in duration-200">
+      <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 p-6 animate-in fade-in zoom-in duration-200">
         <Button
           onClick={onClose}
           variant="icon"
-          className="absolute top-4 right-4"
+          className="absolute top-4 right-0"
         >
           <X className="w-6 h-6" />
         </Button>
-        <h2 className="text-2xl font-bold mb-6">{title}</h2>
+        <h2 className="text-xl md:text-2xl font-medium text-slate-900 mb-6 max-w-[85%]">
+          {title}
+        </h2>
         <div>{children}</div>
       </div>
     </div>,

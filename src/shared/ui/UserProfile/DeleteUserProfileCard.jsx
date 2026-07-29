@@ -35,7 +35,7 @@ export default function DeleteUserProfileCard({
         title="Permanantly delete this account?"
       >
         <DeleteAlert
-          content="The account with any exsisting information will be removed"
+          message="The account with any exsisting information will be removed"
           onDelete={onDeleteUser}
           onClose={() => setOpenDialogModal(false)}
           isLoading={isDeleteLoading}
