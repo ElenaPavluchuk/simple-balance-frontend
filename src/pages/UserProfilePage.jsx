@@ -2,19 +2,23 @@ import { useState } from "react";
 import { useAuth } from "../shared/context/auth/useAuth";
 import UserProfileCard from "../shared/ui/UserProfile/UserProfileCard";
 import EditUserProfileForm from "../shared/ui/UserProfile/EditUserProfileForm";
+import DeleteUserProfileCard from "../shared/ui/UserProfile/DeleteUserProfileCard";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "../shared/utils/getErrorMessage";
+import Loader from "../shared/ui/Loader";
 
 export default function UserProfilePage() {
   const { user, updateUser, logout } = useAuth();
   const [isEdit, setIsEdit] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isUpdateLoading, setIsUpdateLoading] = useState(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
   const handleEdit = () => setIsEdit(true);
 
   const handleSaveEdit = async (data) => {
-    setIsLoading(true);
+    setIsUpdateLoading(true);
 
     try {
       let response;
@@ -45,54 +49,61 @@ export default function UserProfilePage() {
         response = await axiosInstance.put(API_PATHS.USERS.USER_PROFILE, data);
       }
 
-      updateUser(response?.data?.updatedUser);
+      updateUser(response.data?.updatedUser);
       setIsEdit(false);
-      toast.success(response?.data?.message);
+      toast.success(response.data?.message);
     } catch (err) {
       console.error(err);
-      toast.error(
-        err.response?.data?.message || "Something went wrong. Please try again",
-      );
+      toast.error(getErrorMessage(err));
     } finally {
-      setIsLoading(false);
+      setIsUpdateLoading(false);
     }
   };
 
   const handleCancelEdit = () => setIsEdit(false);
 
   const handleDelete = async () => {
-    setIsLoading(true);
+    setIsDeleteLoading(true);
 
     try {
       const response = await axiosInstance.delete(API_PATHS.USERS.USER_PROFILE);
-      toast.success(response?.data?.message);
+      toast.success(response.data?.message);
 
       logout();
     } catch (err) {
       console.error(err);
-      toast.error(
-        err.response?.data?.message || "Something went wrong. Please try again",
-      );
+      toast.error(getErrorMessage(err));
     } finally {
-      setIsLoading(false);
+      setIsDeleteLoading(false);
     }
   };
-  return (
-    <div className="m-10 flex flex-col items-center w-fit gap-5">
-      <h2 className="font-bold">UserProfilePage</h2>
 
-      <div>
-        <Toaster position="top-center" />
+  if (!user) {
+    return (
+      <div className="w-full h-screen">
+        <Loader />
       </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-6">
+      <h2 className="text-3xl text-emerald-800">Profile Info</h2>
 
       {isEdit ? (
-        <EditUserProfileForm
-          user={user}
-          onSave={handleSaveEdit}
-          onCancel={handleCancelEdit}
-          isLoading={isLoading}
-          onDeleteUser={handleDelete}
-        />
+        <>
+          <EditUserProfileForm
+            user={user}
+            onSave={handleSaveEdit}
+            onCancel={handleCancelEdit}
+            isUpdateLoading={isUpdateLoading}
+          />
+
+          <DeleteUserProfileCard
+            onDeleteUser={handleDelete}
+            isDeleteLoading={isDeleteLoading}
+          />
+        </>
       ) : (
         <UserProfileCard user={user} onEdit={handleEdit} />
       )}

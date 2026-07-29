@@ -10,18 +10,27 @@ DeleteAlert.propTypes = {
 
 export default function DeleteAlert({ message, onDelete, onClose, isLoading }) {
   return (
-    <div>
-      <p className="text-sm">{message}</p>
+    <>
+      <p className="text-sm text-cyan-950">{message}</p>
 
-      <div className="flex justify-between mt-6">
-        <Button onClick={onDelete} disabled={isLoading} variant="primary">
+      <div className="flex mt-9 md:flex-row md:justify-around flex-col gap-3 w-full">
+        <Button
+          onClick={onDelete}
+          disabled={isLoading}
+          variant="primary"
+          className="md:w-1/3 w-full"
+        >
           {isLoading ? "Loading..." : "Delete"}
         </Button>
 
-        <Button onClick={onClose} variant="secondary">
+        <Button
+          onClick={onClose}
+          variant="secondary"
+          className="md:w-1/3 w-full"
+        >
           Cancel
         </Button>
       </div>
-    </div>
+    </>
   );
 }
