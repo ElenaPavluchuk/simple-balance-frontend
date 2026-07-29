@@ -3,6 +3,12 @@ import Button from "../Button";
 import Card from "../Card";
 import DialogModal from "../DialogModal";
 import DeleteAlert from "../DeleteAlert";
+import PropTypes from "prop-types";
+
+DeleteUserProfileCard.propTypes = {
+  onDeleteUser: PropTypes.func.isRequired,
+  isDeleteLoading: PropTypes.bool.isRequired,
+};
 
 export default function DeleteUserProfileCard({
   onDeleteUser,

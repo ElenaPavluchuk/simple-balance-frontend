@@ -4,6 +4,17 @@ import ImageSelector from "./ImageSelector";
 import Input from "../Input";
 import Button from "../Button";
 import Card from "../Card";
+import PropTypes from "prop-types";
+
+EditUserProfileForm.propTypes = {
+  user: PropTypes.shape({
+    profile_image_url: PropTypes.string,
+    user_name: PropTypes.string.isRequired,
+  }).isRequired,
+  onSave: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  isUpdateLoading: PropTypes.bool.isRequired,
+};
 
 export default function EditUserProfileForm({
   user,
@@ -15,7 +26,7 @@ export default function EditUserProfileForm({
     user?.profile_image_url || null,
   );
   const [isRemoveImage, setIsRemoveImage] = useState(false);
-  const [newUserName, setNewUserName] = useState(user.user_name);
+  const [newUserName, setNewUserName] = useState(user?.user_name);
   const [isEditPassword, setIsEditPassword] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");

@@ -10,7 +10,7 @@ DeleteAlert.propTypes = {
 
 export default function DeleteAlert({ message, onDelete, onClose, isLoading }) {
   return (
-    <div>
+    <>
       <p className="text-sm text-cyan-950">{message}</p>
 
       <div className="flex mt-9 md:flex-row md:justify-around flex-col gap-3 w-full">
@@ -31,6 +31,6 @@ export default function DeleteAlert({ message, onDelete, onClose, isLoading }) {
           Cancel
         </Button>
       </div>
-    </div>
+    </>
   );
 }

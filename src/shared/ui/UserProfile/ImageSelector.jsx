@@ -1,5 +1,13 @@
 import { useRef, useState, useEffect } from "react";
 import { User, ImageUp, Trash } from "lucide-react";
+import Button from "../Button";
+import PropTypes from "prop-types";
+
+ImageSelector.propTypes = {
+  image: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  setImage: PropTypes.func.isRequired,
+  onRemoveImage: PropTypes.func.isRequired,
+};
 
 export default function ImageSelector({ image, setImage, onRemoveImage }) {
   const inputRef = useRef(null);
@@ -47,25 +55,26 @@ export default function ImageSelector({ image, setImage, onRemoveImage }) {
             alt="profile photo"
             className="w-20 h-20 rounded-full object-cover"
           />
-          <button
-            type="button"
-            className="w-8 h-8 flex items-center justify-center text-white bg-red-400 rounded-full absolute -bottom-1 -right-1"
+          <Button
+            variant="icon"
+            className="absolute -bottom-1 -right-8"
             onClick={handleRemoveImage}
           >
-            <Trash />
-          </button>
+            <div className="w-8 h-8 bg-white border border-emerald-800 rounded-full flex items-center justify-center">
+              <Trash className="text-emerald-800" />
+            </div>
+          </Button>
         </div>
       ) : (
-        <div className="w-20 h-20 flex items-center justify-center bg-gray-300 rounded-full relative">
-          <User className="text-emerald-800" />
-          <button
-            type="button"
-            className="w-8 h-8 flex items-center justify-center bg-primary rounded-full absolute -bottom-1 -right-1"
-            onClick={onChooseFile}
-          >
-            <ImageUp className="text-emerald-800" />
-          </button>
-        </div>
+        <Button variant="icon" onClick={onChooseFile} className="mt-5">
+          <div className="w-20 h-20 flex items-center justify-center bg-gray-300 rounded-full relative">
+            <User className="text-emerald-800" />
+
+            <div className="w-8 h-8 flex items-center justify-center bg-primary rounded-full absolute -bottom-1 -right-1">
+              <ImageUp className="text-emerald-800" />
+            </div>
+          </div>
+        </Button>
       )}
     </div>
   );
