@@ -1,16 +1,22 @@
 import { useState } from "react";
 import Button from "../Button";
+import Card from "../Card";
 import DialogModal from "../DialogModal";
 import DeleteAlert from "../DeleteAlert";
 
-export default function DeleteUserProfileCard({ onDeleteUser, isLoading }) {
+export default function DeleteUserProfileCard({
+  onDeleteUser,
+  isDeleteLoading,
+}) {
   const [openDialogModal, setOpenDialogModal] = useState(false);
 
   return (
-    <div className="flex flex-col items-center bg-white p-6 shadow-md rounded-3xl w-full max-w-md">
+    <Card className="flex flex-col items-center w-full max-w-md">
       <div>
-        <h4 className="text-lg mb-3">Delete account</h4>
-        <p>
+        <h4 className="text-lg mb-3 text-slate-900 font-medium">
+          Delete account
+        </h4>
+        <p className="text-base text-cyan-950">
           You will lose access to your Simple Balance account once your deletion
         </p>
       </div>
@@ -18,7 +24,7 @@ export default function DeleteUserProfileCard({ onDeleteUser, isLoading }) {
       <Button
         variant="danger"
         onClick={() => setOpenDialogModal(true)}
-        className="mt-9 max-w-1/3"
+        className="mt-9 w-full md:max-w-1/3"
       >
         Delete account
       </Button>
@@ -32,9 +38,9 @@ export default function DeleteUserProfileCard({ onDeleteUser, isLoading }) {
           content="The account with any exsisting information will be removed"
           onDelete={onDeleteUser}
           onClose={() => setOpenDialogModal(false)}
-          isLoading={isLoading}
+          isLoading={isDeleteLoading}
         />
       </DialogModal>
-    </div>
+    </Card>
   );
 }

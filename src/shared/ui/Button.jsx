@@ -30,7 +30,7 @@ export default function Button({
     icon: "hover:bg-gray-100 active:bg-gray-200 w-fit",
   };
 
-  const baseClasses = `px-6 py-2
+  const baseClasses = `px-6 py-2 h-9
     flex items-center justify-center gap-2 font-medium text-sm
     rounded-md transition-all duration-[120ms] ease-out select-none whitespace-nowrap
     disabled:opacity-50 disabled:pointer-events-none cursor-pointer 

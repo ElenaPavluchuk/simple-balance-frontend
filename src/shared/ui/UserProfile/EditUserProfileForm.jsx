@@ -3,12 +3,13 @@ import { authValidate, clearFieldError } from "../../utils/validate";
 import ImageSelector from "./ImageSelector";
 import Input from "../Input";
 import Button from "../Button";
+import Card from "../Card";
 
 export default function EditUserProfileForm({
   user,
   onSave,
   onCancel,
-  isLoading,
+  isUpdateLoading,
 }) {
   const [newProfileImage, setNewProfileImage] = useState(
     user?.profile_image_url || null,
@@ -74,68 +75,72 @@ export default function EditUserProfileForm({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col items-center bg-white md:p-6 p-4 shadow-md rounded-3xl w-full max-w-md"
-    >
-      <ImageSelector
-        image={newProfileImage}
-        setImage={setNewProfileImage}
-        onRemoveImage={setIsRemoveImage}
-      />
-
-      <div className="flex flex-col gap-3 w-full my-9">
-        <Input
-          value={newUserName}
-          onChange={handleUserNameChange}
-          label="Change name"
+    <Card className="flex flex-col items-center w-full max-w-md">
+      <form onSubmit={handleSubmit} className="w-full">
+        <ImageSelector
+          image={newProfileImage}
+          setImage={setNewProfileImage}
+          onRemoveImage={setIsRemoveImage}
         />
-        {validateErrors.userName && (
-          <p className="text-red-500 italic">{validateErrors.userName}</p>
-        )}
 
-        <Button onClick={toggleEditPassword} variant="secondary">
-          {isEditPassword ? "Cancel" : "Change password"}
-        </Button>
-
-        {isEditPassword && (
-          <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 w-full my-9">
+          <div className="flex flex-col gap-1">
             <Input
-              value={currentPassword}
-              onChange={handleCurrentPasswordChange}
-              label="Current password"
-              type="password"
+              value={newUserName}
+              onChange={handleUserNameChange}
+              label="Change name"
             />
-            <Input
-              value={newPassword}
-              onChange={handleNewPasswordChange}
-              label="New password"
-              type="password"
-            />
-            {validateErrors.password && (
-              <p className="text-red-500 italic">{validateErrors.password}</p>
+            {validateErrors.userName && (
+              <p className="text-red-600 text-xs">{validateErrors.userName}</p>
             )}
           </div>
-        )}
-      </div>
 
-      <div className="flex md:flex-row md:justify-around flex-col gap-3 w-full">
-        <Button
-          type="submit"
-          disabled={isLoading}
-          variant="primary"
-          className="md:w-1/3"
-        >
-          {isLoading ? "Updating..." : "Update profile"}
-        </Button>
-        <Button
-          onClick={onCancel}
-          variant="secondary"
-          className="h-full md:w-1/3"
-        >
-          Cancel edit
-        </Button>
-      </div>
-    </form>
+          <Button onClick={toggleEditPassword} variant="secondary">
+            {isEditPassword ? "Cancel" : "Change password"}
+          </Button>
+
+          {isEditPassword && (
+            <div className="flex flex-col gap-1">
+              <Input
+                value={currentPassword}
+                onChange={handleCurrentPasswordChange}
+                label="Current password"
+                type="password"
+              />
+              <Input
+                value={newPassword}
+                onChange={handleNewPasswordChange}
+                label="New password"
+                type="password"
+              />
+              {validateErrors.password && (
+                <p className="text-red-600 text-xs">
+                  {validateErrors.password}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="flex md:flex-row md:justify-around flex-col gap-3 w-full">
+          <Button
+            type="submit"
+            disabled={isUpdateLoading}
+            variant="primary"
+            className="md:w-1/3"
+          >
+            {isUpdateLoading ? "Updating..." : "Update profile"}
+          </Button>
+          <Button
+            onClick={onCancel}
+            disabled={isUpdateLoading}
+            variant="secondary"
+            className="h-full md:w-1/3"
+          >
+            Cancel edit
+          </Button>
+        </div>
+      </form>
+    </Card>
   );
 }

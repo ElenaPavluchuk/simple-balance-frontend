@@ -1,4 +1,5 @@
 import Button from "../Button";
+import Card from "../Card";
 import PropTypes from "prop-types";
 
 UserProfileCard.propTypes = {
@@ -13,7 +14,7 @@ UserProfileCard.propTypes = {
 
 export default function UserProfileCard({ user, onEdit }) {
   return (
-    <div className="flex flex-col items-center bg-white p-6 shadow-md rounded-3xl w-full max-w-md">
+    <Card className="flex flex-col items-center w-full max-w-md">
       {user?.profile_image_url ? (
         <img
           src={user.profile_image_url}
@@ -29,27 +30,31 @@ export default function UserProfileCard({ user, onEdit }) {
       )}
 
       <div className="flex flex-col gap-3 my-9">
-        <p className="text-md">
-          <span className="italic text-sm">Name: </span>
+        <p className="text-base text-cyan-950">
+          <span className="text-sm font-medium text-cyan-900 inline-block w-12">
+            Name
+          </span>
           {user?.user_name}
         </p>
 
-        <p className="text-md">
-          <span className="italic text-sm">Email: </span>
+        <p className="text-base text-slate-900">
+          <span className="text-sm font-medium text-cyan-900 inline-block w-12">
+            Email
+          </span>
           {user?.email}
         </p>
 
-        {user?.user_role === "ADMIN" && (
-          <p className="text-md">
-            <span className="italic text-sm">Role: </span>
-            {user?.user_role}
-          </p>
-        )}
+        <p className="text-base text-slate-900">
+          <span className="text-sm font-medium text-cyan-900 inline-block w-12">
+            Role
+          </span>
+          {user?.user_role}
+        </p>
       </div>
 
       <Button onClick={onEdit} variant="primary">
         Edit Profile
       </Button>
-    </div>
+    </Card>
   );
 }

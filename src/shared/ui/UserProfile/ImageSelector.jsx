@@ -56,14 +56,14 @@ export default function ImageSelector({ image, setImage, onRemoveImage }) {
           </button>
         </div>
       ) : (
-        <div className="w-20 h-20 flex items-center justify-center bg-pink-50 rounded-full relative">
-          <User />
+        <div className="w-20 h-20 flex items-center justify-center bg-gray-300 rounded-full relative">
+          <User className="text-emerald-800" />
           <button
             type="button"
             className="w-8 h-8 flex items-center justify-center bg-primary rounded-full absolute -bottom-1 -right-1"
             onClick={onChooseFile}
           >
-            <ImageUp />
+            <ImageUp className="text-emerald-800" />
           </button>
         </div>
       )}

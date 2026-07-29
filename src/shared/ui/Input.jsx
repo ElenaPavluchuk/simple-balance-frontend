@@ -29,7 +29,7 @@ export default function Input({
 
   return (
     <div>
-      <label className="text-xs font-medium text-cyan-950">{label}</label>
+      <label className="text-xs font-medium text-cyan-900">{label}</label>
 
       {multiline ? (
         <textarea
@@ -37,7 +37,7 @@ export default function Input({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           rows={rows}
-          className="w-full px-2 py-1 border border-gray-400 rounded-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500"
+          className="w-full px-2 py-1 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 transition duration-150 ease-in-out"
         />
       ) : (
         <div className="w-full flex justify-between items-center text-sm text-cyan-950 relative">
@@ -48,7 +48,7 @@ export default function Input({
               type === "password" ? (showPassword ? "text" : "password") : type
             }
             placeholder={placeholder}
-            className="w-full h-9 px-2 py-1 border border-gray-400 rounded-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500"
+            className="w-full h-9 px-2 py-1 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 transition duration-150 ease-in-out"
             step={step}
             max={max}
           />
