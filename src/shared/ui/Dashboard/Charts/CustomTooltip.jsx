@@ -3,13 +3,13 @@ import { currencyFormat } from "../../../utils/format";
 export default function CustomTooltip({ active, payload }) {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white shadow-md rounded-lg p-2 border border-gray-300">
-        <p className="text-xs font-semibold text-purple-500 mb-1 capitalize">
+      <div className="bg-white shadow-md rounded-lg p-2 border border-gray-200">
+        <p className="text-sm font-semibold text-slate-900 mb-1">
           {payload[0].payload.name}
         </p>
-        <p className="text-sm text-gray-600">
+        <p className="text-xs font-medium text-cyan-900">
           Amount:{" "}
-          <span className="text-sm font-medium text-gray-900">
+          <span className="text-sm font-medium text-cyan-950">
             {currencyFormat(payload[0].value, payload[0].payload.code)}
           </span>
         </p>

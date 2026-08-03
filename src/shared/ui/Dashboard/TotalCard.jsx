@@ -33,9 +33,7 @@ export default function TotalCard({
       <div>
         <h6 className="text-sm font-medium text-cyan-900 mb-1">{label}</h6>
         <div className="flex flex-row gap-2">
-          <p className="text-xl text-slate-900">
-            {currencyFormat(total, code)}
-          </p>
+          <p className="text-xl text-cyan-950">{currencyFormat(total, code)}</p>
         </div>
       </div>
     </Card>
