@@ -1,15 +1,14 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
 import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
 import TotalCard from "../shared/ui/Dashboard/TotalCard";
 import RecentTransactionsCard from "../shared/ui/Dashboard/RecentTransactionsCard";
 import FinancialFlowCard from "../shared/ui/Dashboard/FinancialFlowCard";
-import Last30DaysTransactionsCard from "../shared/ui/Dashboard/Last30DaysTransactionsCard";
+import RecentTransactionsChartCard from "../shared/ui/Dashboard/RecentTransactionsChartCard";
 import {
   TOTAL_CARDS_DATA,
   RECENT_CARDS_DATA,
-  LAST_CHART_CARDS_DATA,
+  RECENT_CHART_CARDS_DATA,
 } from "../shared/ui/Dashboard/config/data";
 import toast from "react-hot-toast";
 import Loader from "../shared/ui/Loader";
@@ -18,7 +17,6 @@ import { getErrorMessage } from "../shared/utils/getErrorMessage";
 export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     let isCancelled = false;
@@ -82,16 +80,15 @@ export default function DashboardPage() {
             <RecentTransactionsCard
               key={item.ID}
               transactions={dashboardData?.[item.SOURCE]?.[item.DATA_KEY] ?? []}
-              onViewAll={item.NAVIGATE_TO && (() => navigate(item.NAVIGATE_TO))}
+              navigateTo={item.NAVIGATE_TO}
               title={item.TITLE}
-              hideBtn={item.HIDE_BTN}
               order={item.ORDER}
               spanningColumns={item.SPANNING_COLUMNS}
             />
           ))}
 
-          {LAST_CHART_CARDS_DATA.map((item) => (
-            <Last30DaysTransactionsCard
+          {RECENT_CHART_CARDS_DATA.map((item) => (
+            <RecentTransactionsChartCard
               key={item.ID}
               transactions={dashboardData?.[item.SOURCE]?.[item.DATA_KEY] ?? []}
               title={item.TITLE}

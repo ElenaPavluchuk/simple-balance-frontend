@@ -1,6 +1,7 @@
 import TransactionCard from "../Transactions/TransactionCard";
-import Button from "../Button";
+import { Link } from "react-router";
 import { CirclePlus } from "lucide-react";
+import Card from "../Card";
 import PropTypes from "prop-types";
 
 RecentTransactionsCard.propTypes = {
@@ -15,33 +16,30 @@ RecentTransactionsCard.propTypes = {
       currency_code: PropTypes.string.isRequired,
     }),
   ).isRequired,
-  onViewAll: PropTypes.func.isRequired,
+  navigateTo: PropTypes.string,
   title: PropTypes.string.isRequired,
-  hideBtn: PropTypes.bool,
   order: PropTypes.string.isRequired,
   spanningColumns: PropTypes.string.isRequired,
 };
 
 export default function RecentTransactionsCard({
   transactions,
-  onViewAll,
+  navigateTo,
   title,
-  hideBtn,
   order,
   spanningColumns,
 }) {
   return (
-    <div className={`bg-white p-3 rounded card ${order} ${spanningColumns}`}>
+    <Card className={`card ${order} ${spanningColumns} min-h-100`}>
       <div className="flex items-center justify-between">
-        <h5 className="text-lg font-semibold">{title}</h5>
-        {!hideBtn && (
-          <Button
-            onClick={onViewAll}
-            variant={transactions.length === 0 ? "icon" : "link"}
-            fontSize="text-sm"
+        <h3 className="text-xl text-slate-900 font-medium">{title}</h3>
+        {navigateTo && (
+          <Link
+            to={navigateTo}
+            className="text-gray-600 hover:text-cyan-950 hover:underline text-base"
           >
             {transactions.length === 0 ? <CirclePlus size={20} /> : "View all"}
-          </Button>
+          </Link>
         )}
       </div>
 
@@ -59,6 +57,6 @@ export default function RecentTransactionsCard({
           <TransactionCard key={t.id} transaction={t} hideDetails />
         ))}
       </div>
-    </div>
+    </Card>
   );
 }

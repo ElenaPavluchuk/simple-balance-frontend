@@ -36,7 +36,7 @@ export const RECENT_CARDS_DATA = [
     SOURCE: "total",
     DATA_KEY: "recentTransactions",
     TITLE: "Recent Transactions",
-    HIDE_BTN: true,
+    NAVIGATE_TO: null,
     ORDER: "order-5",
     SPANNING_COLUMNS: "col-span-2",
   },
@@ -60,7 +60,7 @@ export const RECENT_CARDS_DATA = [
   },
 ];
 
-export const LAST_CHART_CARDS_DATA = [
+export const RECENT_CHART_CARDS_DATA = [
   {
     ID: "expenseByCategoryChart",
     SOURCE: "last30Days",
