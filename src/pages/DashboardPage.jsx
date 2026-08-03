@@ -4,7 +4,7 @@ import axiosInstance from "../shared/utils/axiosInstance";
 import { API_PATHS } from "../shared/utils/apiPaths";
 import TotalCard from "../shared/ui/Dashboard/TotalCard";
 import RecentTransactionsCard from "../shared/ui/Dashboard/RecentTransactionsCard";
-import FinanceOverviewCard from "../shared/ui/Dashboard/FinanceOverviewCard";
+import FinancialFlowCard from "../shared/ui/Dashboard/FinancialFlowCard";
 import Last30DaysTransactionsCard from "../shared/ui/Dashboard/Last30DaysTransactionsCard";
 import {
   TOTAL_CARDS_DATA,
@@ -69,7 +69,7 @@ export default function DashboardPage() {
             />
           ))}
 
-          <FinanceOverviewCard
+          <FinancialFlowCard
             totalBalance={dashboardData?.total?.totalBalance || 0}
             totalIncome={dashboardData?.total?.totalIncome || 0}
             totalExpense={dashboardData?.total?.totalExpense || 0}

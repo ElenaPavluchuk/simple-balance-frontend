@@ -2,7 +2,7 @@ import CustomPieChart from "./Charts/CustomPieChart";
 import Card from "../Card";
 import PropTypes from "prop-types";
 
-FinanceOverviewCard.propTypes = {
+FinancialFlowCard.propTypes = {
   totalBalance: PropTypes.number.isRequired,
   totalIncome: PropTypes.number.isRequired,
   totalExpense: PropTypes.number.isRequired,
@@ -11,7 +11,7 @@ FinanceOverviewCard.propTypes = {
   spanningColumns: PropTypes.string.isRequired,
 };
 
-export default function FinanceOverviewCard({
+export default function FinancialFlowCard({
   totalBalance,
   totalIncome,
   totalExpense,
