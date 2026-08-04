@@ -102,45 +102,52 @@ export default function TransactionsLayout({
         />
       </DialogModal>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        {transactions.length === 0 && !isLoading && (
-          <div className="bg-white h-52 rounded py-20 flex flex-col items-center justify-center">
-            <p className="text-sm">No transactions yet</p>
-            <p className="text-xs text-gray-300 mt-1">
-              Add your first transaction to see the list
-            </p>
-          </div>
-        )}
+      <div className="flex gap-5 h-screen bg-pink-200">
+        <div className="flex-1 bg-amber-200"></div>
+        <div className="flex flex-col flex-1 min-h-0 gap-5 bg-cyan-50">
+          <div className="flex flex-col gap-5 overflow-y-auto min-h-0">
+            {transactions.length === 0 && !isLoading && (
+              <div className="bg-white h-52 rounded py-20 flex flex-col items-center justify-center">
+                <p className="text-sm">No transactions yet</p>
+                <p className="text-xs text-gray-300 mt-1">
+                  Add your first transaction to see the list
+                </p>
+              </div>
+            )}
 
-        {transactions.map((t) => (
-          <TransactionsList
-            key={t.id}
-            transaction={t}
-            isEditing={editingId === t.id}
-            onDelete={onDelete}
-            onEdit={onEdit}
-            onSaveEdit={onSaveEdit}
-            onCancelEdit={onCancelEdit}
-            isDeleteLoading={deletingId === t.id}
-            isSaveEditLoading={updatingId === t.id}
-          />
-        ))}
+            {transactions.map((t) => (
+              <TransactionsList
+                key={t.id}
+                transaction={t}
+                isEditing={editingId === t.id}
+                onDelete={onDelete}
+                onEdit={onEdit}
+                onSaveEdit={onSaveEdit}
+                onCancelEdit={onCancelEdit}
+                isDeleteLoading={deletingId === t.id}
+                isSaveEditLoading={updatingId === t.id}
+              />
+            ))}
 
-        <div
-          ref={observerTarget}
-          className="col-span-full flex justify-center items-center"
-        >
-          {isLoading && (
-            <div>
-              <p>Loading more transactions...</p>
-              <Loader className="w-2 h-2" />
+            <div
+              ref={observerTarget}
+              className="flex justify-center items-center"
+            >
+              {isLoading && (
+                <div>
+                  <p>Loading more transactions...</p>
+                  <Loader className="w-2 h-2" />
+                </div>
+              )}
+              {!hasNextPage && !isLoading && (
+                <p className="text-gray-600 italic">No more transactions</p>
+              )}
             </div>
-          )}
-          {!hasNextPage && !isLoading && (
-            <p className="text-gray-600 italic">No more transactions</p>
-          )}
+          </div>
         </div>
       </div>
     </>
   );
 }
+
+// className="grid grid-cols-1 lg:grid-cols-2 gap-5"
