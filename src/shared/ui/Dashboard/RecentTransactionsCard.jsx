@@ -33,15 +33,17 @@ export default function RecentTransactionsCard({
 }) {
   return (
     <Card className={`card ${order} ${spanningColumns} min-h-120`}>
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between">
         <div>
           <h3 className="text-xl text-slate-900 font-medium">{title}</h3>
-          <p className="text-xs text-gray-600 mt-1">{description}</p>
+          <p className="text-xs text-gray-600 text-balance mt-1">
+            {description}
+          </p>
         </div>
         {navigateTo && (
           <Link
             to={navigateTo}
-            className="text-gray-600 hover:underline text-base"
+            className="text-gray-600 hover:underline text-base whitespace-nowrap"
           >
             {transactions.length === 0 ? (
               <CirclePlus

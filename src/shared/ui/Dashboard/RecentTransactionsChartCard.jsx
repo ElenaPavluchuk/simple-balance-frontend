@@ -1,4 +1,5 @@
 import CustomBarChart from "./Charts/CustomBarChart";
+import Card from "../Card";
 import PropTypes from "prop-types";
 
 RecentTransactionsChartCard.propTypes = {
@@ -21,29 +22,35 @@ export default function RecentTransactionsChartCard({
   order,
   spanningColumns,
 }) {
-  const DATA = transactions.map((t, index) => ({
-    name: t.category_name,
-    value: Number(t.amount) || 0,
+  const data = transactions.map((t, index) => ({
+    name: t?.category_name,
+    value: Number(t?.amount) || 0,
     code,
-    fill: index % 2 === 0 ? "#ffb3c6" : "#ffe5ec",
+    fill: index % 2 === 0 ? "#009966" : "#006045",
   }));
 
   return (
-    <div className={`card ${order} ${spanningColumns} col-span-1 bg-white`}>
-      <div className="flex items-center justify-between">
-        <h5 className="text-lg">{`Last 30 Days ${title}`}</h5>
+    <Card
+      className={`card ${order} ${spanningColumns} col-span-1 flex flex-col min-h-100`}
+    >
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xl text-slate-900 font-medium">{`Last 30 Days ${title}`}</h3>
       </div>
 
-      {DATA.length === 0 && (
-        <div className="h-20 flex flex-col items-center justify-center">
-          <p className="text-sm">No transactions yet</p>
+      {data.length === 0 ? (
+        <div className="min-h-90 flex flex-col items-center justify-center">
+          <p className="text-sm text-cyan-950">
+            No transactions in the last 30 days
+          </p>
           <p className="text-xs text-gray-300 mt-1">
-            Add your first transaction to see the chart
+            Add transaction to see the chart
           </p>
         </div>
+      ) : (
+        <div className="flex flex-1 items-center justify-center">
+          <CustomBarChart data={data} />
+        </div>
       )}
-
-      <CustomBarChart data={DATA} />
-    </div>
+    </Card>
   );
 }

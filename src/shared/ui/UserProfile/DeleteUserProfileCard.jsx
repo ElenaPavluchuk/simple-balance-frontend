@@ -22,7 +22,7 @@ export default function DeleteUserProfileCard({
         <h4 className="text-lg mb-3 text-slate-900 font-medium">
           Delete account
         </h4>
-        <p className="text-base text-cyan-950">
+        <p className="text-base text-cyan-950 text-pretty">
           You will lose access to your Simple Balance account once your deletion
         </p>
       </div>
