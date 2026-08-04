@@ -82,6 +82,7 @@ export default function DashboardPage() {
               transactions={dashboardData?.[item.SOURCE]?.[item.DATA_KEY] ?? []}
               navigateTo={item.NAVIGATE_TO}
               title={item.TITLE}
+              description={item.DESCRIPTION}
               order={item.ORDER}
               spanningColumns={item.SPANNING_COLUMNS}
             />

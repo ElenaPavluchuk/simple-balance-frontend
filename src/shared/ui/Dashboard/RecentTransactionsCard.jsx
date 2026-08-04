@@ -18,6 +18,7 @@ RecentTransactionsCard.propTypes = {
   ).isRequired,
   navigateTo: PropTypes.string,
   title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
   order: PropTypes.string.isRequired,
   spanningColumns: PropTypes.string.isRequired,
 };
@@ -26,13 +27,17 @@ export default function RecentTransactionsCard({
   transactions,
   navigateTo,
   title,
+  description,
   order,
   spanningColumns,
 }) {
   return (
-    <Card className={`card ${order} ${spanningColumns} min-h-100`}>
+    <Card className={`card ${order} ${spanningColumns} min-h-120`}>
       <div className="flex items-center justify-between">
-        <h3 className="text-xl text-slate-900 font-medium">{title}</h3>
+        <div>
+          <h3 className="text-xl text-slate-900 font-medium">{title}</h3>
+          <p className="text-xs text-gray-600 mt-1">{description}</p>
+        </div>
         {navigateTo && (
           <Link
             to={navigateTo}
@@ -52,9 +57,9 @@ export default function RecentTransactionsCard({
         </div>
       )}
 
-      <div className="mt-6 flex flex-col gap-5">
+      <div className="mt-6 flex flex-col gap-3">
         {transactions.map((t) => (
-          <TransactionCard key={t.id} transaction={t} hideDetails />
+          <TransactionCard key={t.id} transaction={t} dashboardStyle />
         ))}
       </div>
     </Card>
