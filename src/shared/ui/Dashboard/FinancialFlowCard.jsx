@@ -1,7 +1,8 @@
 import CustomPieChart from "./Charts/CustomPieChart";
+import Card from "../Card";
 import PropTypes from "prop-types";
 
-FinanceOverviewCard.propTypes = {
+FinancialFlowCard.propTypes = {
   totalBalance: PropTypes.number.isRequired,
   totalIncome: PropTypes.number.isRequired,
   totalExpense: PropTypes.number.isRequired,
@@ -10,7 +11,7 @@ FinanceOverviewCard.propTypes = {
   spanningColumns: PropTypes.string.isRequired,
 };
 
-export default function FinanceOverviewCard({
+export default function FinancialFlowCard({
   totalBalance,
   totalIncome,
   totalExpense,
@@ -20,31 +21,31 @@ export default function FinanceOverviewCard({
 }) {
   const BALANCE_DATA = [
     {
-      name: "Total Expense",
+      name: "Total expense",
       value: totalExpense,
       code: code,
-      fill: "#ffcfd2",
+      fill: "url(#gradExpense)",
+      color: "#0284c7",
     },
     {
-      name: "Total Income",
+      name: "Total income",
       value: totalIncome,
       code: code,
-      fill: "#ffc6ff",
+      fill: "url(#gradIncome)",
+      color: "#5ea500",
     },
   ];
 
   return (
-    <div className={`card ${order} ${spanningColumns} bg-white rounded h-125`}>
-      <div className="flex items-center justify-between">
-        <h5 className="text-lg">Financial Overview</h5>
-      </div>
+    <Card className={`card ${order} ${spanningColumns} min-h-100`}>
+      <h3 className="text-xl text-slate-900 font-medium">Financial flow</h3>
 
       <CustomPieChart
         data={BALANCE_DATA}
-        label="Total Balance"
+        label="Total balance"
         totalAmount={totalBalance}
         code={code}
       />
-    </div>
+    </Card>
   );
 }

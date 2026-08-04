@@ -1,4 +1,4 @@
-import { Trash2, Pencil } from "lucide-react";
+import { Trash2, Pencil, MoveUpRight, MoveDownRight } from "lucide-react";
 import dayjs from "dayjs";
 import Button from "../Button";
 import { currencyFormat } from "../../utils/format";
@@ -16,6 +16,7 @@ TransactionCard.propTypes = {
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
+  dashboardStyle: PropTypes.bool,
   isDeleteLoading: PropTypes.bool.isRequired,
 };
 
@@ -23,41 +24,52 @@ export default function TransactionCard({
   transaction,
   onDelete,
   onEdit,
-  hideDetails,
+  dashboardStyle,
   isDeleteLoading,
 }) {
   return (
-    <div className="flex gap-2">
-      <div className="w-full flex flex-col gap-4">
-        <div className="flex justify-between items-center">
-          <p>{transaction.title}</p>
-          <p>
-            <span>{transaction.type === "INCOME" ? "+" : "-"}</span>
-            {currencyFormat(transaction.amount, transaction.currency_code)}
+    <div
+      className={`${dashboardStyle ? "flex gap-3 items-center" : "flex gap-2 bg-amber-100"}`}
+    >
+      {dashboardStyle && (
+        <div
+          className={`min-w-8 min-h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white ${transaction?.type === "INCOME" ? "bg-linear-to-r from-emerald-400 to-lime-600" : "bg-linear-to-r from-emerald-400 to-sky-600"}`}
+        >
+          {transaction?.type === "INCOME" ? <MoveUpRight /> : <MoveDownRight />}
+        </div>
+      )}
+      <div
+        className={`w-full flex flex-col ${dashboardStyle ? "gap-3 border-b border-gray-200 pb-2" : "gap-4"}`}
+      >
+        <div className="flex justify-between items-center text-base md:text-lg text-cyan-950">
+          <p>{transaction?.title}</p>
+          <p className="font-medium">
+            <span>{transaction?.type === "INCOME" ? "+" : "-"}</span>
+            {currencyFormat(transaction?.amount, transaction?.currency_code)}
           </p>
         </div>
 
-        <div className="flex justify-between items-center text-sm text-gray-700">
-          <span className="bg-gray-100 px-2 py-1 rounded-lg">
-            <p>{transaction.category_name}</p>
+        <div className="flex justify-between items-center text-sm text-cyan-950">
+          <span>
+            <p>{transaction?.category_name}</p>
           </span>
-          <p>{dayjs(transaction.date).format("DD-MM-YYYY")}</p>
+          <p>{dayjs(transaction?.date).format("DD-MM-YYYY")}</p>
         </div>
 
-        {!hideDetails && (
+        {!dashboardStyle && (
           <p className="italic mt-4">
-            Note: <span>{transaction.note}</span>
+            Note: <span>{transaction?.note}</span>
           </p>
         )}
       </div>
 
-      {!hideDetails && (
+      {!dashboardStyle && (
         <div className="flex flex-col items-center justify-between w-fit">
           <Button onClick={() => onEdit(transaction)} variant="icon">
             <Pencil className="text-gray-700" size={20} />
           </Button>
           <Button
-            onClick={() => onDelete(transaction.id)}
+            onClick={() => onDelete(transaction?.id)}
             disabled={isDeleteLoading}
             variant="icon"
           >

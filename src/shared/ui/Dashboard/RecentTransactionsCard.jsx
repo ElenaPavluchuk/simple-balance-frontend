@@ -1,6 +1,7 @@
 import TransactionCard from "../Transactions/TransactionCard";
-import Button from "../Button";
+import { Link } from "react-router";
 import { CirclePlus } from "lucide-react";
+import Card from "../Card";
 import PropTypes from "prop-types";
 
 RecentTransactionsCard.propTypes = {
@@ -15,50 +16,63 @@ RecentTransactionsCard.propTypes = {
       currency_code: PropTypes.string.isRequired,
     }),
   ).isRequired,
-  onViewAll: PropTypes.func.isRequired,
+  navigateTo: PropTypes.string,
   title: PropTypes.string.isRequired,
-  hideBtn: PropTypes.bool,
+  description: PropTypes.string.isRequired,
   order: PropTypes.string.isRequired,
   spanningColumns: PropTypes.string.isRequired,
 };
 
 export default function RecentTransactionsCard({
   transactions,
-  onViewAll,
+  navigateTo,
   title,
-  hideBtn,
+  description,
   order,
   spanningColumns,
 }) {
   return (
-    <div className={`bg-white p-3 rounded card ${order} ${spanningColumns}`}>
-      <div className="flex items-center justify-between">
-        <h5 className="text-lg font-semibold">{title}</h5>
-        {!hideBtn && (
-          <Button
-            onClick={onViewAll}
-            variant={transactions.length === 0 ? "icon" : "link"}
-            fontSize="text-sm"
+    <Card className={`card ${order} ${spanningColumns} min-h-120`}>
+      <div className="flex items-start justify-between">
+        <div>
+          <h3 className="text-xl text-slate-900 font-medium">{title}</h3>
+          <p className="text-xs text-gray-600 text-balance mt-1">
+            {description}
+          </p>
+        </div>
+        {navigateTo && (
+          <Link
+            to={navigateTo}
+            className="text-gray-600 hover:underline text-base whitespace-nowrap"
           >
-            {transactions.length === 0 ? <CirclePlus size={20} /> : "View all"}
-          </Button>
+            {transactions.length === 0 ? (
+              <CirclePlus
+                size={22}
+                className="hover:bg-emerald-800 hover:text-white rounded-full"
+              />
+            ) : (
+              "View all"
+            )}
+          </Link>
         )}
       </div>
 
       {transactions.length === 0 && (
-        <div className="h-20 flex flex-col items-center justify-center">
-          <p className="text-sm">No transactions yet</p>
+        <div className="flex flex-col items-center justify-center min-h-90">
+          <p className="text-sm text-cyan-950">
+            No transactions in the last 30 days
+          </p>
           <p className="text-xs text-gray-300 mt-1">
-            Add your first transaction to see the list
+            Add transaction to see the list
           </p>
         </div>
       )}
 
-      <div className="mt-6 flex flex-col gap-5">
+      <div className="mt-6 flex flex-col gap-3">
         {transactions.map((t) => (
-          <TransactionCard key={t.id} transaction={t} hideDetails />
+          <TransactionCard key={t.id} transaction={t} dashboardStyle />
         ))}
       </div>
-    </div>
+    </Card>
   );
 }
