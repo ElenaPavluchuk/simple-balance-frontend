@@ -60,7 +60,7 @@ export default function ImageSelector({ image, setImage, onRemoveImage }) {
             className="absolute -bottom-1 -right-8"
             onClick={handleRemoveImage}
           >
-            <div className="w-8 h-8 text-emerald-800 bg-white border border-emerald-800 hover:bg-emerald-800 hover:text-white rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 text-emerald-800 bg-white border border-emerald-800 hover:bg-red-600 hover:border-red-600 hover:text-white rounded-full flex items-center justify-center">
               <Trash />
             </div>
           </Button>

@@ -4,6 +4,8 @@ import DialogModal from "../DialogModal";
 import CreateTransactionForm from "../Transactions/CreateTransactionForm";
 import TransactionsList from "../Transactions/TransactionsList";
 import Loader from "../Loader";
+import CustomLineChart from "../Transactions/CustomLineChart";
+import Card from "../Card";
 import PropTypes from "prop-types";
 
 TransactionsLayout.propTypes = {
@@ -102,10 +104,13 @@ export default function TransactionsLayout({
         />
       </DialogModal>
 
-      <div className="flex gap-5 h-screen bg-pink-200">
-        <div className="flex-1 bg-amber-200"></div>
-        <div className="flex flex-col flex-1 min-h-0 gap-5 bg-cyan-50">
-          <div className="flex flex-col gap-5 overflow-y-auto min-h-0">
+      <div className="flex flex-col lg:flex-row gap-5 h-screen bg-pink-200">
+        <Card className="flex-1 bg-amber-200 h-fit min-h-90">
+          <CustomLineChart transactions={transactions} />
+        </Card>
+
+        <div className="flex flex-col flex-1 lg:min-h-0 gap-5 bg-cyan-50">
+          <div className="flex flex-col gap-5 lg:overflow-y-auto min-h-0">
             {transactions.length === 0 && !isLoading && (
               <div className="bg-white h-52 rounded py-20 flex flex-col items-center justify-center">
                 <p className="text-sm">No transactions yet</p>
@@ -149,5 +154,3 @@ export default function TransactionsLayout({
     </>
   );
 }
-
-// className="grid grid-cols-1 lg:grid-cols-2 gap-5"
