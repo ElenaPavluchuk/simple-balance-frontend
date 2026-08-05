@@ -110,19 +110,26 @@ export default function TransactionsLayout({
       </DialogModal>
 
       <div className="flex flex-col lg:flex-row gap-5 h-screen">
-        {transactions.length > 0 && !isLoading && (
-          <Card className="flex-1 bg-amber-200 h-fit min-h-90 mt-1">
+        <Card className="flex-1 bg-amber-200 h-fit min-h-90 mt-1">
+          {transactions.length === 0 && !isLoading ? (
+            <div className="flex flex-col min-h-77.5 items-center justify-center">
+              <p className="text-sm text-cyan-950">No transactions yet</p>
+              <p className="text-xs text-gray-300 mt-1">
+                Add your first transaction to see the chart
+              </p>
+            </div>
+          ) : (
             <CustomLineChart transactions={transactions} />
-          </Card>
-        )}
+          )}
+        </Card>
 
         <div className="flex flex-col flex-1 lg:min-h-0 gap-5">
           <div className="flex flex-col gap-5 lg:overflow-y-auto min-h-0">
             {transactions.length === 0 && !isLoading && (
-              <Card className="flex max-w-xl min-h-90 flex-col items-center justify-center mt-1">
+              <Card className="flex min-h-90 flex-col items-center justify-center mt-1">
                 <p className="text-sm text-cyan-950">No transactions yet</p>
                 <p className="text-xs text-gray-300 mt-1">
-                  Add your first transaction to see the list and the chart
+                  Add your first transaction to see the list
                 </p>
               </Card>
             )}
@@ -146,9 +153,11 @@ export default function TransactionsLayout({
               className="flex justify-center items-center"
             >
               {isLoading && (
-                <div>
-                  <p>Loading more transactions...</p>
-                  <Loader className="w-2 h-2" />
+                <div className="flex flex-col items-center gap-1">
+                  <p className="text-gray-300 text-xs">
+                    Loading more transactions...
+                  </p>
+                  <Loader className="w-4 h-4" />
                 </div>
               )}
 
