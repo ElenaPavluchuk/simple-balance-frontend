@@ -33,7 +33,7 @@ export default function TransactionsList({
   isSaveEditLoading,
 }) {
   return (
-    <Card>
+    <Card className="mt-1">
       {isEditing ? (
         <EditTransactionForm
           transaction={transaction}

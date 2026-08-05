@@ -110,19 +110,21 @@ export default function TransactionsLayout({
       </DialogModal>
 
       <div className="flex flex-col lg:flex-row gap-5 h-screen">
-        <Card className="flex-1 bg-amber-200 h-fit min-h-90">
-          <CustomLineChart transactions={transactions} />
-        </Card>
+        {transactions.length > 0 && !isLoading && (
+          <Card className="flex-1 bg-amber-200 h-fit min-h-90 mt-1">
+            <CustomLineChart transactions={transactions} />
+          </Card>
+        )}
 
         <div className="flex flex-col flex-1 lg:min-h-0 gap-5">
           <div className="flex flex-col gap-5 lg:overflow-y-auto min-h-0">
             {transactions.length === 0 && !isLoading && (
-              <div className="bg-white h-52 rounded py-20 flex flex-col items-center justify-center">
-                <p className="text-sm">No transactions yet</p>
+              <Card className="flex max-w-xl min-h-90 flex-col items-center justify-center mt-1">
+                <p className="text-sm text-cyan-950">No transactions yet</p>
                 <p className="text-xs text-gray-300 mt-1">
-                  Add your first transaction to see the list
+                  Add your first transaction to see the list and the chart
                 </p>
-              </div>
+              </Card>
             )}
 
             {transactions.map((t) => (
@@ -149,8 +151,9 @@ export default function TransactionsLayout({
                   <Loader className="w-2 h-2" />
                 </div>
               )}
-              {!hasNextPage && !isLoading && (
-                <p className="text-gray-600 italic">No more transactions</p>
+
+              {!hasNextPage && !isLoading && transactions.length !== 0 && (
+                <p className="text-gray-300 text-xs">No more transactions</p>
               )}
             </div>
           </div>
