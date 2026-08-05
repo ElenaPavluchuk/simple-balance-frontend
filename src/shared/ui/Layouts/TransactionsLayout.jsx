@@ -84,8 +84,13 @@ export default function TransactionsLayout({
 
   return (
     <>
-      <div className="flex flex-col gap-4 mb-9 sm:flex-row sm:justify-between sm:items-center">
-        <h2 className="font-semibold text-xl">{title}</h2>
+      <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:justify-between sm:items-center">
+        <div>
+          <h2 className="text-3xl text-emerald-800">{title}</h2>
+          <p className="text-xs md:text-sm text-cyan-900 mt-1">
+            Transaction overview: List & Last 10 Transactions Chart
+          </p>
+        </div>
         <Button onClick={() => setOpenDialogModal(true)} variant="primary">
           Add Transaction
         </Button>
@@ -104,12 +109,12 @@ export default function TransactionsLayout({
         />
       </DialogModal>
 
-      <div className="flex flex-col lg:flex-row gap-5 h-screen bg-pink-200">
+      <div className="flex flex-col lg:flex-row gap-5 h-screen">
         <Card className="flex-1 bg-amber-200 h-fit min-h-90">
           <CustomLineChart transactions={transactions} />
         </Card>
 
-        <div className="flex flex-col flex-1 lg:min-h-0 gap-5 bg-cyan-50">
+        <div className="flex flex-col flex-1 lg:min-h-0 gap-5">
           <div className="flex flex-col gap-5 lg:overflow-y-auto min-h-0">
             {transactions.length === 0 && !isLoading && (
               <div className="bg-white h-52 rounded py-20 flex flex-col items-center justify-center">

@@ -29,7 +29,7 @@ export default function TransactionCard({
 }) {
   return (
     <div
-      className={`flex ${dashboardStyle ? "gap-3 items-center" : "gap-8 lg:gap-5"}`}
+      className={`flex ${dashboardStyle ? "gap-3 items-center" : "gap-6 lg:gap-5"}`}
     >
       {dashboardStyle && (
         <div
