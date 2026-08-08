@@ -80,7 +80,7 @@ export default function UserProfilePage() {
 
   if (!user) {
     return (
-      <div className="w-full h-screen">
+      <div className="w-full min-h-screen flex justify-center items-center">
         <Loader />
       </div>
     );

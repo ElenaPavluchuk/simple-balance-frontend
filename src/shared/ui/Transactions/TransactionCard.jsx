@@ -29,7 +29,7 @@ export default function TransactionCard({
 }) {
   return (
     <div
-      className={`${dashboardStyle ? "flex gap-3 items-center" : "flex gap-2 bg-amber-100"}`}
+      className={`flex ${dashboardStyle ? "gap-3 items-center" : "gap-6 lg:gap-5"}`}
     >
       {dashboardStyle && (
         <div
@@ -39,7 +39,7 @@ export default function TransactionCard({
         </div>
       )}
       <div
-        className={`w-full flex flex-col ${dashboardStyle ? "gap-3 border-b border-gray-200 pb-2" : "gap-4"}`}
+        className={`w-full flex flex-col gap-3 ${dashboardStyle && "border-b border-gray-200 pb-2"}`}
       >
         <div className="flex justify-between items-center text-base md:text-lg text-cyan-950">
           <p>{transaction?.title}</p>
@@ -57,23 +57,27 @@ export default function TransactionCard({
         </div>
 
         {!dashboardStyle && (
-          <p className="italic mt-4">
+          <p className="text-sm text-cyan-950 border-t border-gray-200 py-2">
             Note: <span>{transaction?.note}</span>
           </p>
         )}
       </div>
 
       {!dashboardStyle && (
-        <div className="flex flex-col items-center justify-between w-fit">
+        <div className="flex flex-col items-center justify-between max-w-10">
           <Button onClick={() => onEdit(transaction)} variant="icon">
-            <Pencil className="text-gray-700" size={20} />
+            <div className="border border-emerald-800 hover:bg-emerald-800 text-emerald-800 hover:text-white p-2 rounded-full">
+              <Pencil size={20} />
+            </div>
           </Button>
           <Button
             onClick={() => onDelete(transaction?.id)}
             disabled={isDeleteLoading}
             variant="icon"
           >
-            <Trash2 className="text-gray-700" size={20} />
+            <div className="border border-emerald-800 hover:bg-red-600 hover:border-red-600 text-emerald-800 hover:text-white p-2 rounded-full">
+              <Trash2 size={20} />
+            </div>
           </Button>
         </div>
       )}

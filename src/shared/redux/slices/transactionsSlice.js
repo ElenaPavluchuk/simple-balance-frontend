@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { sortTransactions } from "../../utils/sort";
 
 export const transactionsSlice = createSlice({
   name: "transactions",
@@ -13,14 +14,8 @@ export const transactionsSlice = createSlice({
 
     addTransactionToRedux: (state, action) => {
       state.value.push(action.payload);
-      state.value.sort((a, b) => {
-        const dateA = new Date(a.date);
-        const dateB = new Date(b.date);
-        if (dateA.getTime() !== dateB.getTime()) {
-          return dateB.getTime() - dateA.getTime();
-        }
-        return (b.id || 0) - (a.id || 0);
-      });
+
+      sortTransactions(state.value);
     },
 
     deleteTransactionFromRedux: (state, action) => {
@@ -32,6 +27,8 @@ export const transactionsSlice = createSlice({
       const transaction = state.value.find((t) => t.id === updated.id);
       if (transaction) {
         Object.assign(transaction, updated);
+
+        sortTransactions(state.value);
       }
     },
   },

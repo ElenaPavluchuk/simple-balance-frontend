@@ -4,6 +4,9 @@ import DialogModal from "../DialogModal";
 import CreateTransactionForm from "../Transactions/CreateTransactionForm";
 import TransactionsList from "../Transactions/TransactionsList";
 import Loader from "../Loader";
+import CustomLineChart from "../Transactions/CustomLineChart";
+import Card from "../Card";
+import { groupTransactionsByMonth } from "../../utils/sort";
 import PropTypes from "prop-types";
 
 TransactionsLayout.propTypes = {
@@ -54,6 +57,7 @@ export default function TransactionsLayout({
   hasNextPage,
 }) {
   const observer = useRef(null);
+  const groupedTransactions = groupTransactionsByMonth(transactions);
 
   useEffect(() => {
     return () => observer.current?.disconnect();
@@ -82,8 +86,13 @@ export default function TransactionsLayout({
 
   return (
     <>
-      <div className="flex flex-col gap-4 mb-9 sm:flex-row sm:justify-between sm:items-center">
-        <h2 className="font-semibold text-xl">{title}</h2>
+      <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:justify-between sm:items-center">
+        <div>
+          <h2 className="text-3xl text-emerald-800">{title}</h2>
+          <p className="text-xs md:text-sm text-cyan-900 mt-1">
+            Transaction overview: List & Last 10 Transactions Chart
+          </p>
+        </div>
         <Button onClick={() => setOpenDialogModal(true)} variant="primary">
           Add Transaction
         </Button>
@@ -102,43 +111,73 @@ export default function TransactionsLayout({
         />
       </DialogModal>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        {transactions.length === 0 && !isLoading && (
-          <div className="bg-white h-52 rounded py-20 flex flex-col items-center justify-center">
-            <p className="text-sm">No transactions yet</p>
-            <p className="text-xs text-gray-300 mt-1">
-              Add your first transaction to see the list
-            </p>
-          </div>
-        )}
-
-        {transactions.map((t) => (
-          <TransactionsList
-            key={t.id}
-            transaction={t}
-            isEditing={editingId === t.id}
-            onDelete={onDelete}
-            onEdit={onEdit}
-            onSaveEdit={onSaveEdit}
-            onCancelEdit={onCancelEdit}
-            isDeleteLoading={deletingId === t.id}
-            isSaveEditLoading={updatingId === t.id}
-          />
-        ))}
-
-        <div
-          ref={observerTarget}
-          className="col-span-full flex justify-center items-center"
-        >
-          {isLoading && (
-            <div>
-              <p>Loading more transactions...</p>
-              <Loader className="w-2 h-2" />
+      <div className="flex flex-col lg:flex-row gap-5 h-screen">
+        <Card className="flex-1 bg-amber-200 h-fit min-h-90 mt-1">
+          {transactions.length === 0 && !isLoading ? (
+            <div className="flex flex-col min-h-77.5 items-center justify-center">
+              <p className="text-sm text-cyan-950">No transactions yet</p>
+              <p className="text-xs text-gray-300 mt-1">
+                Add your first transaction to see the chart
+              </p>
             </div>
+          ) : (
+            <CustomLineChart transactions={transactions} />
           )}
-          {!hasNextPage && !isLoading && (
-            <p className="text-gray-600 italic">No more transactions</p>
-          )}
+        </Card>
+
+        <div className="flex flex-col flex-1 lg:min-h-0 gap-5">
+          <div className="flex flex-col gap-5 lg:overflow-y-auto min-h-0">
+            {transactions.length === 0 && !isLoading && (
+              <Card className="flex min-h-90 flex-col items-center justify-center mt-1">
+                <p className="text-sm text-cyan-950">No transactions yet</p>
+                <p className="text-xs text-gray-300 mt-1">
+                  Add your first transaction to see the list
+                </p>
+              </Card>
+            )}
+
+            {groupedTransactions.map((group) => (
+              <section key={group.key}>
+                <h3 className="text-lg font-medium text-slate-900 mb-2 mt-1">
+                  {group.label}
+                </h3>
+
+                <div className="flex flex-col gap-3">
+                  {group.transactions.map((t) => (
+                    <TransactionsList
+                      key={t.id}
+                      transaction={t}
+                      isEditing={editingId === t.id}
+                      onDelete={onDelete}
+                      onEdit={onEdit}
+                      onSaveEdit={onSaveEdit}
+                      onCancelEdit={onCancelEdit}
+                      isDeleteLoading={deletingId === t.id}
+                      isSaveEditLoading={updatingId === t.id}
+                    />
+                  ))}
+                </div>
+              </section>
+            ))}
+
+            <div
+              ref={observerTarget}
+              className="flex justify-center items-center"
+            >
+              {isLoading && (
+                <div className="flex flex-col items-center gap-1">
+                  <p className="text-gray-300 text-xs">
+                    Loading more transactions...
+                  </p>
+                  <Loader className="w-4 h-4" />
+                </div>
+              )}
+
+              {!hasNextPage && !isLoading && transactions.length !== 0 && (
+                <p className="text-gray-300 text-xs">No more transactions</p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </>

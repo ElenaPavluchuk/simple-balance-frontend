@@ -1,5 +1,6 @@
 import TransactionCard from "./TransactionCard";
 import EditTransactionForm from "./EditTransactionForm";
+import Card from "../Card";
 import PropTypes from "prop-types";
 
 TransactionsList.propTypes = {
@@ -32,7 +33,7 @@ export default function TransactionsList({
   isSaveEditLoading,
 }) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition">
+    <Card className="mt-1">
       {isEditing ? (
         <EditTransactionForm
           transaction={transaction}
@@ -48,6 +49,6 @@ export default function TransactionsList({
           isDeleteLoading={isDeleteLoading}
         />
       )}
-    </div>
+    </Card>
   );
 }
