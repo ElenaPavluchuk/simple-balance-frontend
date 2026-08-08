@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import { exchangeRateFormat } from "../../utils/format";
+import Card from "../Card";
 import PropTypes from "prop-types";
 
 ExchangeRateCard.propTypes = {
@@ -60,21 +61,21 @@ export default function ExchangeRateCard({
   )?.name;
 
   return (
-    <div
-      className={`flex border-rose-300
-        ${
-          isManagedCardStyle
-            ? "justify-around border-b p-3"
-            : "flex-col p-5 bg-white rounded-xl shadow-md border-l-4 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
-        }
+    <Card
+      className={`flex
+        ${isManagedCardStyle ? "justify-around border-b p-3" : "flex-col"}
       `}
     >
       <div className="flex justify-between w-full">
-        <span className="flex items-center gap-2">
-          <p>{currencySymbol}</p>
-          <p className="text-lg font-semibold">{rate?.target_code}</p>
+        <span className="flex items-center gap-1">
+          <p className="font-medium text-emerald-700 text-lg">
+            {currencySymbol}
+          </p>
+          <p className="text-lg font-medium text-cyan-950">
+            {rate?.target_code}
+          </p>
         </span>
-        <p className="font-bold text-green-700">
+        <p className="font-semibold text-green-700">
           {exchangeRateFormat(
             rate?.rate,
             baseCurrencyCode || selectedCurrencyCode,
@@ -83,13 +84,11 @@ export default function ExchangeRateCard({
       </div>
 
       {date && (
-        <div className="flex gap-2 items-center mt-4">
-          <span className="text-xs text-italic text-gray-600">
-            The rate is valid on the date:{" "}
-          </span>
-          <p className="text-sm text-gray-600">{date}</p>
+        <div className="flex gap-1 items-center justify-between mt-4 text-cyan-950">
+          <span className="text-xs">The rate is valid on the date:</span>
+          <p className="text-sm">{date}</p>
         </div>
       )}
-    </div>
+    </Card>
   );
 }

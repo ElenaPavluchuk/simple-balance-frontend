@@ -132,14 +132,17 @@ export default function CurrenciesAndNewsPage() {
 
   return (
     <>
-      <h2 className="text-2xl font-bold text-gray-800 mb-8">
-        News & Currencies
-      </h2>
+      <div className="mb-6">
+        <h2 className="text-3xl text-emerald-800">Currencies & News</h2>
+        <p className="text-xs md:text-sm text-cyan-900 mt-1">
+          Stay informed with currency exchange rates and our latest updates
+        </p>
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <div className="col-span-1 h-fit space-y-4">
-          <h3 className="font-semibold">
+          <h3 className="text-xl text-slate-900 font-medium">
             Exchange rates{" "}
-            <span className="text-gray-500 italic text-xs ml-2">
+            <span className="text-gray-500 text-xs ml-1">
               from {user?.currency_code}
             </span>
           </h3>
@@ -187,7 +190,7 @@ export default function CurrenciesAndNewsPage() {
         </div>
 
         <div className="col-span-1 lg:col-span-2 space-y-6">
-          <h3 className="font-semibold">Our news:</h3>
+          <h3 className="text-xl text-slate-900 font-medium">Our news:</h3>
 
           {isNewsLoading && (
             <div className="w-full min-h-125 flex items-center justify-center">
