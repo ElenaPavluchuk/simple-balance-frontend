@@ -185,7 +185,7 @@ export default function ManageContenPage() {
 
   return (
     <div className="grid grid-cols-2 gap-5">
-      <div className="bg-teal-200 grid-1">
+      <div className="grid-1">
         <CreateNewsForm
           isCreateLoading={isCreateNewsLoading}
           onSave={handleAddNews}

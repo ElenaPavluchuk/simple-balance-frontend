@@ -181,7 +181,7 @@ export default function EditTransactionForm({
             </p>
           )}
           {optionsApiError && (
-            <p className="text-red-500 italic">{optionsApiError}</p>
+            <p className="text-red-500 text-xs mt-1">{optionsApiError}</p>
           )}
         </div>
 
