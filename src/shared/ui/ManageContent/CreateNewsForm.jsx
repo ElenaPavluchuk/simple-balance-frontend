@@ -46,8 +46,8 @@ export default function CreateNewsForm({ onSave, isCreateLoading }) {
 
   return (
     <Card className="h-full">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-full">
-        <h3 className="text-lg text-slate-900 font-medium text-center">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3 h-full">
+        <h3 className="text-lg text-slate-900 font-medium text-center mb-2">
           Add News
         </h3>
 
