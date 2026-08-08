@@ -8,7 +8,7 @@ Loader.propTypes = {
 
 export default function Loader({
   size = "w-8 h-8",
-  color = "text-emerald-800",
+  color = "text-emerald-700",
   className = "",
 }) {
   return (

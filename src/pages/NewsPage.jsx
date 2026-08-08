@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import { getErrorMessage } from "../shared/utils/getErrorMessage";
 import toast from "react-hot-toast";
 import Loader from "../shared/ui/Loader";
+import Card from "../shared/ui/Card";
 
 export default function NewsPage() {
   const { id } = useParams();
@@ -52,23 +53,28 @@ export default function NewsPage() {
 
   if (!selectedNews && !isLoading) {
     return (
-      <div>
-        <p className="mt-4 bg-white flex flex-col gap-3 p-6 rounded-2xl shadow-md border-l-4 border-rose-300 transition-all duration-300 hover:shadow-lg hover:translate-y-0.5">
+      <Card className="min-h-90 flex justify-center items-center">
+        <p className="text-lg font-medium text-cyan-950 text-pretty">
           News not found
         </p>
-      </div>
+      </Card>
     );
   }
 
   return (
-    <>
-      <h3 className="font-semibold">{selectedNews?.title}</h3>
-      <div className="mt-4 bg-white flex flex-col gap-3 p-6 rounded-2xl shadow-md border-l-4 border-rose-300 transition-all duration-300 hover:shadow-lg hover:translate-y-0.5">
-        <p>{selectedNews?.content}</p>
-        <p className="italic mt-4">
-          {dayjs(selectedNews?.published_at).format("DD-MM-YY")}
-        </p>
-      </div>
-    </>
+    <Card className="gap-5 flex flex-col">
+      <h3 className="text-xl text-slate-900 font-medium text-balance">
+        {selectedNews?.title}
+      </h3>
+
+      <p className="text-base text-cyan-950 text-pretty">
+        {selectedNews?.content}
+      </p>
+
+      <p className="text-sm font-medium text-cyan-950 text-pretty">
+        <span className="font-normal">Published at: </span>
+        {dayjs(selectedNews?.published_at).format("DD-MM-YY")}
+      </p>
+    </Card>
   );
 }

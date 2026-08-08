@@ -75,7 +75,7 @@ export default function ExchangeRateCard({
             {rate?.target_code}
           </p>
         </span>
-        <p className="font-semibold text-green-700">
+        <p className="text-lg font-semibold text-green-700">
           {exchangeRateFormat(
             rate?.rate,
             baseCurrencyCode || selectedCurrencyCode,
@@ -84,9 +84,9 @@ export default function ExchangeRateCard({
       </div>
 
       {date && (
-        <div className="flex gap-1 items-center justify-between mt-4 text-cyan-950">
+        <div className="flex gap-1 items-end justify-between mt-4 text-cyan-950">
           <span className="text-xs">The rate is valid on the date:</span>
-          <p className="text-sm">{date}</p>
+          <p className="text-sm font-medium">{date}</p>
         </div>
       )}
     </Card>
