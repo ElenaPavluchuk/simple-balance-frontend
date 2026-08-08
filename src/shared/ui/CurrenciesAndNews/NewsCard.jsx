@@ -29,9 +29,11 @@ export default function NewsCard({
   const displayManageBtn = (user?.user_role === "ADMIN") & !hideBtn;
 
   return (
-    <div className="bg-white flex flex-col gap-3  p-6  rounded-2xl shadow-md border-l-4 border-rose-300 transition-all duration-300 hover:shadow-lg hover:translate-y-0.5 ">
+    <div className="flex flex-col gap-3">
       <div className="flex flex-row justify-between items-start">
-        <p className="font-semibold">{item?.title}</p>
+        <h4 className="text-slate-900 font-medium text-balance text-lg">
+          {item?.title}
+        </h4>
         {displayManageBtn ? (
           <Button
             variant="icon"
@@ -44,26 +46,34 @@ export default function NewsCard({
         ) : null}
       </div>
 
-      <p className="line-clamp-2">{item?.content}</p>
-      <p className="italic text-sm">
-        {dayjs(item?.published_at).format("DD-MM-YYYY")}
+      <p className="line-clamp-2 text-base text-cyan-950 text-pretty">
+        {item?.content}
       </p>
 
-      <div className="flex flex-row justify-between items-end">
-        <Link to={`/news/${item?.id}`} className="italic underline mt-5">
-          View more
-        </Link>
-        {displayManageBtn ? (
-          <Button
-            variant="icon"
-            onClick={() => onDelete(item?.id)}
-            className="text-gray-700"
-            disabled={!displayManageBtn || isDeleteNewsLoading}
-          >
-            <Trash2 size={20} />
-          </Button>
-        ) : null}
+      <div className="flex gap-1 items-center mt-2 text-cyan-950 text-sm">
+        <span>Published at:</span>
+        <p className="font-medium">
+          {dayjs(item?.published_at).format("DD-MM-YYYY")}
+        </p>
       </div>
+
+      <Link
+        to={`/news/${item?.id}`}
+        className="text-gray-600 hover:underline text-base whitespace-nowrap mt-5"
+      >
+        View more
+      </Link>
+
+      {displayManageBtn ? (
+        <Button
+          variant="icon"
+          onClick={() => onDelete(item?.id)}
+          className="text-gray-700"
+          disabled={!displayManageBtn || isDeleteNewsLoading}
+        >
+          <Trash2 size={20} />
+        </Button>
+      ) : null}
     </div>
   );
 }

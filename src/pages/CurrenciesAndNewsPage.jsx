@@ -9,6 +9,7 @@ import { Link } from "react-router";
 import NewsList from "../shared/ui/CurrenciesAndNews/NewsList";
 import { getErrorMessage } from "../shared/utils/getErrorMessage";
 import Loader from "../shared/ui/Loader";
+import Card from "../shared/ui/Card";
 
 export default function CurrenciesAndNewsPage() {
   const [news, setNews] = useState([]);
@@ -85,7 +86,10 @@ export default function CurrenciesAndNewsPage() {
           if (isCancelled) return;
           console.error(getErrorMessage(fallbackError, "Fallback also failed"));
           setRatesApiError(
-            "Sorry, rates are not available. Please try again later",
+            getErrorMessage(
+              fallbackError,
+              "Sorry, rates are not available. Please try again later",
+            ),
           );
         } finally {
           setIsRatesLoading(false);
@@ -132,45 +136,53 @@ export default function CurrenciesAndNewsPage() {
 
   return (
     <>
-      <h2 className="text-2xl font-bold text-gray-800 mb-8">
-        News & Currencies
-      </h2>
+      <div className="mb-6">
+        <h2 className="text-3xl text-emerald-800">Currencies & News</h2>
+        <p className="text-xs md:text-sm text-cyan-900 mt-1 text-balance">
+          Stay informed with currency exchange rates and our latest updates
+        </p>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <div className="col-span-1 h-fit space-y-4">
-          <h3 className="font-semibold">
+          <h3 className="text-xl text-slate-900 font-medium">
             Exchange rates{" "}
-            <span className="text-gray-500 italic text-xs ml-2">
+            <span className="text-gray-500 text-xs ml-1">
               from {user?.currency_code}
             </span>
           </h3>
 
           {isRatesLoading && (
-            <div className="w-full min-h-125 flex items-center justify-center">
+            <Card className="min-h-90 flex items-center justify-center">
               <Loader />
-            </div>
+            </Card>
           )}
 
           {ratesApiError && !isRatesLoading && (
-            <div className="w-full min-h-125 flex items-center justify-center border border-dashed rounded">
-              <p className="italic">{ratesApiError}</p>
-            </div>
+            <Card className="min-h-90 flex items-center justify-center">
+              <p className="text-base text-cyan-950 text-pretty">
+                {ratesApiError}
+              </p>
+            </Card>
           )}
 
           {exchangeRates.length === 0 && !isRatesLoading && !ratesApiError && (
-            <div className="w-full min-h-125 flex flex-col gap-5 items-center justify-center border border-dashed rounded">
-              <p className="italic">Rates not added yet</p>
+            <Card className="min-h-90 flex flex-col gap-4 items-center justify-center">
+              <p className="text-lg text-cyan-950 text-pretty">
+                Rates not added yet
+              </p>
               {user?.user_role === "ADMIN" && (
-                <span>
+                <span className="text-slate-800 font-medium text-lg text-balance">
                   You can adding exchange rates{" "}
                   <Link
-                    className="font-semibold underline italic"
+                    className="text-lg text-gray-600 hover:underline whitespace-nowrap"
                     to="/manage-content"
                   >
                     here
                   </Link>
                 </span>
               )}
-            </div>
+            </Card>
           )}
 
           <ul className="grid gap-4 mt-5">
@@ -187,42 +199,46 @@ export default function CurrenciesAndNewsPage() {
         </div>
 
         <div className="col-span-1 lg:col-span-2 space-y-6">
-          <h3 className="font-semibold">Our news:</h3>
+          <h3 className="text-xl text-slate-900 font-medium">Our news</h3>
 
           {isNewsLoading && (
-            <div className="w-full min-h-125 flex items-center justify-center">
+            <Card className="min-h-90 flex items-center justify-center">
               <Loader />
-            </div>
+            </Card>
           )}
 
           {newsApiError && !isNewsLoading && (
-            <div className="w-full min-h-125 flex items-center justify-center border border-dashed rounded">
-              <p className="italic">{newsApiError}</p>
-            </div>
+            <Card className="min-h-90 flex items-center justify-center">
+              <p className="text-base text-cyan-950 text-pretty">
+                {newsApiError}
+              </p>
+            </Card>
           )}
 
           {news.length === 0 && !isNewsLoading && !newsApiError && (
-            <div className="w-full min-h-125 flex flex-col gap-5 items-center justify-center border border-dashed rounded">
-              <p className="italic">News not added yet</p>
+            <Card className="min-h-90 flex flex-col gap-2 items-center justify-center">
+              <p className="text-lg text-cyan-950 text-pretty">
+                News not added yet
+              </p>
               {user?.user_role === "ADMIN" && (
-                <span>
+                <span className="text-slate-800 font-medium text-lg text-balance">
                   You can adding news{" "}
                   <Link
-                    className="font-semibold underline italic"
+                    className="text-lg text-gray-600 hover:underline whitespace-nowrap"
                     to="/manage-content"
                   >
                     here
                   </Link>
                 </span>
               )}
-            </div>
+            </Card>
           )}
 
-          <ul className="grid gap-4 mt-5">
+          <div className="grid gap-4 mt-5">
             {news.map((item) => (
               <NewsList key={item?.id} item={item} hideBtn />
             ))}
-          </ul>
+          </div>
         </div>
       </div>
     </>

@@ -1,5 +1,6 @@
 import NewsCard from "./NewsCard";
 import EditNewsForm from "../ManageContent/EditNewsForm";
+import Card from "../Card";
 import PropTypes from "prop-types";
 
 NewsList.propTypes = {
@@ -31,7 +32,7 @@ export default function NewsList({
   isUpdateNewsLoading,
 }) {
   return (
-    <li>
+    <Card>
       {isEdit ? (
         <EditNewsForm
           item={item}
@@ -48,6 +49,6 @@ export default function NewsList({
           isDeleteNewsLoading={isDeleteNewsLoading}
         />
       )}
-    </li>
+    </Card>
   );
 }
