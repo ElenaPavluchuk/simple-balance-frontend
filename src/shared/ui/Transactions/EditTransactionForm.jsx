@@ -108,8 +108,8 @@ export default function EditTransactionForm({
 
   return (
     <form onSubmit={handleSubmit} className="w-full flex flex-col gap-2">
-      <div className="flex justify-between gap-2">
-        <div className="w-full">
+      <div className="flex flex-col sm:flex-row justify-between gap-2">
+        <div className="flex-1">
           <Input
             value={title}
             onChange={handleTitleChange}
@@ -122,7 +122,7 @@ export default function EditTransactionForm({
           )}
         </div>
 
-        <div className="w-full">
+        <div className="flex-1">
           <Input
             value={amount}
             onChange={handleAmountChange}
@@ -138,8 +138,8 @@ export default function EditTransactionForm({
         </div>
       </div>
 
-      <div className="flex justify-between gap-2 text-sm text-gray-500">
-        <div className="w-1/2">
+      <div className="flex flex-col sm:flex-row justify-between gap-2">
+        <div className="flex-1">
           <CreatableSelect
             isClearable
             value={selectedOption}
@@ -151,6 +151,29 @@ export default function EditTransactionForm({
               isCustom: true,
             })}
             isLoading={isOptionsLoading}
+            unstyled
+            classNames={{
+              control: ({ isFocused }) =>
+                `w-full h-9 px-2 border rounded-md transition duration-150
+              ${isFocused ? "border-sky-500 ring-2 ring-sky-500" : "border-gray-400"}`,
+              valueContainer: () => "p-0",
+              input: () => "m-0 p-0 text-sm text-cyan-950",
+              placeholder: () => "text-sm text-gray-400",
+              singleValue: () => "text-sm text-cyan-950",
+              indicatorsContainer: () => "h-full",
+              dropdownIndicator: () => "text-gray-500 hover:text-gray-700",
+              clearIndicator: () => "text-gray-500",
+              menu: () =>
+                "mt-1 rounded-md border border-gray-300 bg-white shadow-lg",
+              option: ({ isFocused, isSelected }) =>
+                `px-3 py-2 cursor-pointer ${
+                  isSelected
+                    ? "bg-sky-500 text-white"
+                    : isFocused
+                      ? "bg-sky-100"
+                      : "bg-white"
+                }`,
+            }}
           />
           {validateErrors.selectedCategory && (
             <p className="text-red-500 italic text-xs mt-1">
@@ -162,7 +185,7 @@ export default function EditTransactionForm({
           )}
         </div>
 
-        <div className="w-1/2">
+        <div className="flex-1">
           <Input value={date} onChange={handleDateChange} type="date" />
           {validateErrors.date && (
             <p className="text-red-500 italic text-xs mt-1">
@@ -171,6 +194,7 @@ export default function EditTransactionForm({
           )}
         </div>
       </div>
+
       <Input
         value={note}
         onChange={handleNoteChange}
@@ -179,12 +203,12 @@ export default function EditTransactionForm({
         rows={2}
       />
 
-      <div className="flex gap-4 justify-center mt-4">
+      <div className="flex gap-4 justify-center mt-3">
         <Button type="submit" variant="icon" disabled={isSaveEditLoading}>
-          <Check className="text-gray-700" />
+          <Check className="text-emerald-700" />
         </Button>
         <Button variant="icon" onClick={onCancel} disabled={isSaveEditLoading}>
-          <X className="text-gray-700" />
+          <X className="text-gray-500" />
         </Button>
       </div>
     </form>

@@ -6,6 +6,7 @@ import TransactionsList from "../Transactions/TransactionsList";
 import Loader from "../Loader";
 import CustomLineChart from "../Transactions/CustomLineChart";
 import Card from "../Card";
+import { groupTransactionsByMonth } from "../../utils/sort";
 import PropTypes from "prop-types";
 
 TransactionsLayout.propTypes = {
@@ -56,6 +57,7 @@ export default function TransactionsLayout({
   hasNextPage,
 }) {
   const observer = useRef(null);
+  const groupedTransactions = groupTransactionsByMonth(transactions);
 
   useEffect(() => {
     return () => observer.current?.disconnect();
@@ -134,18 +136,28 @@ export default function TransactionsLayout({
               </Card>
             )}
 
-            {transactions.map((t) => (
-              <TransactionsList
-                key={t.id}
-                transaction={t}
-                isEditing={editingId === t.id}
-                onDelete={onDelete}
-                onEdit={onEdit}
-                onSaveEdit={onSaveEdit}
-                onCancelEdit={onCancelEdit}
-                isDeleteLoading={deletingId === t.id}
-                isSaveEditLoading={updatingId === t.id}
-              />
+            {groupedTransactions.map((group) => (
+              <section key={group.key}>
+                <h3 className="text-lg font-medium text-slate-900 mb-2 mt-1">
+                  {group.label}
+                </h3>
+
+                <div className="flex flex-col gap-3">
+                  {group.transactions.map((t) => (
+                    <TransactionsList
+                      key={t.id}
+                      transaction={t}
+                      isEditing={editingId === t.id}
+                      onDelete={onDelete}
+                      onEdit={onEdit}
+                      onSaveEdit={onSaveEdit}
+                      onCancelEdit={onCancelEdit}
+                      isDeleteLoading={deletingId === t.id}
+                      isSaveEditLoading={updatingId === t.id}
+                    />
+                  ))}
+                </div>
+              </section>
             ))}
 
             <div

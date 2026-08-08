@@ -102,7 +102,7 @@ export default function SignupForm({ onSignup, isSignupLoading }) {
             classNames={{
               control: ({ isFocused }) =>
                 `w-full h-9 px-2 border rounded-md transition duration-150
-      ${isFocused ? "border-sky-500 ring-2 ring-sky-500" : "border-gray-400"}`,
+              ${isFocused ? "border-sky-500 ring-2 ring-sky-500" : "border-gray-400"}`,
               valueContainer: () => "p-0",
               input: () => "m-0 p-0 text-sm text-cyan-950",
               placeholder: () => "text-sm text-gray-400",
