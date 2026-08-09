@@ -17,6 +17,7 @@ export default function ManageContenPage() {
   const [rates, setRates] = useState([]);
   const [getRatesMessage, setGetRatesMessage] = useState("");
   const [baseCurrencyId, setBaseCurrencyId] = useState("");
+  const [deleteRateDate, setDeleteRateDate] = useState(null);
   const [isGetNewsLoading, setIsGetNewsLoading] = useState(false);
   const [isCreateNewsLoading, setIsCreateNewsLoading] = useState(false);
   const [isDeleteNewsLoading, setIsDeleteNewsLoading] = useState(false);
@@ -175,14 +176,14 @@ export default function ManageContenPage() {
         ),
       );
 
-      setRates(
-        rates.filter(
+      toast.success(response.data?.message);
+      setDeleteRateDate(null);
+      setRates((prevRates) =>
+        prevRates.filter(
           (rate) =>
             dayjs(rate.date).format("YYYY-MM-DD") !== response.data?.date,
         ),
       );
-
-      toast.success(response.data?.message);
     } catch (err) {
       console.error(err);
       toast.error(getErrorMessage(err));
@@ -275,6 +276,8 @@ export default function ManageContenPage() {
               onDeleteRateByDate={handleDeleteRatesByDate}
               isDeleteRateLoading={isDeleteRateLoading}
               baseCurrencyId={baseCurrencyId}
+              deleteRateDate={deleteRateDate}
+              setDeleteRateDate={setDeleteRateDate}
             />
           ))}
         </div>
