@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import CreateNewsForm from "../../shared/ui/ManageContent/CreateNewsForm";
 import ExchangeRatesToggle from "../../shared/ui/ManageContent/ExchangeRatesToggle";
+import ExchangeRatesByDateList from "../../shared/ui/ManageContent/ExchangeRatesByDateList";
 import axiosInstance from "../../shared/utils/axiosInstance";
 import { API_PATHS } from "../../shared/utils/apiPaths";
 import toast, { Toaster } from "react-hot-toast";
@@ -10,7 +11,6 @@ import { getErrorMessage } from "../../shared/utils/getErrorMessage";
 import Loader from "../../shared/ui/Loader";
 import ExchangeRateCard from "../../shared/ui/CurrenciesAndNews/ExchangeRateCard";
 import Card from "../../shared/ui/Card";
-import Button from "../../shared/ui/Button";
 
 export default function ManageContenPage() {
   const [news, setNews] = useState([]);
@@ -269,30 +269,13 @@ export default function ManageContenPage() {
           )}
 
           {rates.map((rate) => (
-            <div key={rate?.date} className="mt-3 mb-6">
-              <div className="flex justify-between">
-                <p className="text-slate-900 font-medium text-balance text-base">
-                  {dayjs(rate?.date).format("DD-MM-YYYY")}
-                </p>
-
-                <Button
-                  onClick={() => handleDeleteRatesByDate(rate?.date)}
-                  disabled={isDeleteRateLoading}
-                  variant="link"
-                >
-                  {isDeleteRateLoading ? "Loading..." : "Delete"}
-                </Button>
-              </div>
-
-              {rate?.rates.map((r) => (
-                <ExchangeRateCard
-                  key={r?.id}
-                  rate={r}
-                  selectedCurrencyId={baseCurrencyId}
-                  isManagedCardStyle
-                />
-              ))}
-            </div>
+            <ExchangeRatesByDateList
+              key={rate?.date}
+              rate={rate}
+              onDeleteRateByDate={handleDeleteRatesByDate}
+              isDeleteRateLoading={isDeleteRateLoading}
+              baseCurrencyId={baseCurrencyId}
+            />
           ))}
         </div>
       </div>
