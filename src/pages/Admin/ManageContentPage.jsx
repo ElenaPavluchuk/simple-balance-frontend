@@ -9,10 +9,12 @@ import dayjs from "dayjs";
 import { getErrorMessage } from "../../shared/utils/getErrorMessage";
 import Loader from "../../shared/ui/Loader";
 import ExchangeRateCard from "../../shared/ui/CurrenciesAndNews/ExchangeRateCard";
+import Card from "../../shared/ui/Card";
 
 export default function ManageContenPage() {
   const [news, setNews] = useState([]);
   const [rates, setRates] = useState([]);
+  const [getRatesMessage, setGetRatesMessage] = useState("");
   const [baseCurrencyId, setBaseCurrencyId] = useState("");
   const [isGetNewsLoading, setIsGetNewsLoading] = useState(false);
   const [isCreateNewsLoading, setIsCreateNewsLoading] = useState(false);
@@ -144,6 +146,7 @@ export default function ManageContenPage() {
 
       setRates(response.data?.rates);
       setBaseCurrencyId(response.data?.base_currency_id);
+      setGetRatesMessage(response.data?.message);
     } catch (err) {
       console.error(err);
       toast.error(getErrorMessage(err));
@@ -207,17 +210,17 @@ export default function ManageContenPage() {
         </div>
 
         <div className="grid-1">
-          <p>Our news: </p>
+          <p className="text-xl text-slate-900 font-medium">Our news</p>
           {isGetNewsLoading && (
-            <div className="mt-2 h-125 flex items-center justify-center">
+            <div className="mt-3 min-h-50 flex items-center justify-center">
               <Loader />
             </div>
           )}
 
           {!isGetNewsLoading && news.length === 0 && (
-            <div className="mt-2 h-125 flex items-center justify-center border rounded border-dashed p-2">
-              <p className="italic">No news yet...</p>
-            </div>
+            <Card className="mt-3 min-h-50 flex items-center justify-center">
+              <p className="text-sm text-cyan-950">No news yet</p>
+            </Card>
           )}
 
           <ul className="grid gap-4 mt-5">
@@ -238,17 +241,24 @@ export default function ManageContenPage() {
         </div>
 
         <div className="grid-1">
-          <p>Our rates: </p>
+          <p className="text-xl text-slate-900 font-medium">Our rates</p>
           {isGetRateLoading && (
-            <div className="mt-2 h-125 flex items-center justify-center">
+            <div className="mt-3 min-h-50 flex items-center justify-center">
               <Loader />
             </div>
           )}
 
           {!isGetRateLoading && rates.length === 0 && (
-            <div className="mt-2 h-125 flex items-center justify-center border rounded border-dashed p-2">
-              <p className="italic">Click "Get Rates" and get actually rates</p>
-            </div>
+            <Card className="mt-3 min-h-50 flex flex-col gap-2 items-center justify-center">
+              <p className="text-sm text-cyan-950">
+                Click "Get Rates" and get our rates
+              </p>
+              {getRatesMessage && (
+                <p className="text-sm text-cyan-950 font-medium">
+                  {getRatesMessage}
+                </p>
+              )}
+            </Card>
           )}
 
           {rates.map((rate) => (
