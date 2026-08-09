@@ -184,95 +184,101 @@ export default function ManageContenPage() {
   };
 
   return (
-    <div className="grid grid-cols-2 gap-5">
-      <div className="grid-1">
-        <CreateNewsForm
-          isCreateLoading={isCreateNewsLoading}
-          onSave={handleAddNews}
-        />
-      </div>
+    <>
+      <h2 className="text-3xl text-emerald-800">Manage content</h2>
+      <p className="text-xs md:text-sm text-cyan-900 mt-1">
+        Admin tool for publishing and updating currency exchange rates and news
+      </p>
+      <div className="grid grid-cols-2 gap-5 mt-6">
+        <div className="grid-1">
+          <CreateNewsForm
+            isCreateLoading={isCreateNewsLoading}
+            onSave={handleAddNews}
+          />
+        </div>
 
-      <div className="bg-rose-200 grid-1">
-        <ExchangeRatesToggle
-          onGetRates={handleGetRatesByBaseCurrency}
-          onCreateRates={handleCreateRate}
-          isCreateLoading={isCreateRateLoading}
-          isGetLoading={isGetRateLoading}
-        />
-      </div>
+        <div className="grid-1">
+          <ExchangeRatesToggle
+            onGetRates={handleGetRatesByBaseCurrency}
+            onCreateRates={handleCreateRate}
+            isCreateLoading={isCreateRateLoading}
+            isGetLoading={isGetRateLoading}
+          />
+        </div>
 
-      <div className="grid-1">
-        <p>Our news: </p>
-        {isGetNewsLoading && (
-          <div className="mt-2 h-125 flex items-center justify-center">
-            <Loader />
-          </div>
-        )}
-
-        {!isGetNewsLoading && news.length === 0 && (
-          <div className="mt-2 h-125 flex items-center justify-center border rounded border-dashed p-2">
-            <p className="italic">No news yet...</p>
-          </div>
-        )}
-
-        <ul className="grid gap-4 mt-5">
-          {news.map((item) => (
-            <NewsList
-              key={item?.id}
-              item={item}
-              onDelete={handleDeleteNews}
-              isEdit={editingId === item?.id}
-              onEdit={setEditingId}
-              onSave={handleSaveEdit}
-              onCancel={handleCancelEdit}
-              isDeleteNewsLoading={isDeleteNewsLoading}
-              isUpdateNewsLoading={isUpdateNewsLoading}
-            />
-          ))}
-        </ul>
-      </div>
-
-      <div className="grid-1">
-        <p>Our rates: </p>
-        {isGetRateLoading && (
-          <div className="mt-2 h-125 flex items-center justify-center">
-            <Loader />
-          </div>
-        )}
-
-        {!isGetRateLoading && rates.length === 0 && (
-          <div className="mt-2 h-125 flex items-center justify-center border rounded border-dashed p-2">
-            <p className="italic">Click "Get Rates" and get actually rates</p>
-          </div>
-        )}
-
-        {rates.map((rate) => (
-          <div
-            key={rate?.date}
-            className="bg-white mt-5 mb-2 rounded px-4 py-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
-          >
-            <div className="flex justify-between mb-2">
-              <p>{dayjs(rate?.date).format("DD-MM-YYYY")}</p>
-              <button
-                onClick={() => handleDeleteRatesByDate(rate?.date)}
-                disabled={isDeleteRateLoading}
-                className="italic underline"
-              >
-                {isDeleteRateLoading ? "Loading..." : "Delete"}
-              </button>
+        <div className="grid-1">
+          <p>Our news: </p>
+          {isGetNewsLoading && (
+            <div className="mt-2 h-125 flex items-center justify-center">
+              <Loader />
             </div>
+          )}
 
-            {rate?.rates.map((r) => (
-              <ExchangeRateCard
-                key={r?.id}
-                rate={r}
-                selectedCurrencyId={baseCurrencyId}
-                isManagedCardStyle
+          {!isGetNewsLoading && news.length === 0 && (
+            <div className="mt-2 h-125 flex items-center justify-center border rounded border-dashed p-2">
+              <p className="italic">No news yet...</p>
+            </div>
+          )}
+
+          <ul className="grid gap-4 mt-5">
+            {news.map((item) => (
+              <NewsList
+                key={item?.id}
+                item={item}
+                onDelete={handleDeleteNews}
+                isEdit={editingId === item?.id}
+                onEdit={setEditingId}
+                onSave={handleSaveEdit}
+                onCancel={handleCancelEdit}
+                isDeleteNewsLoading={isDeleteNewsLoading}
+                isUpdateNewsLoading={isUpdateNewsLoading}
               />
             ))}
-          </div>
-        ))}
+          </ul>
+        </div>
+
+        <div className="grid-1">
+          <p>Our rates: </p>
+          {isGetRateLoading && (
+            <div className="mt-2 h-125 flex items-center justify-center">
+              <Loader />
+            </div>
+          )}
+
+          {!isGetRateLoading && rates.length === 0 && (
+            <div className="mt-2 h-125 flex items-center justify-center border rounded border-dashed p-2">
+              <p className="italic">Click "Get Rates" and get actually rates</p>
+            </div>
+          )}
+
+          {rates.map((rate) => (
+            <div
+              key={rate?.date}
+              className="bg-white mt-5 mb-2 rounded px-4 py-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+            >
+              <div className="flex justify-between mb-2">
+                <p>{dayjs(rate?.date).format("DD-MM-YYYY")}</p>
+                <button
+                  onClick={() => handleDeleteRatesByDate(rate?.date)}
+                  disabled={isDeleteRateLoading}
+                  className="italic underline"
+                >
+                  {isDeleteRateLoading ? "Loading..." : "Delete"}
+                </button>
+              </div>
+
+              {rate?.rates.map((r) => (
+                <ExchangeRateCard
+                  key={r?.id}
+                  rate={r}
+                  selectedCurrencyId={baseCurrencyId}
+                  isManagedCardStyle
+                />
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
