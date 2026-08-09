@@ -18,6 +18,8 @@ NewsList.propTypes = {
   hideBtn: PropTypes.bool,
   isDeleteNewsLoading: PropTypes.bool,
   isUpdateNewsLoading: PropTypes.bool,
+  deleteNewsId: PropTypes.string,
+  setDeleteNewsId: PropTypes.func,
 };
 
 export default function NewsList({
@@ -30,6 +32,8 @@ export default function NewsList({
   hideBtn,
   isDeleteNewsLoading,
   isUpdateNewsLoading,
+  deleteNewsId,
+  setDeleteNewsId,
 }) {
   return (
     <Card>
@@ -47,6 +51,8 @@ export default function NewsList({
           onEdit={onEdit}
           hideBtn={hideBtn}
           isDeleteNewsLoading={isDeleteNewsLoading}
+          deleteNewsId={deleteNewsId}
+          setDeleteNewsId={setDeleteNewsId}
         />
       )}
     </Card>

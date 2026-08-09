@@ -19,7 +19,8 @@ export default function ManageContenPage() {
   const [isGetNewsLoading, setIsGetNewsLoading] = useState(false);
   const [isCreateNewsLoading, setIsCreateNewsLoading] = useState(false);
   const [isDeleteNewsLoading, setIsDeleteNewsLoading] = useState(false);
-  const [editingId, setEditingId] = useState(null);
+  const [editNewsId, setEditNewsId] = useState(null);
+  const [deleteNewsId, setDeleteNewsId] = useState(null);
   const [isUpdateNewsLoading, setIsUpdateNewsLoading] = useState(false);
   const [isCreateRateLoading, setIsCreateRateLoading] = useState(false);
   const [isGetRateLoading, setIsGetRateLoading] = useState(false);
@@ -82,7 +83,10 @@ export default function ManageContenPage() {
       );
 
       toast.success(response.data?.message);
-      setNews(news.filter((news) => news.id !== parseFloat(response.data?.id)));
+      setDeleteNewsId(null);
+      setNews((prevNews) =>
+        prevNews.filter((news) => news.id !== parseFloat(response.data?.id)),
+      );
     } catch (err) {
       console.error(err);
       toast.error(getErrorMessage(err));
@@ -96,13 +100,13 @@ export default function ManageContenPage() {
 
     try {
       const response = await axiosInstance.put(
-        API_PATHS.ADMINS.NEWS_BY_ID(editingId),
+        API_PATHS.ADMINS.NEWS_BY_ID(editNewsId),
         data,
       );
 
-      setEditingId(null);
+      setEditNewsId(null);
       setNews(
-        news.map((item) => (item.id === editingId ? response?.data : item)),
+        news.map((item) => (item.id === editNewsId ? response.data : item)),
       );
     } catch (err) {
       console.error(err);
@@ -112,7 +116,7 @@ export default function ManageContenPage() {
     }
   };
 
-  const handleCancelEdit = () => setEditingId(null);
+  const handleCancelEdit = () => setEditNewsId(null);
 
   const handleCreateRate = async (data) => {
     setIsCreateRateLoading(true);
@@ -223,18 +227,20 @@ export default function ManageContenPage() {
             </Card>
           )}
 
-          <ul className="grid gap-4 mt-5">
+          <ul className="grid gap-4 mt-3">
             {news.map((item) => (
               <NewsList
                 key={item?.id}
                 item={item}
                 onDelete={handleDeleteNews}
-                isEdit={editingId === item?.id}
-                onEdit={setEditingId}
+                isEdit={editNewsId === item?.id}
+                onEdit={setEditNewsId}
                 onSave={handleSaveEdit}
                 onCancel={handleCancelEdit}
                 isDeleteNewsLoading={isDeleteNewsLoading}
                 isUpdateNewsLoading={isUpdateNewsLoading}
+                deleteNewsId={deleteNewsId}
+                setDeleteNewsId={setDeleteNewsId}
               />
             ))}
           </ul>
@@ -264,7 +270,7 @@ export default function ManageContenPage() {
           {rates.map((rate) => (
             <div
               key={rate?.date}
-              className="bg-white mt-5 mb-2 rounded px-4 py-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+              className="bg-white mt-3 mb-2 rounded px-4 py-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
             >
               <div className="flex justify-between mb-2">
                 <p>{dayjs(rate?.date).format("DD-MM-YYYY")}</p>
