@@ -10,6 +10,7 @@ import { getErrorMessage } from "../../shared/utils/getErrorMessage";
 import Loader from "../../shared/ui/Loader";
 import ExchangeRateCard from "../../shared/ui/CurrenciesAndNews/ExchangeRateCard";
 import Card from "../../shared/ui/Card";
+import Button from "../../shared/ui/Button";
 
 export default function ManageContenPage() {
   const [news, setNews] = useState([]);
@@ -268,19 +269,19 @@ export default function ManageContenPage() {
           )}
 
           {rates.map((rate) => (
-            <div
-              key={rate?.date}
-              className="bg-white mt-3 mb-2 rounded px-4 py-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
-            >
-              <div className="flex justify-between mb-2">
-                <p>{dayjs(rate?.date).format("DD-MM-YYYY")}</p>
-                <button
+            <div key={rate?.date} className="mt-3 mb-6">
+              <div className="flex justify-between">
+                <p className="text-slate-900 font-medium text-balance text-base">
+                  {dayjs(rate?.date).format("DD-MM-YYYY")}
+                </p>
+
+                <Button
                   onClick={() => handleDeleteRatesByDate(rate?.date)}
                   disabled={isDeleteRateLoading}
-                  className="italic underline"
+                  variant="link"
                 >
                   {isDeleteRateLoading ? "Loading..." : "Delete"}
-                </button>
+                </Button>
               </div>
 
               {rate?.rates.map((r) => (

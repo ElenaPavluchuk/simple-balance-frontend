@@ -27,7 +27,7 @@ export default function ExchangeRatesToggle({
   return (
     <Card className="h-full">
       <h3 className="text-lg text-slate-900 font-medium text-center mb-5">
-        Exchange Rates
+        Exchange rates
       </h3>
 
       <div className="flex justify-center gap-4 mb-5">

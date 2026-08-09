@@ -25,7 +25,7 @@ export default function Button({
       "bg-emerald-800 hover:shadow-lg shadow-emerald-600/50 active:bg-emerald-900 text-white",
     secondary:
       "bg-gray-50 border border-gray-400 hover:shadow-lg shadow-gray-400/50 hover:bg-white active:border-gray-500 text-cyan-950",
-    link: "italic underline",
+    link: "bg-transparent text-cyan-950 hover:underline",
     danger:
       "bg-red-600 text-white hover:shadow-lg shadow-red-400/50 active:bg-red-800",
     icon: "bg-transparent",
