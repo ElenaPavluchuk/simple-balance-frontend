@@ -1,5 +1,5 @@
 import NewsCard from "./NewsCard";
-import EditNewsForm from "../ManageContent/EditNewsForm";
+import EditNewsForm from "../ManageContent/NewsTab/EditNewsForm";
 import Card from "../Card";
 import PropTypes from "prop-types";
 

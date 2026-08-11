@@ -1,7 +1,7 @@
 import { useState } from "react";
 import CreateExchangeRateForm from "./CreateExchangeRateForm";
 import GetRatesByBaseCurrencyCard from "./GetRatesByBaseCurrencyCard";
-import Card from "../Card";
+import Card from "../../Card";
 import PropTypes from "prop-types";
 
 ExchangeRatesToggle.propTypes = {

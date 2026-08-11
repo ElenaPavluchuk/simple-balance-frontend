@@ -1,10 +1,13 @@
 import { useState } from "react";
-import axiosInstance from "../../utils/axiosInstance";
-import { API_PATHS } from "../../utils/apiPaths";
+import axiosInstance from "../../../utils/axiosInstance";
+import { API_PATHS } from "../../../utils/apiPaths";
 import Select from "react-select";
-import { useOptions } from "../../hooks/useOptions";
-import { exchangeRatesValidate, clearFieldError } from "../../utils/validate";
-import Button from "../Button";
+import { useOptions } from "../../../hooks/useOptions";
+import {
+  exchangeRatesValidate,
+  clearFieldError,
+} from "../../../utils/validate";
+import Button from "../../Button";
 import PropTypes from "prop-types";
 
 GetRatesByBaseCurrencyCard.propTypes = {

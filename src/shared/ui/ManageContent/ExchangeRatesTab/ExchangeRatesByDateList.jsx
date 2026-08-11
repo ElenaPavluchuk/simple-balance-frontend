@@ -1,8 +1,8 @@
 import dayjs from "dayjs";
-import Button from "../Button";
-import ExchangeRateCard from "../CurrenciesAndNews/ExchangeRateCard";
-import DialogModal from "../DialogModal";
-import DeleteAlert from "../DeleteAlert";
+import Button from "../../Button";
+import ExchangeRateCard from "../../CurrenciesAndNews/ExchangeRateCard";
+import DialogModal from "../../DialogModal";
+import DeleteAlert from "../../DeleteAlert";
 import PropTypes from "prop-types";
 
 ExchangeRatesByDateList.propTypes = {

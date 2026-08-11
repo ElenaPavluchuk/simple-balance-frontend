@@ -1,12 +1,15 @@
 import { useState } from "react";
-import axiosInstance from "../../utils/axiosInstance";
-import { API_PATHS } from "../../utils/apiPaths";
+import axiosInstance from "../../../utils/axiosInstance";
+import { API_PATHS } from "../../../utils/apiPaths";
 import Select from "react-select";
-import { useOptions } from "../../hooks/useOptions";
-import { exchangeRatesValidate, clearFieldError } from "../../utils/validate";
+import { useOptions } from "../../../hooks/useOptions";
+import {
+  exchangeRatesValidate,
+  clearFieldError,
+} from "../../../utils/validate";
 import dayjs from "dayjs";
-import Button from "../Button";
-import Input from "../Input";
+import Button from "../../Button";
+import Input from "../../Input";
 import PropTypes from "prop-types";
 
 CreateExchangeRateForm.propTypes = {

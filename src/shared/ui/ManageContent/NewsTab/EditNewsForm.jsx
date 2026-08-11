@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { X, Check } from "lucide-react";
-import { newsValidate, clearFieldError } from "../../utils/validate";
-import Input from "../Input";
-import Button from "../Button";
+import { newsValidate, clearFieldError } from "../../../utils/validate";
+import Input from "../../Input";
+import Button from "../../Button";
 import PropTypes from "prop-types";
 
 EditNewsForm.propTypes = {

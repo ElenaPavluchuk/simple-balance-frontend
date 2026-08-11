@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { newsValidate, clearFieldError } from "../../utils/validate";
-import Input from "../Input";
-import Button from "../Button";
-import Card from "../Card";
+import { newsValidate, clearFieldError } from "../../../utils/validate";
+import Input from "../../Input";
+import Button from "../../Button";
+import Card from "../../Card";
 import PropTypes from "prop-types";
 
 CreateNewsForm.propTypes = {

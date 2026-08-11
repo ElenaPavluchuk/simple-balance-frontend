@@ -1,16 +1,12 @@
 import { useState, useEffect } from "react";
-import CreateNewsForm from "../../shared/ui/ManageContent/CreateNewsForm";
-import ExchangeRatesToggle from "../../shared/ui/ManageContent/ExchangeRatesToggle";
-import ExchangeRatesByDateList from "../../shared/ui/ManageContent/ExchangeRatesByDateList";
 import axiosInstance from "../../shared/utils/axiosInstance";
 import { API_PATHS } from "../../shared/utils/apiPaths";
-import toast, { Toaster } from "react-hot-toast";
-import NewsList from "../../shared/ui/CurrenciesAndNews/NewsList";
+import toast from "react-hot-toast";
 import dayjs from "dayjs";
 import { getErrorMessage } from "../../shared/utils/getErrorMessage";
-import Loader from "../../shared/ui/Loader";
-import ExchangeRateCard from "../../shared/ui/CurrenciesAndNews/ExchangeRateCard";
-import Card from "../../shared/ui/Card";
+import ContentTabs from "../../shared/ui/ManageContent/ContentTabs/ContentTabs";
+import NewsTab from "../../shared/ui/ManageContent/NewsTab/NewsTab";
+import ExchangeRatesTab from "../../shared/ui/ManageContent/ExchangeRatesTab/ExchangeRatesTab";
 
 const TABS = {
   NEWS: "News",
@@ -205,119 +201,45 @@ export default function ManageContenPage() {
         Admin tool for publishing and updating currency exchange rates and news
       </p>
 
-      <div className="flex gap-8 mt-6 border-b border-gray-200 md:w-1/2">
-        <button
-          onClick={() => setActiveTab(TABS.NEWS)}
-          className={`pb-2 text-sm font-medium ${
-            activeTab === "NEWS"
-              ? "text-emerald-700 border-b-2 border-emerald-700"
-              : "text-slate-500 hover:text-slate-800"
-          }`}
-        >
-          {TABS.NEWS}
-        </button>
-        <button
-          onClick={() => setActiveTab(TABS.EXCHANGE_RATES)}
-          className={`pb-2 text-sm font-medium ${
-            activeTab === "EXCHANGE_RATES"
-              ? "text-emerald-700 border-b-2 border-emerald-700"
-              : "text-slate-500 hover:text-slate-800"
-          }`}
-        >
-          {TABS.EXCHANGE_RATES}
-        </button>
-      </div>
+      <ContentTabs
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        tabs={TABS}
+      />
 
       <div className="mt-8">
         {activeTab === TABS.NEWS && (
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-5">
-            <div className="flex-1">
-              <CreateNewsForm
-                isCreateLoading={isCreateNewsLoading}
-                onSave={handleAddNews}
-              />
-            </div>
-
-            <div className="flex-1">
-              <p className="text-xl text-slate-900 font-medium">Our news</p>
-              {isGetNewsLoading && (
-                <div className="mt-3 min-h-50 flex items-center justify-center">
-                  <Loader />
-                </div>
-              )}
-
-              {!isGetNewsLoading && news.length === 0 && (
-                <Card className="mt-3 min-h-50 flex items-center justify-center">
-                  <p className="text-sm text-cyan-950">No news yet</p>
-                </Card>
-              )}
-
-              <ul className="grid gap-4 mt-3">
-                {news.map((item) => (
-                  <NewsList
-                    key={item?.id}
-                    item={item}
-                    onDelete={handleDeleteNews}
-                    isEdit={editNewsId === item?.id}
-                    onEdit={setEditNewsId}
-                    onSave={handleSaveEdit}
-                    onCancel={handleCancelEdit}
-                    isDeleteNewsLoading={isDeleteNewsLoading}
-                    isUpdateNewsLoading={isUpdateNewsLoading}
-                    deleteNewsId={deleteNewsId}
-                    setDeleteNewsId={setDeleteNewsId}
-                  />
-                ))}
-              </ul>
-            </div>
-          </div>
+          <NewsTab
+            isCreateNewsLoading={isCreateNewsLoading}
+            handleAddNews={handleAddNews}
+            isGetNewsLoading={isGetNewsLoading}
+            news={news}
+            handleDeleteNews={handleDeleteNews}
+            editNewsId={editNewsId}
+            setEditNewsId={setEditNewsId}
+            handleSaveEdit={handleSaveEdit}
+            handleCancelEdit={handleCancelEdit}
+            isDeleteNewsLoading={isDeleteNewsLoading}
+            isUpdateNewsLoading={isUpdateNewsLoading}
+            deleteNewsId={deleteNewsId}
+            setDeleteNewsId={setDeleteNewsId}
+          />
         )}
 
         {activeTab === TABS.EXCHANGE_RATES && (
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-5">
-            <div className="flex-1">
-              <ExchangeRatesToggle
-                onGetRates={handleGetRatesByBaseCurrency}
-                onCreateRates={handleCreateRate}
-                isCreateLoading={isCreateRateLoading}
-                isGetLoading={isGetRateLoading}
-              />
-            </div>
-
-            <div className="flex-1">
-              <p className="text-xl text-slate-900 font-medium">Our rates</p>
-              {isGetRateLoading && (
-                <div className="mt-3 min-h-50 flex items-center justify-center">
-                  <Loader />
-                </div>
-              )}
-
-              {!isGetRateLoading && rates.length === 0 && (
-                <Card className="mt-3 min-h-50 flex flex-col gap-2 items-center justify-center">
-                  <p className="text-sm text-cyan-950">
-                    Click "Get Rates" and get our rates
-                  </p>
-                  {getRatesMessage && (
-                    <p className="text-sm text-cyan-950 font-medium">
-                      {getRatesMessage}
-                    </p>
-                  )}
-                </Card>
-              )}
-
-              {rates.map((rate) => (
-                <ExchangeRatesByDateList
-                  key={rate?.date}
-                  rate={rate}
-                  onDeleteRateByDate={handleDeleteRatesByDate}
-                  isDeleteRateLoading={isDeleteRateLoading}
-                  baseCurrencyId={baseCurrencyId}
-                  deleteRateDate={deleteRateDate}
-                  setDeleteRateDate={setDeleteRateDate}
-                />
-              ))}
-            </div>
-          </div>
+          <ExchangeRatesTab
+            handleGetRatesByBaseCurrency={handleGetRatesByBaseCurrency}
+            handleCreateRate={handleCreateRate}
+            isCreateRateLoading={isCreateRateLoading}
+            isGetRateLoading={isGetRateLoading}
+            rates={rates}
+            handleDeleteRatesByDate={handleDeleteRatesByDate}
+            isDeleteRateLoading={isDeleteRateLoading}
+            baseCurrencyId={baseCurrencyId}
+            deleteRateDate={deleteRateDate}
+            setDeleteRateDate={setDeleteRateDate}
+            getRatesMessage={getRatesMessage}
+          />
         )}
       </div>
     </>
