@@ -52,7 +52,7 @@ export default function GetRatesByBaseCurrencyCard({
   };
 
   return (
-    <div className="flex flex-col min-h-120">
+    <div className="flex flex-col min-h-100">
       <div>
         <h2 className="text-base text-slate-900 font-medium mb-3">
           Get exchange rates by base currency

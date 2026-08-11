@@ -12,6 +12,11 @@ import Loader from "../../shared/ui/Loader";
 import ExchangeRateCard from "../../shared/ui/CurrenciesAndNews/ExchangeRateCard";
 import Card from "../../shared/ui/Card";
 
+const TABS = {
+  NEWS: "News",
+  EXCHANGE_RATES: "Exchange rates",
+};
+
 export default function ManageContenPage() {
   const [news, setNews] = useState([]);
   const [rates, setRates] = useState([]);
@@ -27,6 +32,7 @@ export default function ManageContenPage() {
   const [isCreateRateLoading, setIsCreateRateLoading] = useState(false);
   const [isGetRateLoading, setIsGetRateLoading] = useState(false);
   const [isDeleteRateLoading, setIsDeleteRateLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState(TABS.NEWS);
 
   useEffect(() => {
     let isCancelled = false;
@@ -198,89 +204,121 @@ export default function ManageContenPage() {
       <p className="text-xs md:text-sm text-cyan-900 mt-1">
         Admin tool for publishing and updating currency exchange rates and news
       </p>
-      <div className="grid grid-cols-2 gap-5 mt-6">
-        <div className="grid-1">
-          <CreateNewsForm
-            isCreateLoading={isCreateNewsLoading}
-            onSave={handleAddNews}
-          />
-        </div>
 
-        <div className="grid-1">
-          <ExchangeRatesToggle
-            onGetRates={handleGetRatesByBaseCurrency}
-            onCreateRates={handleCreateRate}
-            isCreateLoading={isCreateRateLoading}
-            isGetLoading={isGetRateLoading}
-          />
-        </div>
+      <div className="flex gap-8 mt-6 border-b border-gray-200 md:w-1/2">
+        <button
+          onClick={() => setActiveTab(TABS.NEWS)}
+          className={`pb-2 text-sm font-medium ${
+            activeTab === "NEWS"
+              ? "text-emerald-700 border-b-2 border-emerald-700"
+              : "text-slate-500 hover:text-slate-800"
+          }`}
+        >
+          {TABS.NEWS}
+        </button>
+        <button
+          onClick={() => setActiveTab(TABS.EXCHANGE_RATES)}
+          className={`pb-2 text-sm font-medium ${
+            activeTab === "EXCHANGE_RATES"
+              ? "text-emerald-700 border-b-2 border-emerald-700"
+              : "text-slate-500 hover:text-slate-800"
+          }`}
+        >
+          {TABS.EXCHANGE_RATES}
+        </button>
+      </div>
 
-        <div className="grid-1">
-          <p className="text-xl text-slate-900 font-medium">Our news</p>
-          {isGetNewsLoading && (
-            <div className="mt-3 min-h-50 flex items-center justify-center">
-              <Loader />
-            </div>
-          )}
-
-          {!isGetNewsLoading && news.length === 0 && (
-            <Card className="mt-3 min-h-50 flex items-center justify-center">
-              <p className="text-sm text-cyan-950">No news yet</p>
-            </Card>
-          )}
-
-          <ul className="grid gap-4 mt-3">
-            {news.map((item) => (
-              <NewsList
-                key={item?.id}
-                item={item}
-                onDelete={handleDeleteNews}
-                isEdit={editNewsId === item?.id}
-                onEdit={setEditNewsId}
-                onSave={handleSaveEdit}
-                onCancel={handleCancelEdit}
-                isDeleteNewsLoading={isDeleteNewsLoading}
-                isUpdateNewsLoading={isUpdateNewsLoading}
-                deleteNewsId={deleteNewsId}
-                setDeleteNewsId={setDeleteNewsId}
+      <div className="mt-8">
+        {activeTab === TABS.NEWS && (
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-5">
+            <div className="flex-1">
+              <CreateNewsForm
+                isCreateLoading={isCreateNewsLoading}
+                onSave={handleAddNews}
               />
-            ))}
-          </ul>
-        </div>
-
-        <div className="grid-1">
-          <p className="text-xl text-slate-900 font-medium">Our rates</p>
-          {isGetRateLoading && (
-            <div className="mt-3 min-h-50 flex items-center justify-center">
-              <Loader />
             </div>
-          )}
 
-          {!isGetRateLoading && rates.length === 0 && (
-            <Card className="mt-3 min-h-50 flex flex-col gap-2 items-center justify-center">
-              <p className="text-sm text-cyan-950">
-                Click "Get Rates" and get our rates
-              </p>
-              {getRatesMessage && (
-                <p className="text-sm text-cyan-950 font-medium">
-                  {getRatesMessage}
-                </p>
+            <div className="flex-1">
+              <p className="text-xl text-slate-900 font-medium">Our news</p>
+              {isGetNewsLoading && (
+                <div className="mt-3 min-h-50 flex items-center justify-center">
+                  <Loader />
+                </div>
               )}
-            </Card>
-          )}
 
-          {rates.map((rate) => (
-            <ExchangeRatesByDateList
-              key={rate?.date}
-              rate={rate}
-              onDeleteRateByDate={handleDeleteRatesByDate}
-              isDeleteRateLoading={isDeleteRateLoading}
-              baseCurrencyId={baseCurrencyId}
-              deleteRateDate={deleteRateDate}
-              setDeleteRateDate={setDeleteRateDate}
-            />
-          ))}
-        </div>
+              {!isGetNewsLoading && news.length === 0 && (
+                <Card className="mt-3 min-h-50 flex items-center justify-center">
+                  <p className="text-sm text-cyan-950">No news yet</p>
+                </Card>
+              )}
+
+              <ul className="grid gap-4 mt-3">
+                {news.map((item) => (
+                  <NewsList
+                    key={item?.id}
+                    item={item}
+                    onDelete={handleDeleteNews}
+                    isEdit={editNewsId === item?.id}
+                    onEdit={setEditNewsId}
+                    onSave={handleSaveEdit}
+                    onCancel={handleCancelEdit}
+                    isDeleteNewsLoading={isDeleteNewsLoading}
+                    isUpdateNewsLoading={isUpdateNewsLoading}
+                    deleteNewsId={deleteNewsId}
+                    setDeleteNewsId={setDeleteNewsId}
+                  />
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+
+        {activeTab === TABS.EXCHANGE_RATES && (
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-5">
+            <div className="flex-1">
+              <ExchangeRatesToggle
+                onGetRates={handleGetRatesByBaseCurrency}
+                onCreateRates={handleCreateRate}
+                isCreateLoading={isCreateRateLoading}
+                isGetLoading={isGetRateLoading}
+              />
+            </div>
+
+            <div className="flex-1">
+              <p className="text-xl text-slate-900 font-medium">Our rates</p>
+              {isGetRateLoading && (
+                <div className="mt-3 min-h-50 flex items-center justify-center">
+                  <Loader />
+                </div>
+              )}
+
+              {!isGetRateLoading && rates.length === 0 && (
+                <Card className="mt-3 min-h-50 flex flex-col gap-2 items-center justify-center">
+                  <p className="text-sm text-cyan-950">
+                    Click "Get Rates" and get our rates
+                  </p>
+                  {getRatesMessage && (
+                    <p className="text-sm text-cyan-950 font-medium">
+                      {getRatesMessage}
+                    </p>
+                  )}
+                </Card>
+              )}
+
+              {rates.map((rate) => (
+                <ExchangeRatesByDateList
+                  key={rate?.date}
+                  rate={rate}
+                  onDeleteRateByDate={handleDeleteRatesByDate}
+                  isDeleteRateLoading={isDeleteRateLoading}
+                  baseCurrencyId={baseCurrencyId}
+                  deleteRateDate={deleteRateDate}
+                  setDeleteRateDate={setDeleteRateDate}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

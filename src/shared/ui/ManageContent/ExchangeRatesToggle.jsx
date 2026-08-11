@@ -25,7 +25,7 @@ export default function ExchangeRatesToggle({
   const [type, setType] = useState(CARD_TYPES.ADD);
 
   return (
-    <Card className="h-full">
+    <Card>
       <h3 className="text-lg text-slate-900 font-medium text-center mb-5">
         Exchange rates
       </h3>

@@ -94,7 +94,7 @@ export default function CreateExchangeRateForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col min-h-120">
+    <form onSubmit={handleSubmit} className="flex flex-col min-h-100">
       <h4 className="text-base text-slate-900 font-medium mb-3">
         Add exchange rates by base currency
       </h4>
