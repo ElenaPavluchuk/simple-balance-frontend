@@ -111,6 +111,7 @@ const getAllRatesByBaseCurrency = async (req, res, next) => {
     res.status(200).json({
       base_currency_id: baseCurrencyId,
       rates,
+      message: rates.length ? null : "Rates not added yet",
     });
   } catch (err) {
     next(err);

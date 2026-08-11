@@ -120,7 +120,10 @@ export default function CurrenciesAndNewsPage() {
         if (isCancelled) return;
         console.error(err);
         setNewsApiError(
-          "Sorry, news are not available. Please try again later",
+          getErrorMessage(
+            err,
+            "Sorry, news are not available. Please try again later",
+          ),
         );
       } finally {
         setIsNewsLoading(false);

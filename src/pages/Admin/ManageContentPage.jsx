@@ -1,27 +1,34 @@
 import { useState, useEffect } from "react";
-import CreateNewsForm from "../../shared/ui/ManageContent/CreateNewsForm";
-import ExchangeRatesToggle from "../../shared/ui/ManageContent/ExchangeRatesToggle";
 import axiosInstance from "../../shared/utils/axiosInstance";
 import { API_PATHS } from "../../shared/utils/apiPaths";
-import toast, { Toaster } from "react-hot-toast";
-import NewsList from "../../shared/ui/CurrenciesAndNews/NewsList";
+import toast from "react-hot-toast";
 import dayjs from "dayjs";
 import { getErrorMessage } from "../../shared/utils/getErrorMessage";
-import Loader from "../../shared/ui/Loader";
-import ExchangeRateCard from "../../shared/ui/CurrenciesAndNews/ExchangeRateCard";
+import ContentTabs from "../../shared/ui/ManageContent/ContentTabs/ContentTabs";
+import NewsTab from "../../shared/ui/ManageContent/NewsTab/NewsTab";
+import ExchangeRatesTab from "../../shared/ui/ManageContent/ExchangeRatesTab/ExchangeRatesTab";
+
+const TABS = {
+  NEWS: "News",
+  EXCHANGE_RATES: "Exchange rates",
+};
 
 export default function ManageContenPage() {
   const [news, setNews] = useState([]);
   const [rates, setRates] = useState([]);
+  const [getRatesMessage, setGetRatesMessage] = useState("");
   const [baseCurrencyId, setBaseCurrencyId] = useState("");
+  const [deleteRateDate, setDeleteRateDate] = useState(null);
   const [isGetNewsLoading, setIsGetNewsLoading] = useState(false);
   const [isCreateNewsLoading, setIsCreateNewsLoading] = useState(false);
   const [isDeleteNewsLoading, setIsDeleteNewsLoading] = useState(false);
-  const [editingId, setEditingId] = useState(null);
+  const [editNewsId, setEditNewsId] = useState(null);
+  const [deleteNewsId, setDeleteNewsId] = useState(null);
   const [isUpdateNewsLoading, setIsUpdateNewsLoading] = useState(false);
   const [isCreateRateLoading, setIsCreateRateLoading] = useState(false);
   const [isGetRateLoading, setIsGetRateLoading] = useState(false);
   const [isDeleteRateLoading, setIsDeleteRateLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState(TABS.NEWS);
 
   useEffect(() => {
     let isCancelled = false;
@@ -80,7 +87,10 @@ export default function ManageContenPage() {
       );
 
       toast.success(response.data?.message);
-      setNews(news.filter((news) => news.id !== parseFloat(response.data?.id)));
+      setDeleteNewsId(null);
+      setNews((prevNews) =>
+        prevNews.filter((news) => news.id !== parseFloat(response.data?.id)),
+      );
     } catch (err) {
       console.error(err);
       toast.error(getErrorMessage(err));
@@ -94,13 +104,13 @@ export default function ManageContenPage() {
 
     try {
       const response = await axiosInstance.put(
-        API_PATHS.ADMINS.NEWS_BY_ID(editingId),
+        API_PATHS.ADMINS.NEWS_BY_ID(editNewsId),
         data,
       );
 
-      setEditingId(null);
+      setEditNewsId(null);
       setNews(
-        news.map((item) => (item.id === editingId ? response?.data : item)),
+        news.map((item) => (item.id === editNewsId ? response.data : item)),
       );
     } catch (err) {
       console.error(err);
@@ -110,7 +120,7 @@ export default function ManageContenPage() {
     }
   };
 
-  const handleCancelEdit = () => setEditingId(null);
+  const handleCancelEdit = () => setEditNewsId(null);
 
   const handleCreateRate = async (data) => {
     setIsCreateRateLoading(true);
@@ -144,6 +154,7 @@ export default function ManageContenPage() {
 
       setRates(response.data?.rates);
       setBaseCurrencyId(response.data?.base_currency_id);
+      setGetRatesMessage(response.data?.message);
     } catch (err) {
       console.error(err);
       toast.error(getErrorMessage(err));
@@ -167,14 +178,14 @@ export default function ManageContenPage() {
         ),
       );
 
-      setRates(
-        rates.filter(
+      toast.success(response.data?.message);
+      setDeleteRateDate(null);
+      setRates((prevRates) =>
+        prevRates.filter(
           (rate) =>
             dayjs(rate.date).format("YYYY-MM-DD") !== response.data?.date,
         ),
       );
-
-      toast.success(response.data?.message);
     } catch (err) {
       console.error(err);
       toast.error(getErrorMessage(err));
@@ -184,95 +195,53 @@ export default function ManageContenPage() {
   };
 
   return (
-    <div className="grid grid-cols-2 gap-5">
-      <div className="bg-teal-200 grid-1">
-        <CreateNewsForm
-          isCreateLoading={isCreateNewsLoading}
-          onSave={handleAddNews}
-        />
-      </div>
+    <>
+      <h2 className="text-3xl text-emerald-800">Manage content</h2>
+      <p className="text-xs md:text-sm text-cyan-900 mt-1">
+        Admin tool for publishing and updating currency exchange rates and news
+      </p>
 
-      <div className="bg-rose-200 grid-1">
-        <ExchangeRatesToggle
-          onGetRates={handleGetRatesByBaseCurrency}
-          onCreateRates={handleCreateRate}
-          isCreateLoading={isCreateRateLoading}
-          isGetLoading={isGetRateLoading}
-        />
-      </div>
+      <ContentTabs
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        tabs={TABS}
+      />
 
-      <div className="grid-1">
-        <p>Our news: </p>
-        {isGetNewsLoading && (
-          <div className="mt-2 h-125 flex items-center justify-center">
-            <Loader />
-          </div>
+      <div className="mt-8">
+        {activeTab === TABS.NEWS && (
+          <NewsTab
+            isCreateNewsLoading={isCreateNewsLoading}
+            handleAddNews={handleAddNews}
+            isGetNewsLoading={isGetNewsLoading}
+            news={news}
+            handleDeleteNews={handleDeleteNews}
+            editNewsId={editNewsId}
+            setEditNewsId={setEditNewsId}
+            handleSaveEdit={handleSaveEdit}
+            handleCancelEdit={handleCancelEdit}
+            isDeleteNewsLoading={isDeleteNewsLoading}
+            isUpdateNewsLoading={isUpdateNewsLoading}
+            deleteNewsId={deleteNewsId}
+            setDeleteNewsId={setDeleteNewsId}
+          />
         )}
 
-        {!isGetNewsLoading && news.length === 0 && (
-          <div className="mt-2 h-125 flex items-center justify-center border rounded border-dashed p-2">
-            <p className="italic">No news yet...</p>
-          </div>
+        {activeTab === TABS.EXCHANGE_RATES && (
+          <ExchangeRatesTab
+            handleGetRatesByBaseCurrency={handleGetRatesByBaseCurrency}
+            handleCreateRate={handleCreateRate}
+            isCreateRateLoading={isCreateRateLoading}
+            isGetRateLoading={isGetRateLoading}
+            rates={rates}
+            handleDeleteRatesByDate={handleDeleteRatesByDate}
+            isDeleteRateLoading={isDeleteRateLoading}
+            baseCurrencyId={baseCurrencyId}
+            deleteRateDate={deleteRateDate}
+            setDeleteRateDate={setDeleteRateDate}
+            getRatesMessage={getRatesMessage}
+          />
         )}
-
-        <ul className="grid gap-4 mt-5">
-          {news.map((item) => (
-            <NewsList
-              key={item?.id}
-              item={item}
-              onDelete={handleDeleteNews}
-              isEdit={editingId === item?.id}
-              onEdit={setEditingId}
-              onSave={handleSaveEdit}
-              onCancel={handleCancelEdit}
-              isDeleteNewsLoading={isDeleteNewsLoading}
-              isUpdateNewsLoading={isUpdateNewsLoading}
-            />
-          ))}
-        </ul>
       </div>
-
-      <div className="grid-1">
-        <p>Our rates: </p>
-        {isGetRateLoading && (
-          <div className="mt-2 h-125 flex items-center justify-center">
-            <Loader />
-          </div>
-        )}
-
-        {!isGetRateLoading && rates.length === 0 && (
-          <div className="mt-2 h-125 flex items-center justify-center border rounded border-dashed p-2">
-            <p className="italic">Click "Get Rates" and get actually rates</p>
-          </div>
-        )}
-
-        {rates.map((rate) => (
-          <div
-            key={rate?.date}
-            className="bg-white mt-5 mb-2 rounded px-4 py-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
-          >
-            <div className="flex justify-between mb-2">
-              <p>{dayjs(rate?.date).format("DD-MM-YYYY")}</p>
-              <button
-                onClick={() => handleDeleteRatesByDate(rate?.date)}
-                disabled={isDeleteRateLoading}
-                className="italic underline"
-              >
-                {isDeleteRateLoading ? "Loading..." : "Delete"}
-              </button>
-            </div>
-
-            {rate?.rates.map((r) => (
-              <ExchangeRateCard
-                key={r?.id}
-                rate={r}
-                selectedCurrencyId={baseCurrencyId}
-                isManagedCardStyle
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-    </div>
+    </>
   );
 }

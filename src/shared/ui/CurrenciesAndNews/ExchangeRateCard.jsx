@@ -63,7 +63,7 @@ export default function ExchangeRateCard({
   return (
     <Card
       className={`flex
-        ${isManagedCardStyle ? "justify-around border-b p-3" : "flex-col"}
+        ${isManagedCardStyle ? "mb-2" : "flex-col"}
       `}
     >
       <div className="flex justify-between w-full">

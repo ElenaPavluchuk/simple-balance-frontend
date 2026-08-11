@@ -1,12 +1,15 @@
 import { useState } from "react";
-import axiosInstance from "../../utils/axiosInstance";
-import { API_PATHS } from "../../utils/apiPaths";
+import axiosInstance from "../../../utils/axiosInstance";
+import { API_PATHS } from "../../../utils/apiPaths";
 import Select from "react-select";
-import { useOptions } from "../../hooks/useOptions";
-import { exchangeRatesValidate, clearFieldError } from "../../utils/validate";
+import { useOptions } from "../../../hooks/useOptions";
+import {
+  exchangeRatesValidate,
+  clearFieldError,
+} from "../../../utils/validate";
 import dayjs from "dayjs";
-import Button from "../Button";
-import Input from "../Input";
+import Button from "../../Button";
+import Input from "../../Input";
 import PropTypes from "prop-types";
 
 CreateExchangeRateForm.propTypes = {
@@ -94,27 +97,55 @@ export default function CreateExchangeRateForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col min-h-125">
-      <h2 className="font-semibold mb-4">Add exchange rates</h2>
+    <form onSubmit={handleSubmit} className="flex flex-col min-h-100">
+      <h4 className="text-base text-slate-900 font-medium mb-3">
+        Add exchange rates by base currency
+      </h4>
+
       <div>
-        <label className="text-gray-500 text-sm">Select base currency:</label>
+        <label className="text-xs font-medium text-cyan-900">
+          Select base currency:
+        </label>
         <Select
           value={selectedOption}
           onChange={handleCurrencyChange}
           options={allOptions}
           isLoading={isOptionsLoading}
+          unstyled
+          classNames={{
+            control: ({ isFocused }) =>
+              `w-full h-9 px-2 border rounded-md transition duration-150
+              ${isFocused ? "border-sky-500 ring-2 ring-sky-500" : "border-gray-400"}`,
+            valueContainer: () => "p-0",
+            input: () => "m-0 p-0 text-sm text-cyan-950",
+            placeholder: () => "text-sm text-gray-400",
+            singleValue: () => "text-sm text-cyan-950",
+            indicatorsContainer: () => "h-full",
+            dropdownIndicator: () => "text-gray-500 hover:text-gray-700",
+            clearIndicator: () => "text-gray-500",
+            menu: () =>
+              "mt-1 rounded-md border border-gray-300 bg-white shadow-lg",
+            option: ({ isFocused, isSelected }) =>
+              `px-3 py-2 cursor-pointer ${
+                isSelected
+                  ? "bg-sky-500 text-white"
+                  : isFocused
+                    ? "bg-sky-100"
+                    : "bg-white"
+              }`,
+          }}
         />
         {validateErrors.selectedBaseCurrency && (
-          <p className="text-red-500 italic">
+          <p className="text-red-500 italic text-xs mt-1">
             {validateErrors.selectedBaseCurrency}
           </p>
         )}
         {optionsApiError && (
-          <p className="text-red-500 italic">{optionsApiError}</p>
+          <p className="text-red-500 italic text-xs mt-1">{optionsApiError}</p>
         )}
       </div>
 
-      <div className="mt-4">
+      <div className="mt-1">
         <Input
           value={date}
           type="date"
@@ -123,33 +154,33 @@ export default function CreateExchangeRateForm({
           label="Date: "
         />
         {validateErrors.date && (
-          <p className="text-red-500 italic">{validateErrors.date}</p>
+          <p className="text-red-500 italic text-xs mt-1">
+            {validateErrors.date}
+          </p>
         )}
       </div>
 
-      <div className="mt-4">
-        <h4 className="mt-6 mb-2 font-medium">Rates:</h4>
-        {targetCurrencies.map((currency) => (
-          <div key={currency.value}>
-            <label className="text-gray-500 text-sm">
-              From {selectedOption?.label}{" "}
-              <span className="text-gray-500">to {currency.label}</span>
-            </label>
-            <input
-              type="number"
-              step="0.00000001"
-              value={rates[currency.value] ?? ""}
-              onChange={(e) => handleRateChange(currency.value, e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2"
-            />
-            {validateErrors[currency.value] && (
-              <p className="text-red-500 italic">
-                {validateErrors[currency.value]}
-              </p>
-            )}
-          </div>
-        ))}
-      </div>
+      <h4 className="mt-4 text-base text-slate-900">Rates</h4>
+      {targetCurrencies.map((currency) => (
+        <div key={currency.value}>
+          <label className="text-xs font-medium text-cyan-900">
+            From {selectedOption?.label}{" "}
+            <span className="text-gray-500">to {currency.label}</span>
+          </label>
+          <input
+            type="number"
+            step="0.00000001"
+            value={rates[currency.value] ?? ""}
+            onChange={(e) => handleRateChange(currency.value, e.target.value)}
+            className="mb-1 w-full h-9 px-2 py-1 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 transition duration-150 ease-in-out"
+          />
+          {validateErrors[currency.value] && (
+            <p className="text-red-500 italic text-xs mt-1">
+              {validateErrors[currency.value]}
+            </p>
+          )}
+        </div>
+      ))}
 
       <Button
         type="submit"

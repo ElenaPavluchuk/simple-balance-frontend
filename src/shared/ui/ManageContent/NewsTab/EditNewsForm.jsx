@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { X, Check } from "lucide-react";
-import { newsValidate, clearFieldError } from "../../utils/validate";
-import Input from "../Input";
-import Button from "../Button";
+import { newsValidate, clearFieldError } from "../../../utils/validate";
+import Input from "../../Input";
+import Button from "../../Button";
 import PropTypes from "prop-types";
 
 EditNewsForm.propTypes = {
@@ -53,20 +53,17 @@ export default function EditNewsForm({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white rounded shadow flex flex-col p-5 gap-4 w-full mt-5"
-    >
-      <h3>Edit news</h3>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
       <div>
         <Input
           value={newTitle}
           onChange={handleTitleChange}
           placeholder="Add title"
-          label="Title:"
         />
         {validateErrors.title && (
-          <p className="text-red-500 italic text-">{validateErrors.title}</p>
+          <p className="text-red-500 italic text-xs mt-1">
+            {validateErrors.title}
+          </p>
         )}
       </div>
 
@@ -75,20 +72,19 @@ export default function EditNewsForm({
           value={newContent}
           onChange={handleContentChange}
           placeholder="Add content"
-          label="Content:"
           multiline
           rows={6}
         />
         {validateErrors.content && (
-          <p className="text-red-500 italic text-md">
+          <p className="text-red-500 italic text-xs mt-1">
             {validateErrors.content}
           </p>
         )}
       </div>
 
-      <div className="flex gap-5 justify-around">
+      <div className="flex justify-around mt-3">
         <Button type="submit" variant="icon" disabled={isUpdateNewsLoading}>
-          <Check className="text-green-700 hover:opacity-80 transition-opacity" />
+          <Check className="text-emerald-700 hover:opacity-80 transition-opacity" />
         </Button>
 
         <Button

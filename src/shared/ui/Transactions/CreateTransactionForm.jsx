@@ -96,7 +96,7 @@ export default function CreateTransactionForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
       <div>
         <Input
           value={title}
@@ -105,7 +105,9 @@ export default function CreateTransactionForm({
           placeholder="Add title"
         />
         {validateErrors.title && (
-          <p className="text-red-500 italic">{validateErrors.title}</p>
+          <p className="text-red-500 italic text-xs mt-1">
+            {validateErrors.title}
+          </p>
         )}
       </div>
 
@@ -119,12 +121,16 @@ export default function CreateTransactionForm({
           step="0.01"
         />
         {validateErrors.amount && (
-          <p className="text-red-500 italic">{validateErrors.amount}</p>
+          <p className="text-red-500 italic text-xs mt-1">
+            {validateErrors.amount}
+          </p>
         )}
       </div>
 
       <div>
-        <label>Select category</label>
+        <label className="text-xs font-medium text-cyan-900">
+          Select category
+        </label>
         <CreatableSelect
           isClearable
           value={selectedOption}
@@ -136,14 +142,37 @@ export default function CreateTransactionForm({
             isCustom: true,
           })}
           isLoading={isOptionsLoading}
+          unstyled
+          classNames={{
+            control: ({ isFocused }) =>
+              `w-full h-9 px-2 border rounded-md transition duration-150
+              ${isFocused ? "border-sky-500 ring-2 ring-sky-500" : "border-gray-400"}`,
+            valueContainer: () => "p-0",
+            input: () => "m-0 p-0 text-sm text-cyan-950",
+            placeholder: () => "text-sm text-gray-400",
+            singleValue: () => "text-sm text-cyan-950",
+            indicatorsContainer: () => "h-full",
+            dropdownIndicator: () => "text-gray-500 hover:text-gray-700",
+            clearIndicator: () => "text-gray-500",
+            menu: () =>
+              "mt-1 rounded-md border border-gray-300 bg-white shadow-lg",
+            option: ({ isFocused, isSelected }) =>
+              `px-3 py-2 cursor-pointer ${
+                isSelected
+                  ? "bg-sky-500 text-white"
+                  : isFocused
+                    ? "bg-sky-100"
+                    : "bg-white"
+              }`,
+          }}
         />
         {validateErrors.selectedCategory && (
-          <p className="text-red-500 italic">
+          <p className="text-red-500 italic text-xs mt-1">
             {validateErrors.selectedCategory}
           </p>
         )}
         {optionsApiError && (
-          <p className="text-red-500 italic">{optionsApiError}</p>
+          <p className="text-red-500 italic text-xs mt-1">{optionsApiError}</p>
         )}
       </div>
 
@@ -155,7 +184,9 @@ export default function CreateTransactionForm({
           label="Select date"
         />
         {validateErrors.date && (
-          <p className="text-red-500 italic">{validateErrors.date}</p>
+          <p className="text-red-500 italic text-xs mt-1">
+            {validateErrors.date}
+          </p>
         )}
       </div>
 
@@ -164,13 +195,17 @@ export default function CreateTransactionForm({
           value={note}
           onChange={handleNoteChange}
           label="Note"
-          placeholder="Add note"
           multiline
           rows={2}
         />
       </div>
 
-      <Button type="submit" disabled={isCreateLoading} variant="primary">
+      <Button
+        type="submit"
+        disabled={isCreateLoading}
+        variant="primary"
+        className="mt-4"
+      >
         {isCreateLoading ? "Saving..." : "Add transaction"}
       </Button>
     </form>

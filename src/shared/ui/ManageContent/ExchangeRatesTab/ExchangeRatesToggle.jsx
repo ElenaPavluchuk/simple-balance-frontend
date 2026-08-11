@@ -1,6 +1,7 @@
 import { useState } from "react";
 import CreateExchangeRateForm from "./CreateExchangeRateForm";
 import GetRatesByBaseCurrencyCard from "./GetRatesByBaseCurrencyCard";
+import Card from "../../Card";
 import PropTypes from "prop-types";
 
 ExchangeRatesToggle.propTypes = {
@@ -24,9 +25,12 @@ export default function ExchangeRatesToggle({
   const [type, setType] = useState(CARD_TYPES.ADD);
 
   return (
-    <div className="w-full h-full bg-white p-6 rounded shadow">
-      <p className="text-center font-semibold my-3">Exchange Rates</p>
-      <div className="flex justify-center gap-4 mb-6">
+    <Card>
+      <h3 className="text-lg text-slate-900 font-medium text-center mb-5">
+        Exchange rates
+      </h3>
+
+      <div className="flex justify-center gap-4 mb-5">
         {[
           { LABEL: "Add rates", VALUE: CARD_TYPES.ADD },
           { LABEL: "Get rates", VALUE: CARD_TYPES.GET },
@@ -44,7 +48,7 @@ export default function ExchangeRatesToggle({
               className={`px-6 py-2 rounded-lg text-sm font-medium transition-all
               ${
                 type === item.VALUE
-                  ? "bg-green-500 text-white shadow-md"
+                  ? "bg-emerald-600 text-white shadow-md"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
@@ -65,6 +69,6 @@ export default function ExchangeRatesToggle({
           isGetLoading={isGetLoading}
         />
       )}
-    </div>
+    </Card>
   );
 }

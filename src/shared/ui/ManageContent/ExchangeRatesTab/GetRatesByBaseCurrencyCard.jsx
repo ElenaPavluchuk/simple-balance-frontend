@@ -1,10 +1,13 @@
 import { useState } from "react";
-import axiosInstance from "../../utils/axiosInstance";
-import { API_PATHS } from "../../utils/apiPaths";
+import axiosInstance from "../../../utils/axiosInstance";
+import { API_PATHS } from "../../../utils/apiPaths";
 import Select from "react-select";
-import { useOptions } from "../../hooks/useOptions";
-import { exchangeRatesValidate, clearFieldError } from "../../utils/validate";
-import Button from "../Button";
+import { useOptions } from "../../../hooks/useOptions";
+import {
+  exchangeRatesValidate,
+  clearFieldError,
+} from "../../../utils/validate";
+import Button from "../../Button";
 import PropTypes from "prop-types";
 
 GetRatesByBaseCurrencyCard.propTypes = {
@@ -52,26 +55,54 @@ export default function GetRatesByBaseCurrencyCard({
   };
 
   return (
-    <div className="flex flex-col min-h-125">
+    <div className="flex flex-col min-h-100">
       <div>
-        <h2 className="font-semibold mb-4">
+        <h2 className="text-base text-slate-900 font-medium mb-3">
           Get exchange rates by base currency
         </h2>
+
         <div>
-          <label className="text-gray-500 text-sm">Select base currency:</label>
+          <label className="text-xs font-medium text-cyan-900">
+            Select base currency:
+          </label>
           <Select
             value={selectedOption}
             onChange={handleCurrencyChange}
             options={allOptions}
             isLoading={isOptionsLoading}
+            unstyled
+            classNames={{
+              control: ({ isFocused }) =>
+                `w-full h-9 px-2 border rounded-md transition duration-150
+              ${isFocused ? "border-sky-500 ring-2 ring-sky-500" : "border-gray-400"}`,
+              valueContainer: () => "p-0",
+              input: () => "m-0 p-0 text-sm text-cyan-950",
+              placeholder: () => "text-sm text-gray-400",
+              singleValue: () => "text-sm text-cyan-950",
+              indicatorsContainer: () => "h-full",
+              dropdownIndicator: () => "text-gray-500 hover:text-gray-700",
+              clearIndicator: () => "text-gray-500",
+              menu: () =>
+                "mt-1 rounded-md border border-gray-300 bg-white shadow-lg",
+              option: ({ isFocused, isSelected }) =>
+                `px-3 py-2 cursor-pointer ${
+                  isSelected
+                    ? "bg-sky-500 text-white"
+                    : isFocused
+                      ? "bg-sky-100"
+                      : "bg-white"
+                }`,
+            }}
           />
           {validateErrors.selectedBaseCurrency && (
-            <p className="text-red-500 italic">
+            <p className="text-red-500 italic text-xs mt-1">
               {validateErrors.selectedBaseCurrency}
             </p>
           )}
           {optionsApiError && (
-            <p className="text-red-500 italic">{optionsApiError}</p>
+            <p className="text-red-500 italic text-xs mt-1">
+              {optionsApiError}
+            </p>
           )}
         </div>
       </div>
