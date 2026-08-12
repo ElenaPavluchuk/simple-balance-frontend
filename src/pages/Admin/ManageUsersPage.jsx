@@ -8,6 +8,7 @@ import { Trash } from "lucide-react";
 import { getErrorMessage } from "../../shared/utils/getErrorMessage";
 import Loader from "../../shared/ui/Loader";
 import Button from "../../shared/ui/Button";
+import Card from "../../shared/ui/Card";
 
 export default function ManageUsersPage() {
   const [users, setUsers] = useState([]);
@@ -77,72 +78,78 @@ export default function ManageUsersPage() {
   }
 
   return (
-    <div className="p-6 bg-white rounded-2xl shadow-[0px_10px_30px_rgba(251,111,146,0.12)] overflow-x-auto border border-[#ffe5ec]">
-      <h2 className="m-4 font-bold">Manage Users</h2>
-      <table className="min-w-full divide-y divide-[#ffb3c6]">
-        <thead className="bg-[#ffe5ec] rounded-t-2xl">
-          <tr>
-            <th className="px-6 py-4 text-left text-xs font-bold text-[#e11d48] uppercase tracking-wider">
-              Name
-            </th>
-            <th className="px-6 py-4 text-left text-xs font-bold text-[#e11d48] uppercase tracking-wider">
-              Email
-            </th>
-            <th className="px-6 py-4 text-left text-xs font-bold text-[#e11d48] uppercase tracking-wider">
-              Role
-            </th>
-            <th className="px-6 py-4 text-left text-xs font-bold text-[#e11d48] uppercase tracking-wider">
-              Action
-            </th>
-          </tr>
-        </thead>
+    <>
+      <h2 className="text-3xl text-emerald-800">Manage Users</h2>
+      <p className="text-xs md:text-sm text-cyan-900 mt-1 mb-6">
+        Administration tool for viewing and removing user accounts
+      </p>
 
-        <tbody className="bg-white divide-y divide-gray-100">
-          {users.map((user) => (
-            <tr
-              key={user?.id}
-              className="hover:bg-[#fff7f8] transition duration-150"
-            >
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                {user?.user_name}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                {user?.email}
-              </td>
-
-              <td className="px-6 py-4 whitespace-nowrap">
-                <span
-                  className={`px-3 py-1 text-xs font-semibold rounded-full ${user?.user_role === "ADMIN" ? "bg-[#ffc2d1] text-[#e11d48]" : "bg-green-100 text-green-600"}`}
-                >
-                  {user?.user_role}
-                </span>
-              </td>
-
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <span
-                  title={
-                    user?.user_role === "ADMIN"
-                      ? "Administrators cannot be removed"
-                      : "Delete user"
-                  }
-                >
-                  <Button
-                    variant="icon"
-                    onClick={() => {
-                      setSelectedUserId(user?.id);
-                      setOpenDialogModal(true);
-                    }}
-                    className={`p-2 rounded-full transition duration-200 ${user?.user_role === "ADMIN" ? "text-gray-400 cursor-not-allowed" : "text-gray-400 bg-white hover:bg-white hover:text-red-500"}`}
-                    disabled={user?.user_role === "ADMIN"}
-                  >
-                    <Trash size={18} />
-                  </Button>
-                </span>
-              </td>
+      <Card>
+        <table className="min-w-full divide-y divide-emerald-600">
+          <thead>
+            <tr>
+              <th className="px-6 py-4 text-left text-xs font-bold text-emerald-800 uppercase">
+                Name
+              </th>
+              <th className="px-6 py-4 text-left text-xs font-bold text-emerald-800 uppercase">
+                Email
+              </th>
+              <th className="px-6 py-4 text-left text-xs font-bold text-emerald-800 uppercase">
+                Role
+              </th>
+              <th className="px-6 py-4 text-left text-xs font-bold text-emerald-800 uppercase">
+                Action
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody className="divide-y divide-gray-200">
+            {users.map((user) => (
+              <tr
+                key={user?.id}
+                className="hover:bg-gray-100/50 transition duration-150"
+              >
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-900">
+                  {user?.user_name}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-cyan-950">
+                  {user?.email}
+                </td>
+
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span
+                    className={`inline-block w-22 px-3 py-1 text-xs text-center font-semibold rounded-full ${user?.user_role === "ADMIN" ? "bg-red-100 text-red-800" : "bg-emerald-100 text-emerald-800"}`}
+                  >
+                    {user?.user_role}
+                  </span>
+                </td>
+
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <span
+                    title={
+                      user?.user_role === "ADMIN"
+                        ? "Administrators cannot be removed"
+                        : "Delete user"
+                    }
+                  >
+                    <Button
+                      variant="icon"
+                      onClick={() => {
+                        setSelectedUserId(user?.id);
+                        setOpenDialogModal(true);
+                      }}
+                      className={`${user?.user_role === "ADMIN" ? "text-gray-400 cursor-not-allowed" : "text-emerald-700 hover:text-emerald-500"}`}
+                      disabled={user?.user_role === "ADMIN"}
+                    >
+                      <Trash size={18} />
+                    </Button>
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Card>
 
       <DialogModal
         isOpen={openDialogModal}
@@ -156,6 +163,6 @@ export default function ManageUsersPage() {
           isLoading={isDeleteUserLoading}
         />
       </DialogModal>
-    </div>
+    </>
   );
 }
