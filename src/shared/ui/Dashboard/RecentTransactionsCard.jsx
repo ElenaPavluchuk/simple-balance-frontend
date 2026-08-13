@@ -1,6 +1,6 @@
 import TransactionCard from "../Transactions/TransactionCard";
 import { Link } from "react-router";
-import { CirclePlus } from "lucide-react";
+import PlusIcon from "../Icons/PlusIcon";
 import Card from "../Card";
 import PropTypes from "prop-types";
 
@@ -46,10 +46,9 @@ export default function RecentTransactionsCard({
             className="text-gray-600 hover:underline text-base whitespace-nowrap"
           >
             {transactions.length === 0 ? (
-              <CirclePlus
-                size={22}
-                className="hover:bg-emerald-800 hover:text-white rounded-full"
-              />
+              <div className="border border-gray-600 rounded-full text-gray-600 hover:bg-emerald-800 hover:border-emerald-800 hover:text-white">
+                <PlusIcon />
+              </div>
             ) : (
               "View all"
             )}
@@ -70,7 +69,7 @@ export default function RecentTransactionsCard({
 
       <div className="mt-6 flex flex-col gap-3">
         {transactions.map((t) => (
-          <TransactionCard key={t.id} transaction={t} dashboardStyle />
+          <TransactionCard key={t.id} transaction={t} isDashboardStyle />
         ))}
       </div>
     </Card>

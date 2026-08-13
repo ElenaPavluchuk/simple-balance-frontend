@@ -1,10 +1,13 @@
 import { Home, Wallet, CreditCard } from "lucide-react";
+import DashboardIcon from "../../Icons/DashboardIcon";
+import IncomeIcon from "../../Icons/IncomeIcon";
+import ExpenseIcon from "../../Icons/ExpenseIcon";
 
 export const TOTAL_CARDS_DATA = [
   {
     ID: "totalBalance",
     DATA_KEY: "totalBalance",
-    ICON: Home,
+    ICON: DashboardIcon,
     LABEL: "Total balance",
     COLOR: "bg-linear-to-r from-emerald-500 to-emerald-800",
     ORDER: "order-1",
@@ -13,7 +16,7 @@ export const TOTAL_CARDS_DATA = [
   {
     ID: "totalIncome",
     DATA_KEY: "totalIncome",
-    ICON: Wallet,
+    ICON: IncomeIcon,
     LABEL: "Total income",
     COLOR: "bg-linear-to-r from-emerald-400 to-lime-600",
     ORDER: "order-2",
@@ -22,7 +25,7 @@ export const TOTAL_CARDS_DATA = [
   {
     ID: "totalExpense",
     DATA_KEY: "totalExpense",
-    ICON: CreditCard,
+    ICON: ExpenseIcon,
     LABEL: "Total expense",
     COLOR: "bg-linear-to-r from-emerald-400 to-sky-600",
     ORDER: "order-3",
