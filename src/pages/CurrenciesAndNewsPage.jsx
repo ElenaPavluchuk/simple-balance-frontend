@@ -239,7 +239,7 @@ export default function CurrenciesAndNewsPage() {
 
           <div className="grid gap-4 mt-5">
             {news.map((item) => (
-              <NewsList key={item?.id} item={item} hideBtn />
+              <NewsList key={item?.id} item={item} isHideBtn />
             ))}
           </div>
         </div>

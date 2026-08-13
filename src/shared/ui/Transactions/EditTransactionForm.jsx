@@ -204,7 +204,7 @@ export default function EditTransactionForm({
         rows={2}
       />
 
-      <div className="flex gap-4 justify-center mt-3">
+      <div className="flex justify-around mt-3">
         <Button type="submit" variant="icon" disabled={isSaveEditLoading}>
           <CheckIcon className="text-emerald-700 hover:text-emerald-400" />
         </Button>

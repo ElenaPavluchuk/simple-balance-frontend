@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { Link } from "react-router";
-import { Trash2, Pencil } from "lucide-react";
+import TrashIcon from "../Icons/TrashIcon";
+import PencilIcon from "../Icons/PencilIcon";
 import { useAuth } from "../../context/auth/useAuth";
 import Button from "../Button";
 import DialogModal from "../DialogModal";
@@ -16,7 +17,7 @@ NewsCard.propTypes = {
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
-  hideBtn: PropTypes.bool,
+  isHideBtn: PropTypes.bool,
   isDeleteNewsLoading: PropTypes.bool.isRequired,
   deleteNewsId: PropTypes.string,
   setDeleteNewsId: PropTypes.func,
@@ -26,13 +27,13 @@ export default function NewsCard({
   item,
   onDelete,
   onEdit,
-  hideBtn,
+  isHideBtn,
   isDeleteNewsLoading,
   deleteNewsId,
   setDeleteNewsId,
 }) {
   const { user } = useAuth();
-  const displayManageBtn = (user?.user_role === "ADMIN") & !hideBtn;
+  const isDisplayManageBtn = user?.user_role === "ADMIN" && !isHideBtn;
 
   return (
     <div className="flex flex-col gap-3">
@@ -41,15 +42,15 @@ export default function NewsCard({
           {item?.title}
         </h4>
 
-        {displayManageBtn ? (
+        {isDisplayManageBtn ? (
           <div className="max-w-16">
             <Button
               variant="icon"
               onClick={() => onEdit(item?.id)}
-              disabled={!displayManageBtn}
+              disabled={!isDisplayManageBtn}
             >
               <div className="border border-emerald-800 hover:bg-emerald-800 text-emerald-800 hover:text-white p-2 rounded-full">
-                <Pencil size={20} />
+                <PencilIcon className="w-5 h-5" />
               </div>
             </Button>
           </div>
@@ -57,7 +58,7 @@ export default function NewsCard({
       </div>
 
       <p
-        className={`line-clamp-2 text-base text-cyan-950 text-pretty ${displayManageBtn && "max-w-9/10"}`}
+        className={`line-clamp-2 text-base text-cyan-950 text-pretty ${isDisplayManageBtn && "max-w-9/10"}`}
       >
         {item?.content}
       </p>
@@ -77,15 +78,15 @@ export default function NewsCard({
           View more
         </Link>
 
-        {displayManageBtn ? (
+        {isDisplayManageBtn ? (
           <div className="max-w-16">
             <Button
               variant="icon"
               onClick={() => setDeleteNewsId(item?.id)}
-              disabled={!displayManageBtn || isDeleteNewsLoading}
+              disabled={!isDisplayManageBtn || isDeleteNewsLoading}
             >
               <div className="border border-emerald-800 hover:bg-red-600 hover:border-red-600 text-emerald-800 hover:text-white p-2 rounded-full">
-                <Trash2 size={20} />
+                <TrashIcon className="w-5 h-5" />
               </div>
             </Button>
           </div>

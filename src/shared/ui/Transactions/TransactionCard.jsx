@@ -35,11 +35,11 @@ export default function TransactionCard({
     >
       {isDashboardStyle && (
         <div
-          className={`min-w-8 min-h-8 md:w-11 md:h-10 rounded-full flex items-center justify-center text-white ${transaction?.type === "INCOME" ? "bg-linear-to-r from-emerald-400 to-lime-600" : "bg-linear-to-r from-emerald-400 to-sky-600"}`}
+          className={`p-2 rounded-full flex items-center justify-center text-white ${transaction?.type === "INCOME" ? "bg-linear-to-r from-emerald-400 to-lime-600" : "bg-linear-to-r from-emerald-400 to-sky-600"}`}
         >
           {
             <ArrowTrendIcon
-              className={`${transaction?.type === "INCOME" ? "rotate-180" : "rotate-0"}`}
+              className={`w-5 h-5 ${transaction?.type === "INCOME" ? "rotate-180" : "rotate-0"}`}
             />
           }
         </div>

@@ -15,7 +15,7 @@ NewsList.propTypes = {
   onEdit: PropTypes.func,
   onSave: PropTypes.func,
   onCancel: PropTypes.func,
-  hideBtn: PropTypes.bool,
+  isHideBtn: PropTypes.bool,
   isDeleteNewsLoading: PropTypes.bool,
   isUpdateNewsLoading: PropTypes.bool,
   deleteNewsId: PropTypes.string,
@@ -29,7 +29,7 @@ export default function NewsList({
   onEdit,
   onSave,
   onCancel,
-  hideBtn,
+  isHideBtn,
   isDeleteNewsLoading,
   isUpdateNewsLoading,
   deleteNewsId,
@@ -49,7 +49,7 @@ export default function NewsList({
           item={item}
           onDelete={onDelete}
           onEdit={onEdit}
-          hideBtn={hideBtn}
+          isHideBtn={isHideBtn}
           isDeleteNewsLoading={isDeleteNewsLoading}
           deleteNewsId={deleteNewsId}
           setDeleteNewsId={setDeleteNewsId}

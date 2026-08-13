@@ -1,4 +1,3 @@
-import { Home, Wallet, CreditCard } from "lucide-react";
 import DashboardIcon from "../../Icons/DashboardIcon";
 import IncomeIcon from "../../Icons/IncomeIcon";
 import ExpenseIcon from "../../Icons/ExpenseIcon";

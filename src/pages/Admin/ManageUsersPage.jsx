@@ -4,7 +4,7 @@ import axiosInstance from "../../shared/utils/axiosInstance";
 import { API_PATHS } from "../../shared/utils/apiPaths";
 import DialogModal from "../../shared/ui/DialogModal";
 import DeleteAlert from "../../shared/ui/DeleteAlert";
-import { Trash } from "lucide-react";
+import TrashIcon from "../../shared/ui/Icons/TrashIcon";
 import { getErrorMessage } from "../../shared/utils/getErrorMessage";
 import Loader from "../../shared/ui/Loader";
 import Button from "../../shared/ui/Button";
@@ -133,7 +133,7 @@ export default function ManageUsersPage() {
                 }}
                 disabled={user?.user_role === "ADMIN"}
               >
-                <Trash size={18} />
+                <TrashIcon className="w-5 h-5" />
               </Button>
             </span>
           </Card>
@@ -198,7 +198,7 @@ export default function ManageUsersPage() {
                       }}
                       disabled={user?.user_role === "ADMIN"}
                     >
-                      <Trash size={18} />
+                      <TrashIcon />
                     </Button>
                   </span>
                 </td>
