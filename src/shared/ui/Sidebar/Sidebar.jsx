@@ -1,11 +1,11 @@
 import PropTypes from "prop-types";
 import { Link, useLocation } from "react-router";
 import { MENU_DATA } from "./config/data";
-import { Menu, X } from "lucide-react";
 import { useAuth } from "../../context/auth/useAuth";
 import Button from "../Button";
 import LogoBig from "../Icons/LogoBig";
 import LogoSmall from "../Icons/LogoSmall";
+import ArrowIcon from "../Icons/ArrowIcon";
 
 Sidebar.propTypes = {
   isOpen: PropTypes.bool.isRequired,
@@ -62,17 +62,19 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
             </li>
           ))}
         </ul>
+
+        <div className="flex items-center justify-center mt-10">
+          <Button onClick={toggleSidebar} variant="icon">
+            <ArrowIcon
+              className={`text-emerald-800 ${isOpen && "rotate-180 transition-all duration-300 ease-in-out"}`}
+            />
+          </Button>
+        </div>
       </nav>
 
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center mb-3">
         <Button onClick={logout} variant="link">
           Logout
-        </Button>
-      </div>
-
-      <div className="flex items-center justify-center">
-        <Button onClick={toggleSidebar} variant="icon">
-          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </Button>
       </div>
     </div>
