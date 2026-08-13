@@ -1,54 +1,52 @@
-import {
-  Home,
-  Wallet,
-  CreditCard,
-  User,
-  Users,
-  Orbit,
-  NotebookPen,
-} from "lucide-react";
+import DashboardIcon from "../../Icons/DashboardIcon";
+import IncomeIcon from "../../Icons/IncomeIcon";
+import ExpenseIcon from "../../Icons/ExpenseIcon";
+import NewsAndCurrenciesIcon from "../../Icons/NewsAndCurrenciesIcon";
+import ManageUsersIcon from "../../Icons/ManageUsersIcon";
+import UserProfileIcon from "../../Icons/UserProfileIcon";
+import ManageContentIcon from "../../Icons/ManageContentIcon";
 
 export const MENU_DATA = [
   {
     KEY: "dashboard",
     LABEL: "Dashboard",
-    ICON: Home,
+    ICON: DashboardIcon,
     PATH: "/",
   },
   {
     KEY: "expense",
     LABEL: "Expense",
-    ICON: CreditCard,
+    ICON: ExpenseIcon,
     PATH: "/expense",
   },
   {
     KEY: "income",
     LABEL: "Income",
-    ICON: Wallet,
+    ICON: IncomeIcon,
     PATH: "/income",
   },
   {
     KEY: "profile",
     LABEL: "Profile",
-    ICON: User,
+    ICON: UserProfileIcon,
     PATH: "/profile",
   },
   {
     KEY: "content",
     LABEL: "Currencies and News",
-    ICON: Orbit,
+    ICON: NewsAndCurrenciesIcon,
     PATH: "/content",
   },
   {
     KEY: "manage-users",
     LABEL: "Manage users",
-    ICON: Users,
+    ICON: ManageUsersIcon,
     PATH: "/manage-users",
   },
   {
     KEY: "manage-content",
     LABEL: "Manage content",
-    ICON: NotebookPen,
+    ICON: ManageContentIcon,
     PATH: "/manage-content",
   },
 ];

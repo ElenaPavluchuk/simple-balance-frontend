@@ -34,7 +34,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
         {isOpen ? (
           <LogoBig className="w-30 lg:w-40 2xl:w-44 text-emerald-800 my-3" />
         ) : (
-          <LogoSmall className="w-10 lg:w-12 text-emerald-800 my-3" />
+          <LogoSmall className="w-10 text-emerald-800 my-3" />
         )}
       </div>
 
@@ -48,13 +48,13 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
                     flex items-center gap-3 px-3 py-3 rounded-lg transition-colors
                     ${
                       location.pathname === item.PATH
-                        ? "bg-teal-100 text-teal-800 font-medium"
-                        : "text-gray-700 hover:bg-gray-100"
+                        ? "bg-emerald-700 text-white font-medium"
+                        : "text-emerald-900 hover:bg-gray-100"
                     }
                   `}
               >
                 <span className={`${isOpen ? "" : "mx-auto"}`}>
-                  <item.ICON size={20} />
+                  <item.ICON />
                 </span>
 
                 {isOpen && <span>{item.LABEL}</span>}
