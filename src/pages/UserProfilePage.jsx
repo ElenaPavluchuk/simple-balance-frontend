@@ -88,7 +88,7 @@ export default function UserProfilePage() {
 
   return (
     <div className="flex flex-col items-center gap-6">
-      <h2 className="text-3xl text-emerald-800">Profile Info</h2>
+      <h2 className="text-3xl text-emerald-800">Profile info</h2>
 
       {isEdit ? (
         <>

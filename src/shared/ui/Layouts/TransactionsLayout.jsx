@@ -86,7 +86,7 @@ export default function TransactionsLayout({
 
   return (
     <>
-      <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:justify-between sm:items-center">
+      <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:justify-between">
         <div>
           <h2 className="text-3xl text-emerald-800">{title}</h2>
           <p className="text-xs md:text-sm text-cyan-900 mt-1">
@@ -111,8 +111,8 @@ export default function TransactionsLayout({
         />
       </DialogModal>
 
-      <div className="flex flex-col lg:flex-row gap-5 h-screen">
-        <Card className="flex-1 bg-amber-200 h-fit min-h-90 mt-1">
+      <div className="flex flex-col lg:flex-row gap-5 min-h-0">
+        <Card className="flex-1 h-fit min-h-90 mt-1">
           {transactions.length === 0 && !isLoading ? (
             <div className="flex flex-col min-h-77.5 items-center justify-center">
               <p className="text-sm text-cyan-950">No transactions yet</p>

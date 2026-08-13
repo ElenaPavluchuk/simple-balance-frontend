@@ -79,7 +79,7 @@ export default function ManageUsersPage() {
 
   return (
     <>
-      <h2 className="text-3xl text-emerald-800">Manage Users</h2>
+      <h2 className="text-3xl text-emerald-800">Manage users</h2>
       <p className="text-xs md:text-sm text-cyan-900 mt-1 mb-6 text-balance">
         Administration tool for viewing and removing user accounts
       </p>
