@@ -4,6 +4,8 @@ import { MENU_DATA } from "./config/data";
 import { Menu, X } from "lucide-react";
 import { useAuth } from "../../context/auth/useAuth";
 import Button from "../Button";
+import LogoBig from "../Icons/LogoBig";
+import LogoSmall from "../Icons/LogoSmall";
 
 Sidebar.propTypes = {
   isOpen: PropTypes.bool.isRequired,
@@ -26,10 +28,14 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     <div
       className={`${
         isOpen ? "w-full sm:w-2xs" : "w-20"
-      } bg-teal-100 transition-all duration-300 ease-in-out flex flex-col h-screen sticky top-0`}
+      } border-r border-gray-200 shadow-md transition-all duration-300 ease-in-out flex flex-col h-screen sticky top-0`}
     >
-      <div className="h-16 flex items-center justify-center border-b">
-        <p>simple BALANCE</p>
+      <div className="flex items-center justify-center border-b border-gray-200">
+        {isOpen ? (
+          <LogoBig className="w-30 lg:w-40 2xl:w-44 text-emerald-800 my-3" />
+        ) : (
+          <LogoSmall className="w-10 lg:w-12 text-emerald-800 my-3" />
+        )}
       </div>
 
       <nav className="flex-1 pt-4 bg-white">
