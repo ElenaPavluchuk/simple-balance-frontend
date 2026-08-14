@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import Button from "./Button";
+import EyeIcon from "./Icons/EyeIcon";
+import EyeOffIcon from "./Icons/EyeOffIcon";
 import PropTypes from "prop-types";
 
 Input.propTypes = {
@@ -10,7 +12,7 @@ Input.propTypes = {
   type: PropTypes.oneOf(["text", "number", "password", "date"]),
   step: PropTypes.string,
   max: PropTypes.string,
-  multiline: PropTypes.bool,
+  isMultiline: PropTypes.bool,
   rows: PropTypes.number,
 };
 
@@ -21,17 +23,17 @@ export default function Input({
   placeholder,
   type = "text",
   step,
-  multiline = false,
+  isMultiline = false,
   rows = 4,
   max,
 }) {
-  const [showPassword, setShowPassword] = useState(false);
+  const [isShowPassword, setIsShowPassword] = useState(false);
 
   return (
     <div>
       <label className="text-xs font-medium text-cyan-900">{label}</label>
 
-      {multiline ? (
+      {isMultiline ? (
         <textarea
           value={value}
           onChange={(e) => onChange(e.target.value)}
@@ -45,7 +47,11 @@ export default function Input({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             type={
-              type === "password" ? (showPassword ? "text" : "password") : type
+              type === "password"
+                ? isShowPassword
+                  ? "text"
+                  : "password"
+                : type
             }
             placeholder={placeholder}
             className="w-full h-9 px-2 py-1 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 transition duration-150 ease-in-out"
@@ -55,18 +61,22 @@ export default function Input({
 
           {type === "password" && (
             <>
-              {showPassword ? (
-                <Eye
-                  size={18}
-                  className="text-gray-400 hover:text-gray-500 cursor-pointer absolute right-1/18"
-                  onClick={() => setShowPassword(false)}
-                />
+              {isShowPassword ? (
+                <Button
+                  onClick={() => setIsShowPassword(false)}
+                  variant="icon"
+                  className="text-gray-400 hover:text-gray-500 absolute right-0"
+                >
+                  <EyeIcon className="w-5 h-5" />
+                </Button>
               ) : (
-                <EyeOff
-                  size={18}
-                  className="text-gray-400 hover:text-gray-500 cursor-pointer absolute right-1/18"
-                  onClick={() => setShowPassword(true)}
-                />
+                <Button
+                  onClick={() => setIsShowPassword(true)}
+                  variant="icon"
+                  className="text-gray-400 hover:text-gray-500 absolute right-0"
+                >
+                  <EyeOffIcon className="w-5 h-5" />
+                </Button>
               )}
             </>
           )}

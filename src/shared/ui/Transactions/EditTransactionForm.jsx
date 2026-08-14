@@ -200,7 +200,7 @@ export default function EditTransactionForm({
         value={note}
         onChange={handleNoteChange}
         placeholder="Note"
-        multiline
+        isMultiline
         rows={2}
       />
 

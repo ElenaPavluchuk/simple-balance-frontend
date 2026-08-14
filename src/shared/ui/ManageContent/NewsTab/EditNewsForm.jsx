@@ -72,7 +72,7 @@ export default function EditNewsForm({
           value={newContent}
           onChange={handleContentChange}
           placeholder="Add content"
-          multiline
+          isMultiline
           rows={6}
         />
         {validateErrors.content && (

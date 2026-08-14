@@ -65,7 +65,7 @@ export default function CreateNewsForm({ onSave, isCreateLoading }) {
             value={content}
             onChange={handleContentChange}
             label="Content"
-            multiline
+            isMultiline
             rows={14}
           />
           {validateErrors.content && (

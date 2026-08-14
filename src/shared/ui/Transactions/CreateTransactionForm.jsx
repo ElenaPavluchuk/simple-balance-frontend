@@ -195,7 +195,7 @@ export default function CreateTransactionForm({
           value={note}
           onChange={handleNoteChange}
           label="Note"
-          multiline
+          isMultiline
           rows={2}
         />
       </div>
