@@ -10,8 +10,8 @@ import { groupTransactionsByMonth } from "../../utils/sort";
 import PropTypes from "prop-types";
 
 TransactionsLayout.propTypes = {
-  openDialogModal: PropTypes.bool.isRequired,
-  setOpenDialogModal: PropTypes.func.isRequired,
+  isOpenDialogModal: PropTypes.bool.isRequired,
+  setIsOpenDialogModal: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   transactions: PropTypes.arrayOf(
@@ -38,8 +38,8 @@ TransactionsLayout.propTypes = {
 };
 
 export default function TransactionsLayout({
-  openDialogModal,
-  setOpenDialogModal,
+  isOpenDialogModal,
+  setIsOpenDialogModal,
   title,
   type,
   transactions,
@@ -93,20 +93,20 @@ export default function TransactionsLayout({
             Transaction overview: List & Last 10 Transactions Chart
           </p>
         </div>
-        <Button onClick={() => setOpenDialogModal(true)} variant="primary">
+        <Button onClick={() => setIsOpenDialogModal(true)} variant="primary">
           Add Transaction
         </Button>
       </div>
 
       <DialogModal
-        isOpen={openDialogModal}
-        onClose={() => setOpenDialogModal(false)}
+        isOpen={isOpenDialogModal}
+        onClose={() => setIsOpenDialogModal(false)}
         title={`New ${type === "INCOME" ? "income" : "expense"}`}
       >
         <CreateTransactionForm
           type={type}
           onCreate={onCreate}
-          onClose={() => setOpenDialogModal(false)}
+          onClose={() => setIsOpenDialogModal(false)}
           isCreateLoading={isCreateLoading}
         />
       </DialogModal>

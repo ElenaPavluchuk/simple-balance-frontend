@@ -7,8 +7,8 @@ export default function IncomePage() {
   const TRANSACTION_TYPE = "INCOME";
   const {
     transactions,
-    openDialogModal,
-    setOpenDialogModal,
+    isOpenDialogModal,
+    setIsOpenDialogModal,
     editingId,
     isLoading,
     isCreateLoading,
@@ -26,8 +26,8 @@ export default function IncomePage() {
 
   return (
     <TransactionsLayout
-      openDialogModal={openDialogModal}
-      setOpenDialogModal={setOpenDialogModal}
+      isOpenDialogModal={isOpenDialogModal}
+      setIsOpenDialogModal={setIsOpenDialogModal}
       title="Income transactions"
       type={TRANSACTION_TYPE}
       transactions={transactions.filter((t) => t.type === TRANSACTION_TYPE)}

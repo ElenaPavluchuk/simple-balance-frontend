@@ -7,8 +7,8 @@ export default function ExpensePage() {
   const TRANSACTION_TYPE = "EXPENSE";
   const {
     transactions,
-    openDialogModal,
-    setOpenDialogModal,
+    isOpenDialogModal,
+    setIsOpenDialogModal,
     editingId,
     isLoading,
     isCreateLoading,
@@ -26,8 +26,8 @@ export default function ExpensePage() {
 
   return (
     <TransactionsLayout
-      openDialogModal={openDialogModal}
-      setOpenDialogModal={setOpenDialogModal}
+      isOpenDialogModal={isOpenDialogModal}
+      setIsOpenDialogModal={setIsOpenDialogModal}
       title="Expense transactions"
       type={TRANSACTION_TYPE}
       transactions={transactions.filter((t) => t.type === TRANSACTION_TYPE)}
