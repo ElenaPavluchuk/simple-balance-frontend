@@ -32,7 +32,7 @@ export default function ExchangeRatesByDateList({
   setDeleteRateDate,
 }) {
   return (
-    <div className="mt-3 mb-6">
+    <div className="mb-6">
       <div className="flex justify-between">
         <p className="text-slate-900 font-medium text-balance text-base">
           {dayjs(rate?.date).format("DD-MM-YYYY")}

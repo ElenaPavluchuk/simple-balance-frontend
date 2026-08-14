@@ -79,7 +79,7 @@ export default function CreateNewsForm({ onSave, isCreateLoading }) {
           type="submit"
           disabled={isCreateLoading}
           variant="primary"
-          className="mt-auto"
+          className="mt-8"
         >
           {isCreateLoading ? "Loading..." : "Add news"}
         </Button>

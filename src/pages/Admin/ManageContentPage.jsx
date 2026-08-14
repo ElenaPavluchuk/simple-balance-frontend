@@ -4,7 +4,7 @@ import { API_PATHS } from "../../shared/utils/apiPaths";
 import toast from "react-hot-toast";
 import dayjs from "dayjs";
 import { getErrorMessage } from "../../shared/utils/getErrorMessage";
-import ContentTabs from "../../shared/ui/ManageContent/ContentTabs/ContentTabs";
+import ContentTabs from "../../shared/ui/ManageContent/ContentTabs";
 import NewsTab from "../../shared/ui/ManageContent/NewsTab/NewsTab";
 import ExchangeRatesTab from "../../shared/ui/ManageContent/ExchangeRatesTab/ExchangeRatesTab";
 

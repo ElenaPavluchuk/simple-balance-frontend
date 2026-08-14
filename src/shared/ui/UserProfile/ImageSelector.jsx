@@ -55,7 +55,7 @@ export default function ImageSelector({ image, setImage, onRemoveImage }) {
           <img
             src={previewUrl}
             alt="profile photo"
-            className="p-6 rounded-full object-cover"
+            className="w-20 h-20 rounded-full object-cover"
           />
           <Button
             variant="icon"
@@ -69,7 +69,7 @@ export default function ImageSelector({ image, setImage, onRemoveImage }) {
         </div>
       ) : (
         <Button variant="icon" onClick={onChooseFile} className="mt-5">
-          <div className="p-6 flex items-center justify-center bg-gray-300 rounded-full relative text-emerald-800">
+          <div className="w-20 h-20 flex items-center justify-center bg-gray-300 rounded-full relative text-emerald-800">
             <UserProfileIcon className="w-8 h-8" />
 
             <div className="p-1 text-emerald-800 bg-white border border-emerald-800 hover:bg-emerald-800 hover:text-white flex items-center justify-center bg-primary rounded-full absolute -bottom-1 -right-1">

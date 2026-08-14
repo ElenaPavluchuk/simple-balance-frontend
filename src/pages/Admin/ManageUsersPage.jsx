@@ -14,7 +14,7 @@ export default function ManageUsersPage() {
   const [users, setUsers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isDeleteUserLoading, setIsDeleteUserLoading] = useState(false);
-  const [openDialogModal, setOpenDialogModal] = useState(false);
+  const [isOpenDialogModal, setIsOpenDialogModal] = useState(false);
   const [isUsersLoading, setIsUsersLoading] = useState(false);
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function ManageUsersPage() {
 
       toast.success(response.data?.message);
       setUsers(users.filter((user) => user?.id !== selectedUserId));
-      setOpenDialogModal(false);
+      setIsOpenDialogModal(false);
       setSelectedUserId(null);
     } catch (err) {
       console.error(err);
@@ -129,7 +129,7 @@ export default function ManageUsersPage() {
                 variant="icon"
                 onClick={() => {
                   setSelectedUserId(user?.id);
-                  setOpenDialogModal(true);
+                  setIsOpenDialogModal(true);
                 }}
                 disabled={user?.user_role === "ADMIN"}
               >
@@ -194,7 +194,7 @@ export default function ManageUsersPage() {
                       variant="icon"
                       onClick={() => {
                         setSelectedUserId(user?.id);
-                        setOpenDialogModal(true);
+                        setIsOpenDialogModal(true);
                       }}
                       disabled={user?.user_role === "ADMIN"}
                     >
@@ -209,14 +209,14 @@ export default function ManageUsersPage() {
       </Card>
 
       <DialogModal
-        isOpen={openDialogModal}
-        onClose={() => setOpenDialogModal(false)}
+        isOpen={isOpenDialogModal}
+        onClose={() => setIsOpenDialogModal(false)}
         title="Delete user"
       >
         <DeleteAlert
           message="Are you sure you want to delete the user?"
           onDelete={handleDeleteUser}
-          onClose={() => setOpenDialogModal(false)}
+          onClose={() => setIsOpenDialogModal(false)}
           isLoading={isDeleteUserLoading}
         />
       </DialogModal>
