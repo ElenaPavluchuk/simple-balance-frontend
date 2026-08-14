@@ -65,7 +65,7 @@ export default function NewsTab({
 
           {!isGetNewsLoading && news.length === 0 && (
             <Card className="min-h-50 flex items-center justify-center">
-              <p className="text-sm text-cyan-950">No news yet</p>
+              <p className="text-sm text-cyan-950 lg:shrink-0">No news yet</p>
             </Card>
           )}
 
