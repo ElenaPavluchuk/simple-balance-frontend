@@ -1,5 +1,7 @@
 import { useRef, useState, useEffect } from "react";
-import { User, ImageUp, Trash } from "lucide-react";
+import UserProfileIcon from "../Icons/UserProfileIcon";
+import ImageIcon from "../Icons/ImageIcon";
+import TrashIcon from "../Icons/TrashIcon";
 import Button from "../Button";
 import PropTypes from "prop-types";
 
@@ -53,25 +55,25 @@ export default function ImageSelector({ image, setImage, onRemoveImage }) {
           <img
             src={previewUrl}
             alt="profile photo"
-            className="w-20 h-20 rounded-full object-cover"
+            className="p-6 rounded-full object-cover"
           />
           <Button
             variant="icon"
             className="absolute -bottom-1 -right-8"
             onClick={handleRemoveImage}
           >
-            <div className="w-8 h-8 text-emerald-800 bg-white border border-emerald-800 hover:bg-red-600 hover:border-red-600 hover:text-white rounded-full flex items-center justify-center">
-              <Trash />
+            <div className="p-1 text-emerald-800 bg-white border border-emerald-800 hover:bg-red-600 hover:border-red-600 hover:text-white rounded-full flex items-center justify-center">
+              <TrashIcon />
             </div>
           </Button>
         </div>
       ) : (
         <Button variant="icon" onClick={onChooseFile} className="mt-5">
-          <div className="w-20 h-20 flex items-center justify-center bg-gray-300 rounded-full relative">
-            <User className="text-emerald-800" size={30} />
+          <div className="p-6 flex items-center justify-center bg-gray-300 rounded-full relative text-emerald-800">
+            <UserProfileIcon className="w-8 h-8" />
 
-            <div className="w-8 h-8 text-emerald-800 bg-white border border-emerald-800 hover:bg-emerald-800 hover:text-white flex items-center justify-center bg-primary rounded-full absolute -bottom-1 -right-1">
-              <ImageUp />
+            <div className="p-1 text-emerald-800 bg-white border border-emerald-800 hover:bg-emerald-800 hover:text-white flex items-center justify-center bg-primary rounded-full absolute -bottom-1 -right-1">
+              <ImageIcon />
             </div>
           </div>
         </Button>

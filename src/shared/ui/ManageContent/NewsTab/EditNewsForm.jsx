@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { X, Check } from "lucide-react";
+import CheckIcon from "../../Icons/CheckIcon";
+import CrossIcon from "../../Icons/CrossIcon";
 import { newsValidate, clearFieldError } from "../../../utils/validate";
 import Input from "../../Input";
 import Button from "../../Button";
@@ -84,7 +85,7 @@ export default function EditNewsForm({
 
       <div className="flex justify-around mt-3">
         <Button type="submit" variant="icon" disabled={isUpdateNewsLoading}>
-          <Check className="text-emerald-700 hover:opacity-80 transition-opacity" />
+          <CheckIcon className="text-emerald-700 hover:text-emerald-400" />
         </Button>
 
         <Button
@@ -92,7 +93,7 @@ export default function EditNewsForm({
           variant="icon"
           disabled={isUpdateNewsLoading}
         >
-          <X className="text-gray-600 hover:opacity-80 transition-opacity" />
+          <CrossIcon className="text-gray-500 hover:text-gray-700" />
         </Button>
       </div>
     </form>
