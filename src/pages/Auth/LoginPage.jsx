@@ -24,7 +24,7 @@ export default function LoginPage() {
         navigate("/");
       }
     } catch (err) {
-      console.error(getErrorMessage(err));
+      console.error(err);
       toast.error(getErrorMessage(err));
     } finally {
       setIsLoginLoading(false);
