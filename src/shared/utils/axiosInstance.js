@@ -29,7 +29,10 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     if (error.response) {
-      if (error.response.status === 401) {
+      if (
+        error.response.status === 401 &&
+        !error.config.url.includes("/login")
+      ) {
         localStorage.removeItem("token");
         window.location.href = "/login";
       } else if (error.response.status === 500) {
@@ -38,6 +41,7 @@ axiosInstance.interceptors.response.use(
     } else if (error.code === "ECONNABORTED") {
       console.error("Request timeout. Please try again.");
     }
+
     return Promise.reject(error);
   },
 );

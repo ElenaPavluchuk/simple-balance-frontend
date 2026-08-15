@@ -69,7 +69,7 @@ export default function CurrenciesAndNewsPage() {
         setIsRatesLoading(false);
       } catch (err) {
         if (isCancelled) return;
-        console.warn(getErrorMessage(err, "API failed, fallback to DB"));
+        console.warn("API failed, fallback to DB", err);
 
         setIsRatesLoading(true);
 
@@ -84,7 +84,7 @@ export default function CurrenciesAndNewsPage() {
           setCurrentDate(dayjs(fallback.data?.date ?? "").format("DD-MM-YYYY"));
         } catch (fallbackError) {
           if (isCancelled) return;
-          console.error(getErrorMessage(fallbackError, "Fallback also failed"));
+          console.error("Fallback also failed", fallbackError);
           setRatesApiError(
             getErrorMessage(
               fallbackError,

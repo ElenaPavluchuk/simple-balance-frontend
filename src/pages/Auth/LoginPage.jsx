@@ -6,6 +6,7 @@ import { useAuth } from "../../shared/context/auth/useAuth";
 import toast from "react-hot-toast";
 import LoginForm from "../../shared/ui/Auth/LoginForm";
 import AuthLayout from "../../shared/ui/Layouts/AuthLayout";
+import { getErrorMessage } from "../../shared/utils/getErrorMessage";
 
 export default function LoginPage() {
   const [isLoginLoading, setIsLoginLoading] = useState(false);
@@ -24,7 +25,7 @@ export default function LoginPage() {
       }
     } catch (err) {
       console.error(err);
-      toast.error(err);
+      toast.error(getErrorMessage(err));
     } finally {
       setIsLoginLoading(false);
     }
