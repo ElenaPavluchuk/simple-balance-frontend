@@ -1,7 +1,5 @@
 import { useTransactions } from "../shared/hooks/useTransactions";
 import TransactionsLayout from "../shared/ui/Layouts/TransactionsLayout";
-import TransactionsList from "../shared/ui/Transactions/TransactionsList";
-import Loader from "../shared/ui/Loader";
 
 export default function IncomePage() {
   const TRANSACTION_TYPE = "INCOME";

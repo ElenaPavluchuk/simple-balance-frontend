@@ -46,7 +46,7 @@ export default function CustomLineChart({ transactions }) {
           width={36}
         />
 
-        <Tooltip content={<CustomTooltip />} />
+        <Tooltip content={CustomTooltip} />
 
         <Area
           type="monotone"
