@@ -47,38 +47,43 @@ export default function ExchangeRatesTab({
         />
       </div>
 
-      <div className="flex-1">
-        <p className="text-xl text-slate-900 font-medium">Our rates</p>
-        {isGetRateLoading && (
-          <div className="mt-3 min-h-50 flex items-center justify-center">
-            <Loader />
-          </div>
-        )}
+      <div className="flex flex-col flex-1 lg:min-h-0">
+        <p className="text-xl text-slate-900 font-medium lg:shrink-0 mb-4">
+          Our rates
+        </p>
 
-        {!isGetRateLoading && rates.length === 0 && (
-          <Card className="mt-3 min-h-50 flex flex-col gap-2 items-center justify-center">
-            <p className="text-sm text-cyan-950">
-              Click "Get Rates" and get our rates
-            </p>
-            {getRatesMessage && (
-              <p className="text-sm text-cyan-950 font-medium">
-                {getRatesMessage}
+        <div className="lg:min-h-0 lg:max-h-192 xl:max-h-256 2xl:max-h-240 lg:overflow-y-auto lg:scroll-smooth">
+          {isGetRateLoading && (
+            <div className="min-h-50 flex items-center justify-center">
+              <Loader />
+            </div>
+          )}
+
+          {!isGetRateLoading && rates.length === 0 && (
+            <Card className="min-h-50 flex flex-col gap-2 items-center justify-center">
+              <p className="text-sm text-cyan-950">
+                Click "Get Rates" and get our rates
               </p>
-            )}
-          </Card>
-        )}
+              {getRatesMessage && (
+                <p className="text-sm text-cyan-950 font-medium">
+                  {getRatesMessage}
+                </p>
+              )}
+            </Card>
+          )}
 
-        {rates.map((rate) => (
-          <ExchangeRatesByDateList
-            key={rate?.date}
-            rate={rate}
-            onDeleteRateByDate={handleDeleteRatesByDate}
-            isDeleteRateLoading={isDeleteRateLoading}
-            baseCurrencyId={baseCurrencyId}
-            deleteRateDate={deleteRateDate}
-            setDeleteRateDate={setDeleteRateDate}
-          />
-        ))}
+          {rates.map((rate) => (
+            <ExchangeRatesByDateList
+              key={rate?.date}
+              rate={rate}
+              onDeleteRateByDate={handleDeleteRatesByDate}
+              isDeleteRateLoading={isDeleteRateLoading}
+              baseCurrencyId={baseCurrencyId}
+              deleteRateDate={deleteRateDate}
+              setDeleteRateDate={setDeleteRateDate}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

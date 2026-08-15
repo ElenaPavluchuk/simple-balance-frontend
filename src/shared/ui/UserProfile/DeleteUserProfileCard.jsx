@@ -14,7 +14,7 @@ export default function DeleteUserProfileCard({
   onDeleteUser,
   isDeleteLoading,
 }) {
-  const [openDialogModal, setOpenDialogModal] = useState(false);
+  const [isOpenDialogModal, setIsOpenDialogModal] = useState(false);
 
   return (
     <Card className="flex flex-col items-center w-full max-w-md">
@@ -29,21 +29,21 @@ export default function DeleteUserProfileCard({
 
       <Button
         variant="danger"
-        onClick={() => setOpenDialogModal(true)}
+        onClick={() => setIsOpenDialogModal(true)}
         className="mt-9 w-full md:max-w-1/3"
       >
         Delete account
       </Button>
 
       <DialogModal
-        isOpen={openDialogModal}
-        onClose={() => setOpenDialogModal(false)}
+        isOpen={isOpenDialogModal}
+        onClose={() => setIsOpenDialogModal(false)}
         title="Permanantly delete this account?"
       >
         <DeleteAlert
           message="The account with any exsisting information will be removed"
           onDelete={onDeleteUser}
-          onClose={() => setOpenDialogModal(false)}
+          onClose={() => setIsOpenDialogModal(false)}
           isLoading={isDeleteLoading}
         />
       </DialogModal>

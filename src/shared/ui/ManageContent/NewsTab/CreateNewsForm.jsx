@@ -65,7 +65,7 @@ export default function CreateNewsForm({ onSave, isCreateLoading }) {
             value={content}
             onChange={handleContentChange}
             label="Content"
-            multiline
+            isMultiline
             rows={14}
           />
           {validateErrors.content && (
@@ -79,7 +79,7 @@ export default function CreateNewsForm({ onSave, isCreateLoading }) {
           type="submit"
           disabled={isCreateLoading}
           variant="primary"
-          className="mt-auto"
+          className="mt-8"
         >
           {isCreateLoading ? "Loading..." : "Add news"}
         </Button>

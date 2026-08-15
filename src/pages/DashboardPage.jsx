@@ -59,7 +59,7 @@ export default function DashboardPage() {
           {TOTAL_CARDS_DATA.map((item) => (
             <TotalCard
               key={item.ID}
-              icon={<item.ICON />}
+              icon={<item.ICON className="w-7 h-7" />}
               label={item.LABEL}
               total={dashboardData?.total?.[item.DATA_KEY] || 0}
               color={item.COLOR}

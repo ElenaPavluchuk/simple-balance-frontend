@@ -201,46 +201,50 @@ export default function CurrenciesAndNewsPage() {
           </ul>
         </div>
 
-        <div className="col-span-1 lg:col-span-2 space-y-6">
-          <h3 className="text-xl text-slate-900 font-medium">Our news</h3>
+        <div className="col-span-1 lg:col-span-2 lg:min-h-0">
+          <h3 className="mb-5 text-xl text-slate-900 font-medium mt-4 lg:mt-0 lg:shrink-0">
+            Our news
+          </h3>
 
-          {isNewsLoading && (
-            <Card className="min-h-90 flex items-center justify-center">
-              <Loader />
-            </Card>
-          )}
+          <div className="lg:min-h-0 lg:max-h-192 xl:max-h-256 2xl:max-h-240 lg:overflow-y-auto lg:scroll-smooth">
+            {isNewsLoading && (
+              <Card className="min-h-90 flex items-center justify-center">
+                <Loader />
+              </Card>
+            )}
 
-          {newsApiError && !isNewsLoading && (
-            <Card className="min-h-90 flex items-center justify-center">
-              <p className="text-base text-cyan-950 text-pretty">
-                {newsApiError}
-              </p>
-            </Card>
-          )}
+            {newsApiError && !isNewsLoading && (
+              <Card className="min-h-90 flex items-center justify-center">
+                <p className="text-base text-cyan-950 text-pretty">
+                  {newsApiError}
+                </p>
+              </Card>
+            )}
 
-          {news.length === 0 && !isNewsLoading && !newsApiError && (
-            <Card className="min-h-90 flex flex-col gap-2 items-center justify-center">
-              <p className="text-lg text-cyan-950 text-pretty">
-                News not added yet
-              </p>
-              {user?.user_role === "ADMIN" && (
-                <span className="text-slate-800 font-medium text-lg text-balance">
-                  You can adding news{" "}
-                  <Link
-                    className="text-lg text-gray-600 hover:underline whitespace-nowrap"
-                    to="/manage-content"
-                  >
-                    here
-                  </Link>
-                </span>
-              )}
-            </Card>
-          )}
+            {news.length === 0 && !isNewsLoading && !newsApiError && (
+              <Card className="min-h-90 flex flex-col gap-2 items-center justify-center">
+                <p className="text-lg text-cyan-950 text-pretty">
+                  News not added yet
+                </p>
+                {user?.user_role === "ADMIN" && (
+                  <span className="text-slate-800 font-medium text-lg text-balance">
+                    You can adding news{" "}
+                    <Link
+                      className="text-lg text-gray-600 hover:underline whitespace-nowrap"
+                      to="/manage-content"
+                    >
+                      here
+                    </Link>
+                  </span>
+                )}
+              </Card>
+            )}
 
-          <div className="grid gap-4 mt-5">
-            {news.map((item) => (
-              <NewsList key={item?.id} item={item} hideBtn />
-            ))}
+            <div className="grid gap-4 mt-1">
+              {news.map((item) => (
+                <NewsList key={item?.id} item={item} isHideBtn />
+              ))}
+            </div>
           </div>
         </div>
       </div>

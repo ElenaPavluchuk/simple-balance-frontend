@@ -51,37 +51,42 @@ export default function NewsTab({
         />
       </div>
 
-      <div className="flex-1">
-        <p className="text-xl text-slate-900 font-medium">Our news</p>
-        {isGetNewsLoading && (
-          <div className="mt-3 min-h-50 flex items-center justify-center">
-            <Loader />
-          </div>
-        )}
+      <div className="flex flex-col flex-1 lg:min-h-0">
+        <p className="text-xl text-slate-900 font-medium lg:shrink-0 mb-4">
+          Our news
+        </p>
 
-        {!isGetNewsLoading && news.length === 0 && (
-          <Card className="mt-3 min-h-50 flex items-center justify-center">
-            <p className="text-sm text-cyan-950">No news yet</p>
-          </Card>
-        )}
+        <div className="lg:min-h-0 lg:max-h-192 xl:max-h-256 2xl:max-h-240 lg:overflow-y-auto lg:scroll-smooth">
+          {isGetNewsLoading && (
+            <div className="min-h-50 flex items-center justify-center">
+              <Loader />
+            </div>
+          )}
 
-        <ul className="grid gap-4 mt-3">
-          {news.map((item) => (
-            <NewsList
-              key={item?.id}
-              item={item}
-              onDelete={handleDeleteNews}
-              isEdit={editNewsId === item?.id}
-              onEdit={setEditNewsId}
-              onSave={handleSaveEdit}
-              onCancel={handleCancelEdit}
-              isDeleteNewsLoading={isDeleteNewsLoading}
-              isUpdateNewsLoading={isUpdateNewsLoading}
-              deleteNewsId={deleteNewsId}
-              setDeleteNewsId={setDeleteNewsId}
-            />
-          ))}
-        </ul>
+          {!isGetNewsLoading && news.length === 0 && (
+            <Card className="min-h-50 flex items-center justify-center">
+              <p className="text-sm text-cyan-950 lg:shrink-0">No news yet</p>
+            </Card>
+          )}
+
+          <ul className="grid gap-4 mt-1">
+            {news.map((item) => (
+              <NewsList
+                key={item?.id}
+                item={item}
+                onDelete={handleDeleteNews}
+                isEdit={editNewsId === item?.id}
+                onEdit={setEditNewsId}
+                onSave={handleSaveEdit}
+                onCancel={handleCancelEdit}
+                isDeleteNewsLoading={isDeleteNewsLoading}
+                isUpdateNewsLoading={isUpdateNewsLoading}
+                deleteNewsId={deleteNewsId}
+                setDeleteNewsId={setDeleteNewsId}
+              />
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

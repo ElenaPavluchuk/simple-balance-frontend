@@ -10,8 +10,8 @@ import { groupTransactionsByMonth } from "../../utils/sort";
 import PropTypes from "prop-types";
 
 TransactionsLayout.propTypes = {
-  openDialogModal: PropTypes.bool.isRequired,
-  setOpenDialogModal: PropTypes.func.isRequired,
+  isOpenDialogModal: PropTypes.bool.isRequired,
+  setIsOpenDialogModal: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   transactions: PropTypes.arrayOf(
@@ -38,8 +38,8 @@ TransactionsLayout.propTypes = {
 };
 
 export default function TransactionsLayout({
-  openDialogModal,
-  setOpenDialogModal,
+  isOpenDialogModal,
+  setIsOpenDialogModal,
   title,
   type,
   transactions,
@@ -86,33 +86,33 @@ export default function TransactionsLayout({
 
   return (
     <>
-      <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:justify-between sm:items-center">
+      <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:justify-between">
         <div>
           <h2 className="text-3xl text-emerald-800">{title}</h2>
           <p className="text-xs md:text-sm text-cyan-900 mt-1">
             Transaction overview: List & Last 10 Transactions Chart
           </p>
         </div>
-        <Button onClick={() => setOpenDialogModal(true)} variant="primary">
+        <Button onClick={() => setIsOpenDialogModal(true)} variant="primary">
           Add Transaction
         </Button>
       </div>
 
       <DialogModal
-        isOpen={openDialogModal}
-        onClose={() => setOpenDialogModal(false)}
+        isOpen={isOpenDialogModal}
+        onClose={() => setIsOpenDialogModal(false)}
         title={`New ${type === "INCOME" ? "income" : "expense"}`}
       >
         <CreateTransactionForm
           type={type}
           onCreate={onCreate}
-          onClose={() => setOpenDialogModal(false)}
+          onClose={() => setIsOpenDialogModal(false)}
           isCreateLoading={isCreateLoading}
         />
       </DialogModal>
 
-      <div className="flex flex-col lg:flex-row gap-5 h-screen">
-        <Card className="flex-1 bg-amber-200 h-fit min-h-90 mt-1">
+      <div className="flex flex-col lg:flex-row gap-5">
+        <Card className="flex-1 h-fit min-h-90 mt-1">
           {transactions.length === 0 && !isLoading ? (
             <div className="flex flex-col min-h-77.5 items-center justify-center">
               <p className="text-sm text-cyan-950">No transactions yet</p>
@@ -125,12 +125,14 @@ export default function TransactionsLayout({
           )}
         </Card>
 
-        <div className="flex flex-col flex-1 lg:min-h-0 gap-5">
-          <div className="flex flex-col gap-5 lg:overflow-y-auto min-h-0">
+        <div className="flex flex-col flex-1 lg:min-h-0">
+          <div className="flex flex-col gap-5 lg:min-h-0 lg:max-h-192 xl:max-h-256 2xl:max-h-240 lg:overflow-y-auto lg:scroll-smooth">
             {transactions.length === 0 && !isLoading && (
               <Card className="flex min-h-90 flex-col items-center justify-center mt-1">
-                <p className="text-sm text-cyan-950">No transactions yet</p>
-                <p className="text-xs text-gray-300 mt-1">
+                <p className="text-sm text-cyan-950 lg:shrink-0">
+                  No transactions yet
+                </p>
+                <p className="text-xs text-gray-300 mt-1 lg:shrink-0">
                   Add your first transaction to see the list
                 </p>
               </Card>
@@ -138,7 +140,7 @@ export default function TransactionsLayout({
 
             {groupedTransactions.map((group) => (
               <section key={group.key}>
-                <h3 className="text-lg font-medium text-slate-900 mb-2 mt-1">
+                <h3 className="text-lg font-medium text-slate-900 mb-2 mt-1 lg:shrink-0">
                   {group.label}
                 </h3>
 

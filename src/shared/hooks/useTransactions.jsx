@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 import { getErrorMessage } from "../utils/getErrorMessage";
 
 export function useTransactions(type) {
-  const [openDialogModal, setOpenDialogModal] = useState(false);
+  const [isOpenDialogModal, setIsOpenDialogModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isCreateLoading, setIsCreateLoading] = useState(false);
@@ -72,7 +72,7 @@ export function useTransactions(type) {
 
       dispatch(addTransactionToRedux(response.data));
 
-      setOpenDialogModal(false);
+      setIsOpenDialogModal(false);
     } catch (err) {
       console.error(err);
       toast.error(getErrorMessage(err));
@@ -129,8 +129,8 @@ export function useTransactions(type) {
   return {
     // state
     transactions,
-    openDialogModal,
-    setOpenDialogModal,
+    isOpenDialogModal,
+    setIsOpenDialogModal,
     editingId,
     isLoading,
     isCreateLoading,

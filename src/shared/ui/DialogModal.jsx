@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import { X } from "lucide-react";
+import CrossIcon from "./Icons/CrossIcon";
 import Button from "./Button";
 import PropTypes from "prop-types";
 
@@ -27,7 +27,7 @@ export default function DialogModal({ isOpen, onClose, title, children }) {
           iconColor="text-red-500"
           className="absolute top-4 right-0 text-gray-400 hover:text-gray-600 active:text-gray-700"
         >
-          <X className="w-6 h-6" />
+          <CrossIcon />
         </Button>
         <h2 className="text-xl md:text-2xl font-medium text-slate-900 mb-6 max-w-[85%]">
           {title}

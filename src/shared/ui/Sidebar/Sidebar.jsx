@@ -1,9 +1,11 @@
 import PropTypes from "prop-types";
 import { Link, useLocation } from "react-router";
 import { MENU_DATA } from "./config/data";
-import { Menu, X } from "lucide-react";
 import { useAuth } from "../../context/auth/useAuth";
 import Button from "../Button";
+import LogoBig from "../Icons/LogoBig";
+import LogoSmall from "../Icons/LogoSmall";
+import ArrowIcon from "../Icons/ArrowIcon";
 
 Sidebar.propTypes = {
   isOpen: PropTypes.bool.isRequired,
@@ -23,13 +25,17 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   });
 
   return (
-    <div
+    <aside
       className={`${
         isOpen ? "w-full sm:w-2xs" : "w-20"
-      } bg-teal-100 transition-all duration-300 ease-in-out flex flex-col h-screen sticky top-0`}
+      } border-r border-gray-200 shadow-md transition-all duration-300 ease-in-out flex flex-col h-screen sticky top-0 overflow-x-hidden`}
     >
-      <div className="h-16 flex items-center justify-center border-b">
-        <p>simple BALANCE</p>
+      <div className="flex items-center justify-center border-b border-gray-200">
+        {isOpen ? (
+          <LogoBig className="w-30 lg:w-40 2xl:w-44 text-emerald-800 my-3" />
+        ) : (
+          <LogoSmall className="w-10 text-emerald-800 my-3" />
+        )}
       </div>
 
       <nav className="flex-1 pt-4 bg-white">
@@ -39,36 +45,44 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
               <Link
                 to={item.PATH}
                 className={`
-                    flex items-center gap-3 px-3 py-3 rounded-lg transition-colors
+                    flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
                     ${
                       location.pathname === item.PATH
-                        ? "bg-teal-100 text-teal-800 font-medium"
-                        : "text-gray-700 hover:bg-gray-100"
+                        ? "bg-emerald-700 text-white font-medium"
+                        : "text-emerald-900 hover:bg-gray-100"
                     }
                   `}
               >
-                <span className={`${isOpen ? "" : "mx-auto"}`}>
-                  <item.ICON size={20} />
+                <span
+                  className={`flex shrink-0 justify-center ${isOpen ? "w-6" : "w-full"}`}
+                >
+                  <item.ICON />
                 </span>
 
-                {isOpen && <span>{item.LABEL}</span>}
+                <span
+                  className={`whitespace-nowrap overflow-hidden transition-all duration-100 ${isOpen ? "opacity-100 max-w-45" : "opacity-0 max-w-0"}`}
+                >
+                  {item.LABEL}
+                </span>
               </Link>
             </li>
           ))}
         </ul>
+
+        <div className="flex items-center justify-center mt-10">
+          <Button onClick={toggleSidebar} variant="icon">
+            <ArrowIcon
+              className={`text-emerald-800 ${isOpen ? "rotate-180 transition-all duration-300 ease-in-out" : "rotate-0"}`}
+            />
+          </Button>
+        </div>
       </nav>
 
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center mb-3">
         <Button onClick={logout} variant="link">
           Logout
         </Button>
       </div>
-
-      <div className="flex items-center justify-center">
-        <Button onClick={toggleSidebar} variant="icon">
-          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </Button>
-      </div>
-    </div>
+    </aside>
   );
 }

@@ -1,14 +1,12 @@
 import { useTransactions } from "../shared/hooks/useTransactions";
 import TransactionsLayout from "../shared/ui/Layouts/TransactionsLayout";
-import TransactionsList from "../shared/ui/Transactions/TransactionsList";
-import Loader from "../shared/ui/Loader";
 
 export default function ExpensePage() {
   const TRANSACTION_TYPE = "EXPENSE";
   const {
     transactions,
-    openDialogModal,
-    setOpenDialogModal,
+    isOpenDialogModal,
+    setIsOpenDialogModal,
     editingId,
     isLoading,
     isCreateLoading,
@@ -26,8 +24,8 @@ export default function ExpensePage() {
 
   return (
     <TransactionsLayout
-      openDialogModal={openDialogModal}
-      setOpenDialogModal={setOpenDialogModal}
+      isOpenDialogModal={isOpenDialogModal}
+      setIsOpenDialogModal={setIsOpenDialogModal}
       title="Expense transactions"
       type={TRANSACTION_TYPE}
       transactions={transactions.filter((t) => t.type === TRANSACTION_TYPE)}

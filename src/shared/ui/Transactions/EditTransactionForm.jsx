@@ -1,4 +1,5 @@
-import { X, Check } from "lucide-react";
+import CheckIcon from "../Icons/CheckIcon";
+import CrossIcon from "../Icons/CrossIcon";
 import { useState } from "react";
 import CreatableSelect from "react-select/creatable";
 import axiosInstance from "../../utils/axiosInstance";
@@ -199,16 +200,16 @@ export default function EditTransactionForm({
         value={note}
         onChange={handleNoteChange}
         placeholder="Note"
-        multiline
+        isMultiline
         rows={2}
       />
 
-      <div className="flex gap-4 justify-center mt-3">
+      <div className="flex justify-around mt-3">
         <Button type="submit" variant="icon" disabled={isSaveEditLoading}>
-          <Check className="text-emerald-700" />
+          <CheckIcon className="text-emerald-700 hover:text-emerald-400" />
         </Button>
         <Button variant="icon" onClick={onCancel} disabled={isSaveEditLoading}>
-          <X className="text-gray-500" />
+          <CrossIcon className="text-gray-500 hover:text-gray-700" />
         </Button>
       </div>
     </form>

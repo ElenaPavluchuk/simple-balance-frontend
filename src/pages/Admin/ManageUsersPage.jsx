@@ -4,7 +4,7 @@ import axiosInstance from "../../shared/utils/axiosInstance";
 import { API_PATHS } from "../../shared/utils/apiPaths";
 import DialogModal from "../../shared/ui/DialogModal";
 import DeleteAlert from "../../shared/ui/DeleteAlert";
-import { Trash } from "lucide-react";
+import TrashIcon from "../../shared/ui/Icons/TrashIcon";
 import { getErrorMessage } from "../../shared/utils/getErrorMessage";
 import Loader from "../../shared/ui/Loader";
 import Button from "../../shared/ui/Button";
@@ -14,7 +14,7 @@ export default function ManageUsersPage() {
   const [users, setUsers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isDeleteUserLoading, setIsDeleteUserLoading] = useState(false);
-  const [openDialogModal, setOpenDialogModal] = useState(false);
+  const [isOpenDialogModal, setIsOpenDialogModal] = useState(false);
   const [isUsersLoading, setIsUsersLoading] = useState(false);
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function ManageUsersPage() {
 
       toast.success(response.data?.message);
       setUsers(users.filter((user) => user?.id !== selectedUserId));
-      setOpenDialogModal(false);
+      setIsOpenDialogModal(false);
       setSelectedUserId(null);
     } catch (err) {
       console.error(err);
@@ -79,7 +79,7 @@ export default function ManageUsersPage() {
 
   return (
     <>
-      <h2 className="text-3xl text-emerald-800">Manage Users</h2>
+      <h2 className="text-3xl text-emerald-800">Manage users</h2>
       <p className="text-xs md:text-sm text-cyan-900 mt-1 mb-6 text-balance">
         Administration tool for viewing and removing user accounts
       </p>
@@ -129,11 +129,11 @@ export default function ManageUsersPage() {
                 variant="icon"
                 onClick={() => {
                   setSelectedUserId(user?.id);
-                  setOpenDialogModal(true);
+                  setIsOpenDialogModal(true);
                 }}
                 disabled={user?.user_role === "ADMIN"}
               >
-                <Trash size={18} />
+                <TrashIcon className="w-5 h-5" />
               </Button>
             </span>
           </Card>
@@ -194,11 +194,11 @@ export default function ManageUsersPage() {
                       variant="icon"
                       onClick={() => {
                         setSelectedUserId(user?.id);
-                        setOpenDialogModal(true);
+                        setIsOpenDialogModal(true);
                       }}
                       disabled={user?.user_role === "ADMIN"}
                     >
-                      <Trash size={18} />
+                      <TrashIcon />
                     </Button>
                   </span>
                 </td>
@@ -209,14 +209,14 @@ export default function ManageUsersPage() {
       </Card>
 
       <DialogModal
-        isOpen={openDialogModal}
-        onClose={() => setOpenDialogModal(false)}
+        isOpen={isOpenDialogModal}
+        onClose={() => setIsOpenDialogModal(false)}
         title="Delete user"
       >
         <DeleteAlert
           message="Are you sure you want to delete the user?"
           onDelete={handleDeleteUser}
-          onClose={() => setOpenDialogModal(false)}
+          onClose={() => setIsOpenDialogModal(false)}
           isLoading={isDeleteUserLoading}
         />
       </DialogModal>

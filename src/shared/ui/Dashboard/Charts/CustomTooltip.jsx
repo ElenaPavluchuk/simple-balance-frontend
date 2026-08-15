@@ -1,4 +1,18 @@
 import { currencyFormat } from "../../../utils/format";
+import PropTypes from "prop-types";
+
+CustomTooltip.propTypes = {
+  active: PropTypes.bool,
+  payload: PropTypes.arrayOf(
+    PropTypes.shape({
+      payload: PropTypes.shape({
+        name: PropTypes.string,
+        code: PropTypes.string,
+      }),
+      value: PropTypes.number,
+    }),
+  ),
+};
 
 export default function CustomTooltip({ active, payload }) {
   if (active && payload && payload.length) {

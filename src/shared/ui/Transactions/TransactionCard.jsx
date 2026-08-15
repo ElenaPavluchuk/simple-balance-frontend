@@ -1,4 +1,6 @@
-import { Trash2, Pencil, MoveUpRight, MoveDownRight } from "lucide-react";
+import ArrowTrendIcon from "../Icons/ArrowTrendIcon";
+import TrashIcon from "../Icons/TrashIcon";
+import PencilIcon from "../Icons/PencilIcon";
 import dayjs from "dayjs";
 import Button from "../Button";
 import { currencyFormat } from "../../utils/format";
@@ -16,7 +18,7 @@ TransactionCard.propTypes = {
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
-  dashboardStyle: PropTypes.bool,
+  isDashboardStyle: PropTypes.bool,
   isDeleteLoading: PropTypes.bool.isRequired,
 };
 
@@ -24,22 +26,26 @@ export default function TransactionCard({
   transaction,
   onDelete,
   onEdit,
-  dashboardStyle,
+  isDashboardStyle,
   isDeleteLoading,
 }) {
   return (
     <div
-      className={`flex ${dashboardStyle ? "gap-3 items-center" : "gap-6 lg:gap-5"}`}
+      className={`flex ${isDashboardStyle ? "gap-3 items-center" : "gap-6 lg:gap-5"}`}
     >
-      {dashboardStyle && (
+      {isDashboardStyle && (
         <div
-          className={`min-w-8 min-h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white ${transaction?.type === "INCOME" ? "bg-linear-to-r from-emerald-400 to-lime-600" : "bg-linear-to-r from-emerald-400 to-sky-600"}`}
+          className={`p-2 rounded-full flex items-center justify-center text-white ${transaction?.type === "INCOME" ? "bg-linear-to-r from-emerald-400 to-lime-600" : "bg-linear-to-r from-emerald-400 to-sky-600"}`}
         >
-          {transaction?.type === "INCOME" ? <MoveUpRight /> : <MoveDownRight />}
+          {
+            <ArrowTrendIcon
+              className={`w-5 h-5 ${transaction?.type === "INCOME" ? "rotate-180" : "rotate-0"}`}
+            />
+          }
         </div>
       )}
       <div
-        className={`w-full flex flex-col gap-3 ${dashboardStyle && "border-b border-gray-200 pb-2"}`}
+        className={`w-full flex flex-col gap-3 ${isDashboardStyle && "border-b border-gray-200 pb-2"}`}
       >
         <div className="flex justify-between items-center text-base md:text-lg text-cyan-950">
           <p>{transaction?.title}</p>
@@ -56,27 +62,28 @@ export default function TransactionCard({
           <p>{dayjs(transaction?.date).format("DD-MM-YYYY")}</p>
         </div>
 
-        {!dashboardStyle && (
+        {!isDashboardStyle && (
           <p className="text-sm text-cyan-950 border-t border-gray-200 py-2">
             Note: <span>{transaction?.note}</span>
           </p>
         )}
       </div>
 
-      {!dashboardStyle && (
+      {!isDashboardStyle && (
         <div className="flex flex-col items-center justify-between max-w-10">
           <Button onClick={() => onEdit(transaction)} variant="icon">
             <div className="border border-emerald-800 hover:bg-emerald-800 text-emerald-800 hover:text-white p-2 rounded-full">
-              <Pencil size={20} />
+              <PencilIcon className="w-5 h-5" />
             </div>
           </Button>
+
           <Button
             onClick={() => onDelete(transaction?.id)}
             disabled={isDeleteLoading}
             variant="icon"
           >
             <div className="border border-emerald-800 hover:bg-red-600 hover:border-red-600 text-emerald-800 hover:text-white p-2 rounded-full">
-              <Trash2 size={20} />
+              <TrashIcon className="w-5 h-5" />
             </div>
           </Button>
         </div>

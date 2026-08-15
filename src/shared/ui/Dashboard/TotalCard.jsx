@@ -26,7 +26,7 @@ export default function TotalCard({
       className={`flex flex-col items-center justify-center md:justify-start md:flex-row gap-6 card ${order} ${spanningColumns}`}
     >
       <div
-        className={`md:w-14 md:h-14 w-12 h-12 flex items-center justify-center text-white ${color} rounded-full drop-shadow-xl`}
+        className={`p-3 flex items-center justify-center text-white ${color} rounded-full drop-shadow-xl`}
       >
         {icon}
       </div>
