@@ -78,7 +78,7 @@ export default function TransactionCard({
           </Button>
 
           <Button
-            onClick={() => onDelete(transaction?.id)}
+            onClick={() => onDelete(transaction.id)}
             disabled={isDeleteLoading}
             variant="icon"
           >

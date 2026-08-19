@@ -31,7 +31,7 @@ export default function DashboardPage() {
 
         if (isCancelled) return;
 
-        setDashboardData(response.data);
+        setDashboardData(response.data ?? null);
       } catch (err) {
         if (isCancelled) return;
         console.error(err);

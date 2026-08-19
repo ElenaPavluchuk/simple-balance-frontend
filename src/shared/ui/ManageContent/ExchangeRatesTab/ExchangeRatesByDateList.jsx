@@ -50,7 +50,7 @@ export default function ExchangeRatesByDateList({
 
       {rate?.rates.map((r) => (
         <ExchangeRateCard
-          key={r?.id}
+          key={r.id}
           rate={r}
           selectedCurrencyId={baseCurrencyId}
           isManagedCardStyle

@@ -10,9 +10,7 @@ import AuthProvider from "./shared/context/auth/AuthProvider.jsx";
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <AuthProvider>
-      <BrowserRouter
-        basename={import.meta.env.PROD ? "/simple-balance-frontend" : "/"}
-      >
+      <BrowserRouter basename={import.meta.env.PROD ? "/simple-balance" : "/"}>
         <StrictMode>
           <App />
         </StrictMode>

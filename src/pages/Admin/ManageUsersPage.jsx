@@ -58,7 +58,7 @@ export default function ManageUsersPage() {
       );
 
       toast.success(response.data?.message);
-      setUsers(users.filter((user) => user?.id !== selectedUserId));
+      setUsers(users.filter((user) => user.id !== selectedUserId));
       setIsOpenDialogModal(false);
       setSelectedUserId(null);
     } catch (err) {
@@ -87,7 +87,7 @@ export default function ManageUsersPage() {
       {/* mobile cards */}
       <div className="grid grid-cols-1 gap-4 md:hidden">
         {users.map((user) => (
-          <Card key={user?.id} className="flex flex-row justify-between gap-5">
+          <Card key={user.id} className="flex flex-row justify-between gap-5">
             <div className="flex flex-col gap-3 w-full">
               <div className="flex justify-between items-center">
                 <span className="text-sm font-medium text-cyan-900 inline-block w-12">
@@ -128,7 +128,7 @@ export default function ManageUsersPage() {
               <Button
                 variant="icon"
                 onClick={() => {
-                  setSelectedUserId(user?.id);
+                  setSelectedUserId(user.id);
                   setIsOpenDialogModal(true);
                 }}
                 disabled={user?.user_role === "ADMIN"}
@@ -163,7 +163,7 @@ export default function ManageUsersPage() {
           <tbody className="divide-y divide-gray-200">
             {users.map((user) => (
               <tr
-                key={user?.id}
+                key={user.id}
                 className="hover:bg-gray-100/50 transition duration-150"
               >
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-900">
@@ -193,7 +193,7 @@ export default function ManageUsersPage() {
                     <Button
                       variant="icon"
                       onClick={() => {
-                        setSelectedUserId(user?.id);
+                        setSelectedUserId(user.id);
                         setIsOpenDialogModal(true);
                       }}
                       disabled={user?.user_role === "ADMIN"}

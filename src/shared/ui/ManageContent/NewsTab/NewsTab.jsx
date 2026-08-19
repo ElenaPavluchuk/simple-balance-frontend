@@ -72,10 +72,10 @@ export default function NewsTab({
           <ul className="grid gap-4 mt-1">
             {news.map((item) => (
               <NewsList
-                key={item?.id}
+                key={item.id}
                 item={item}
                 onDelete={handleDeleteNews}
-                isEdit={editNewsId === item?.id}
+                isEdit={editNewsId === item.id}
                 onEdit={setEditNewsId}
                 onSave={handleSaveEdit}
                 onCancel={handleCancelEdit}

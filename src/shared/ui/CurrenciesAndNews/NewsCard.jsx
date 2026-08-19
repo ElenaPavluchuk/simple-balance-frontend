@@ -46,7 +46,7 @@ export default function NewsCard({
           <div className="max-w-16">
             <Button
               variant="icon"
-              onClick={() => onEdit(item?.id)}
+              onClick={() => onEdit(item.id)}
               disabled={!isDisplayManageBtn}
             >
               <div className="border border-emerald-800 hover:bg-emerald-800 text-emerald-800 hover:text-white p-2 rounded-full">
@@ -72,7 +72,7 @@ export default function NewsCard({
 
       <div className="mt-4 flex items-center text-center justify-between">
         <Link
-          to={`/news/${item?.id}`}
+          to={`/news/${item.id}`}
           className="text-gray-600 hover:underline text-base whitespace-nowrap"
         >
           View more
@@ -82,7 +82,7 @@ export default function NewsCard({
           <div className="max-w-16">
             <Button
               variant="icon"
-              onClick={() => setDeleteNewsId(item?.id)}
+              onClick={() => setDeleteNewsId(item.id)}
               disabled={!isDisplayManageBtn || isDeleteNewsLoading}
             >
               <div className="border border-emerald-800 hover:bg-red-600 hover:border-red-600 text-emerald-800 hover:text-white p-2 rounded-full">
@@ -100,7 +100,7 @@ export default function NewsCard({
       >
         <DeleteAlert
           message="Are you sure you want to delete news?"
-          onDelete={() => onDelete(item?.id)}
+          onDelete={() => onDelete(item.id)}
           onClose={() => setDeleteNewsId(null)}
           isLoading={isDeleteNewsLoading}
         />
