@@ -57,7 +57,7 @@ export default function ExchangeRateCard({
   )?.symbol;
 
   const selectedCurrencyCode = currencies.find(
-    (currency) => currency?.id === Number(selectedCurrencyId),
+    (currency) => currency.id === Number(selectedCurrencyId),
   )?.name;
 
   return (

@@ -37,7 +37,7 @@ export default function EditTransactionForm({
   const [date, setDate] = useState(
     transaction.date ? dayjs(transaction.date).format("YYYY-MM-DD") : "",
   );
-  const [note, setNote] = useState(transaction.note);
+  const [note, setNote] = useState(transaction?.note);
   const [validateErrors, setValidateErrors] = useState({});
 
   const {

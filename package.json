@@ -1,12 +1,9 @@
 {
-  "name": "simple-balance-frontend",
+  "name": "simple-balance",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://github.com/ElenaPavluchuk/simple-balance-frontend.git",
   "type": "module",
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
